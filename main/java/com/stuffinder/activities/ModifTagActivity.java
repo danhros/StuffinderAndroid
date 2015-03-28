@@ -1,7 +1,6 @@
 package com.stuffinder.activities;
 
 
-import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -18,7 +17,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
-public class ModifTagActivity extends Activity {
+public class ModifTagActivity extends BasicActivity {
 
     private ListView mListModif = null;
 

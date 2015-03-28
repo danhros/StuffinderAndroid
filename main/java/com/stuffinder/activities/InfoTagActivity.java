@@ -1,6 +1,5 @@
 package com.stuffinder.activities;
 
-import android.app.Activity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -18,7 +17,7 @@ import com.stuffinder.exceptions.NetworkServiceException;
 import com.stuffinder.exceptions.NotAuthenticatedException;
 import com.stuffinder.R;
 
-public class InfoTagActivity extends Activity {
+public class InfoTagActivity extends BasicActivity {
 
     EditText editTextNom;
     EditText editTextImage;

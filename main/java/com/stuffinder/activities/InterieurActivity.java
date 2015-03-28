@@ -1,6 +1,6 @@
 package com.stuffinder.activities;
 
-import android.app.Activity;
+
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
@@ -19,7 +19,7 @@ import java.util.Comparator;
 import java.util.List;
 
 
-public class InterieurActivity extends Activity {
+public class InterieurActivity extends BasicActivity {
 
     private ListView mListInt = null;
     private static List<Tag> arrayAdapter = new ArrayList<>();

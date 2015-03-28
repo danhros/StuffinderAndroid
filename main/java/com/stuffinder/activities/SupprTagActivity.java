@@ -1,7 +1,6 @@
 package com.stuffinder.activities;
 
 
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
@@ -26,7 +25,7 @@ import java.util.Comparator;
 import java.util.List;
 
 
-public class SupprTagActivity extends Activity {
+public class SupprTagActivity extends BasicActivity {
 
     private ListView mListSuppr = null;
     private ArrayAdapter<Tag> tagArrayAdapter;

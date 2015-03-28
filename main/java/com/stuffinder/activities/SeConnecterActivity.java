@@ -18,7 +18,7 @@ import com.stuffinder.exceptions.IllegalFieldException;
 import com.stuffinder.engine.FieldVerifier;
 import com.stuffinder.exceptions.NetworkServiceException;
 
-public class SeConnecterActivity extends Activity {
+public class SeConnecterActivity extends BasicActivity {
 
     EditText editTextIdentifiant;
     EditText editTextMdp;

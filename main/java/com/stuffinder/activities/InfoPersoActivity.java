@@ -1,6 +1,5 @@
 package com.stuffinder.activities;
 
-import android.app.Activity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -19,7 +18,7 @@ import com.stuffinder.exceptions.NotAuthenticatedException;
 import com.stuffinder.R;
 
 
-public class InfoPersoActivity extends Activity {
+public class InfoPersoActivity extends BasicActivity {
 
 
     TextView nomTextView ;

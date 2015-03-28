@@ -1,6 +1,5 @@
 package com.stuffinder.activities;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
@@ -19,7 +18,7 @@ import com.stuffinder.engine.EngineServiceProvider;
 import java.lang.Override;
 
 
-public class CreerCompteActivity extends Activity {
+public class CreerCompteActivity extends BasicActivity {
 
     EditText editTextNom ;
     EditText editTextPrenom;

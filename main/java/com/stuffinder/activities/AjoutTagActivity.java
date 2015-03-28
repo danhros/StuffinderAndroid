@@ -1,6 +1,5 @@
 package com.stuffinder.activities;
 
-import android.app.Activity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -16,7 +15,7 @@ import com.stuffinder.exceptions.IllegalFieldException;
 import com.stuffinder.exceptions.NetworkServiceException;
 import com.stuffinder.exceptions.NotAuthenticatedException;
 
-public class AjoutTagActivity extends Activity {
+public class AjoutTagActivity extends BasicActivity {
 
     EditText EditTextNom ;
     EditText EditTextImage ;

@@ -1,6 +1,5 @@
 package com.stuffinder.activities;
 
-import android.app.Activity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -19,7 +18,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-public class ExterieurActivity extends Activity {
+public class ExterieurActivity extends BasicActivity {
 
         ListView listView ;
     @Override

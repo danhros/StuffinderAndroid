@@ -1,6 +1,5 @@
 package com.stuffinder.activities;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
@@ -17,7 +16,7 @@ import com.stuffinder.exceptions.NotAuthenticatedException;
 
 import java.util.List;
 
-public class TagsActivity extends Activity {
+public class TagsActivity extends BasicActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

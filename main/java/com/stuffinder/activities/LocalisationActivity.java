@@ -1,6 +1,5 @@
 package com.stuffinder.activities;
 
-import android.app.Activity;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothManager;
@@ -24,7 +23,7 @@ import java.util.List;
 import java.util.logging.Handler;
 
 
-public class LocalisationActivity extends Activity {
+public class LocalisationActivity extends BasicActivity {
 
     // fields used to BLE tags detection.
     private String UUID_Tag = "F9:1F:24:D3:1B:D4" ;//adresse du TAG actuel

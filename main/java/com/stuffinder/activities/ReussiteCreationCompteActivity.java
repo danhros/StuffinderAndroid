@@ -1,6 +1,5 @@
 package com.stuffinder.activities;
 
-import android.app.Activity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -11,7 +10,7 @@ import android.view.Window;
 import com.stuffinder.R;
 
 
-public class ReussiteCreationCompteActivity extends Activity {
+public class ReussiteCreationCompteActivity extends BasicActivity {
 
 
 

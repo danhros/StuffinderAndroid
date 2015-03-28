@@ -1,6 +1,5 @@
 package com.stuffinder.activities;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
@@ -18,7 +17,7 @@ import com.stuffinder.exceptions.NotAuthenticatedException;
 import com.stuffinder.webservice.NetworkService;
 
 
-public class Accueil extends Activity {
+public class Accueil extends BasicActivity {
 
 
 
