@@ -29,6 +29,8 @@ public class EngineService {
     Account currentAccount; // null if authentication done, non null otherwise.
     String currentPassword;
 
+    Semaphore accountAccessMutex;
+
     List<Tag> tags;
     List<Profile> profiles;
 
@@ -41,6 +43,8 @@ public class EngineService {
     {
         tags = new ArrayList<>();
         profiles = new ArrayList<>();
+
+        accountAccessMutex = new Semaphore(1);
 
         requests = new ArrayList<>();
     }
@@ -64,7 +68,7 @@ public class EngineService {
 
         try {
             tags.addAll(NetworkServiceProvider.getNetworkService().getTags());
-//            profiles.addAll(NetworkServiceProvider.getNetworkService().getProfiles());
+//            profiles.addAll(NetworkServiceProvider.getNetworkService().getProfiles()); //TODO add links with the tag object list.
             currentPassword = password;
 
             if(isAutoSynchronizationEnabled()) // to start auto-synchronization.
@@ -78,11 +82,13 @@ public class EngineService {
         } catch (NotAuthenticatedException e) { // will normally never occur.
             currentAccount = null;
             tags.clear();
+            profiles.clear();
             throw new NetworkServiceException("");
         } catch (NetworkServiceException e) {
             Logger.getLogger(getClass().getName()).log(Level.SEVERE, "A network service error has occured :    " + e.getMessage());
             currentAccount = null;
             tags.clear();
+            profiles.clear();
             throw e;
         }
 
@@ -112,6 +118,7 @@ public class EngineService {
     public Account getCurrentAccount() throws NotAuthenticatedException {
         if(currentAccount == null)
             throw new NotAuthenticatedException();
+
         return currentAccount;
     }
 
