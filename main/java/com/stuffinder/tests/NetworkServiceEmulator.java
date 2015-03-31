@@ -48,13 +48,13 @@ public class NetworkServiceEmulator implements NetworkServiceInterface
 		
 		Account testAccount = new Account("jdupon", "Jean", "Dupont", "jean.dupont@gmail.com");
 
-		Tag tag1 = new Tag("a1bef83a374", "Home keys");
-		Tag tag2 = new Tag("bd3496e342c", "Car key");
-		Tag tag3 = new Tag("aefd573fc3e", "Bag");
-		Tag tag4 = new Tag("f53ebc87298", "Wallet");
-		Tag tag5 = new Tag("e68fa3547cb", "Android tablet");
-		Tag tag6 = new Tag("F9:1F:24:D3:1B:D4", "Correct tag");
-		Tag tag7 = new Tag("e92fae67acb", "Android smartphone");
+		Tag tag1 = new Tag("a1bef83a374", "Home keys", "keys");
+		Tag tag2 = new Tag("bd3496e342c", "Car key", "carkey");
+		Tag tag3 = new Tag("aefd573fc3e", "Bag", "bag");
+		Tag tag4 = new Tag("f53ebc87298", "Wallet", "wallet");
+		Tag tag5 = new Tag("e68fa3547cb", "Android tablet", "tablet");
+		Tag tag6 = new Tag("F9:1F:24:D3:1B:D4", "Correct tag", "tag");
+		Tag tag7 = new Tag("e92fae67acb", "Android smartphone", "smartphone");
 		
 		tags.add(tag1);
 		tags.add(tag2);
