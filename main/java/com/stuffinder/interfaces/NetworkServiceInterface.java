@@ -69,7 +69,6 @@ public interface NetworkServiceInterface
 	 */
 	public Account getCurrentAccount() throws NotAuthenticatedException;
 
-
 	
 	/**
 	 * Modifies the email address of the current account.
@@ -113,8 +112,25 @@ public interface NetworkServiceInterface
 	 * @throws NetworkServiceException If a network service error has occurred.
 	 */
 	public Tag addTag(Tag tag) throws NotAuthenticatedException, IllegalFieldException, NetworkServiceException;
-	
-	/**
+
+
+    /**
+     * Downloads an object image and returns the path of the downloaded image file.
+     * @param tag The tag to be modified.
+     * @return the local filePath of the tag.
+     * @throws NotAuthenticatedException If the authentication is not done.
+     * @throws IllegalFieldException If one field (i.e. one information) is illegal. <br/>
+     * The possible fields with the reason(s) are : <br/>
+     * <ul>
+     * 		<li>{@link IllegalFieldException#TAG_UID tag uid} (reasons {@link IllegalFieldException#REASON_VALUE_INCORRECT value incorrect} if it is syntactically incorrect and {@link IllegalFieldException#REASON_VALUE_NOT_FOUND value not found} if the tag is not found) </li>
+     * 	   	<li>{@link com.stuffinder.exceptions.IllegalFieldException#TAG_OBJECT_IMAGE TAG_OBJECT_IMAGE} (reason {@link com.stuffinder.exceptions.IllegalFieldException#REASON_VALUE_NOT_FOUND REASON_VALUE_NOT_FOUND} if there is no image associated with this tag).</li>
+     * </ul>
+     * @throws NetworkServiceException If a network service error has occurred.
+     */
+    public String downloadObjectImage(Tag tag)  throws NotAuthenticatedException, IllegalFieldException, NetworkServiceException;
+
+
+    /**
 	 * Modifies the object name for a tag.
 	 * @param tag The tag to be modified.
 	 * @param newObjectName The new object name.
@@ -392,4 +408,21 @@ public interface NetworkServiceInterface
 	 * @throws NetworkServiceException If a network service error has occurred.
 	 */
 	public List<Profile> getProfiles() throws NotAuthenticatedException, NetworkServiceException;
+
+
+
+
+    /**
+     *
+     * @return the last update time about tags.
+     * @throws NetworkServiceException
+     */
+    public int getLastTagsUpdateTime() throws NetworkServiceException, NotAuthenticatedException;
+
+    /**
+     *
+     * @return The last update time about profiles.
+     * @throws NetworkServiceException
+     */
+    public int getLastProfilesUpdateTime() throws NetworkServiceException, NotAuthenticatedException;
 }
