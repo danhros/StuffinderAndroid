@@ -120,6 +120,7 @@ public class ModifTagActivity extends Activity {
         Intent intent = new Intent(ModifTagActivity.this, InfoTagActivity.class);
 
         startActivity(intent);
+        finish();
 
     }
 
