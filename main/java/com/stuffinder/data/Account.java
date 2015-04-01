@@ -3,86 +3,93 @@ package com.stuffinder.data;
 import java.util.ArrayList;
 import java.util.List;
 
+
 public class Account
 {
-    private String pseudo;
-    private String firstName;
-    private String lastName;
-    private String emailAddress;
+	private String pseudo;
+	private String firstName;
+	private String lastName;
+	private String emailAddress;
+	
+	private List<Tag> tags;
+	private List<Profile> profils;
+	
+	public Account(String pseudo, String firstName, String lastName, String emailAddress)
+	{
+		if(pseudo == null)
+			throw new NullPointerException();
+		
+		this.pseudo = pseudo;
+		
+		setFirstName(firstName);
+		setLastName(lastName);
+		setMailAddress(emailAddress);
+		
+		tags = new ArrayList<>();
+		profils = new ArrayList<>();
+	}
 
-    private List<Tag> tags;
-    private List<Profile> profils;
+	public List<Tag> getTags()
+	{
+		return tags;
+	}
 
-    public Account(String pseudo, String firstName, String lastName, String emailAddress)
-    {
-        if(pseudo == null)
-            throw new NullPointerException();
+	public List<Profile> getProfiles()
+	{
+		return profils;
+	}
 
-        this.pseudo = pseudo;
+	public String getPseudo()
+	{
+		return pseudo;
+	}
 
-        setFirstName(firstName);
-        setLastName(lastName);
-        setMailAddress(emailAddress);
+	public String getFirstName()
+	{
+		return firstName;
+	}
 
-        tags = new ArrayList<>();
-        profils = new ArrayList<>();
-    }
+	public void setFirstName(String firstName)
+	{
+		if(firstName == null)
+			throw new NullPointerException();
+		this.firstName = firstName;
+	}
 
-    public List<Tag> getTags()
-    {
-        return tags;
-    }
+	public String getLastName()
+	{
+		return lastName;
+	}
 
-    public List<Profile> getProfils()
-    {
-        return profils;
-    }
+	public void setLastName(String lastName)
+	{
+		if(lastName == null)
+			throw new NullPointerException();
+		this.lastName = lastName;
+	}
 
-    public String getPseudo()
-    {
-        return pseudo;
-    }
+	public String getEMailAddress()
+	{
+		return emailAddress;
+	}
 
-    public String getFirstName()
-    {
-        return firstName;
-    }
+	public void setMailAddress(String emailAddress)
+	{
+		if(emailAddress == null)
+			throw new NullPointerException();
+		
+		this.emailAddress = emailAddress;
+	}
 
-    public void setFirstName(String firstName)
-    {
-        if(firstName == null)
-            throw new NullPointerException();
-        this.firstName = firstName;
-    }
+	public boolean equals(Object obj)
+	{
+		return (!(obj instanceof Account)) ? false : 
+					pseudo.equals(((Account) obj).getPseudo());
+	}
 
-    public String getLastName()
-    {
-        return lastName;
-    }
-
-    public void setLastName(String lastName)
-    {
-        if(lastName == null)
-            throw new NullPointerException();
-        this.lastName = lastName;
-    }
-
-    public String getEMailAddress()
-    {
-        return emailAddress;
-    }
-
-    public void setMailAddress(String emailAddress)
-    {
-        if(emailAddress == null)
-            throw new NullPointerException();
-
-        this.emailAddress = emailAddress;
-    }
-
-    public boolean equals(Object obj)
-    {
-        return (!(obj instanceof Account)) ? false :
-                pseudo.equals(((Account) obj).getPseudo());
-    }
+	public int hashCode()
+	{
+		return pseudo.hashCode();
+	}
+	
 }
