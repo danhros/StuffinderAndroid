@@ -32,7 +32,7 @@ public class ExterieurActivity extends BasicActivity {
         try {
             Account account = EngineServiceProvider.getEngineService().getCurrentAccount();
 
-            List<Profile> profiles = account.getProfils();
+            List<Profile> profiles = account.getProfiles();
             ArrayList<String> liste = new ArrayList<String>();
             int size = profiles.size();
 

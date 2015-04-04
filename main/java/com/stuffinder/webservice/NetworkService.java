@@ -583,6 +583,25 @@ public class NetworkService implements NetworkServiceInterface {
         return tag;
     }
 
+    /**
+     * Downloads an object image and returns the path of the downloaded image file.
+     *
+     * @param tag The tag to be modified.
+     * @return the local filePath of the tag.
+     * @throws com.stuffinder.exceptions.NotAuthenticatedException If the authentication is not done.
+     * @throws com.stuffinder.exceptions.IllegalFieldException     If one field (i.e. one information) is illegal. <br/>
+     *                                                             The possible fields with the reason(s) are : <br/>
+     *                                                             <ul>
+     *                                                             <li>{@link com.stuffinder.exceptions.IllegalFieldException#TAG_UID tag uid} (reasons {@link com.stuffinder.exceptions.IllegalFieldException#REASON_VALUE_INCORRECT value incorrect} if it is syntactically incorrect and {@link com.stuffinder.exceptions.IllegalFieldException#REASON_VALUE_NOT_FOUND value not found} if the tag is not found) </li>
+     *                                                             <li>{@link com.stuffinder.exceptions.IllegalFieldException#TAG_OBJECT_IMAGE TAG_OBJECT_IMAGE} (reason {@link com.stuffinder.exceptions.IllegalFieldException#REASON_VALUE_NOT_FOUND REASON_VALUE_NOT_FOUND} if there is no image associated with this tag).</li>
+     *                                                             </ul>
+     * @throws com.stuffinder.exceptions.NetworkServiceException   If a network service error has occurred.
+     */
+    @Override
+    public String downloadObjectImage(Tag tag) throws NotAuthenticatedException, IllegalFieldException, NetworkServiceException {
+        return null;
+    }
+
     @Override
     public Tag modifyObjectName(Tag tag, String newObjectName)
             throws NotAuthenticatedException, IllegalFieldException,
@@ -728,6 +747,54 @@ public class NetworkService implements NetworkServiceInterface {
         return null;
     }
 
+    /**
+     * Creates a new profile named <code>profileName</code> and adds the tags of the list <code>tagList</code> in this profile.
+     * <p/>
+     * <br/><br />Only the UID of the tags are used to perform this operation.
+     * <p/>
+     * <br />If one of these UID is incorrect or doesn't exist (i.e. no tag linked with the current account has this UID),
+     * an exception of type {@link com.stuffinder.exceptions.IllegalFieldException} is thrown to indicate this problem.
+     * <p/>
+     * <br />If a tag is twice or more in the specified tag list, it will be added only once.
+     * <p/>
+     * <br /><br />At the end of call, it returns the new profile.
+     *
+     * @param profileName The name of the new profile to be created.
+     * @param tagList     The tags to add in the new profile.
+     * @return The profile created.
+     * @throws com.stuffinder.exceptions.NotAuthenticatedException If the authentication is not done.
+     * @throws com.stuffinder.exceptions.IllegalFieldException     If one field (i.e. one information) is illegal. <br/>
+     *                                                             The possible fields with the reason(s) are : <br/>
+     *                                                             <ul>
+     *                                                             <li>{@link com.stuffinder.exceptions.IllegalFieldException#PROFILE_NAME Profile name} (reasons {@link com.stuffinder.exceptions.IllegalFieldException#REASON_VALUE_INCORRECT REASON_VALUE_INCORRECT} if it is syntactically incorrect and {@link com.stuffinder.exceptions.IllegalFieldException#REASON_VALUE_ALREADY_USED REASON_VALUE_ALREADY_USED} if you have already a profile with this name) </li>
+     *                                                             <li>{@link com.stuffinder.exceptions.IllegalFieldException#TAG_UID tag UID} (reasons {@link com.stuffinder.exceptions.IllegalFieldException#REASON_VALUE_INCORRECT REASON_VALUE_INCORRECT} if it is syntactically incorrect and {@link com.stuffinder.exceptions.IllegalFieldException#REASON_VALUE_NOT_FOUND REASON_VALUE_NOT_FOUND} if there is no tag with this UID) </li>
+     *                                                             </ul>
+     * @throws com.stuffinder.exceptions.NetworkServiceException   If a network service error has occurred.
+     */
+    @Override
+    public Profile createProfile(String profileName, List<Tag> tagList) throws NotAuthenticatedException, IllegalFieldException, NetworkServiceException {
+        return null;
+    }
+
+    /**
+     * Modify the name of a profile.
+     *
+     * @param profile        The profile to be modified.
+     * @param newProfileName the new name for the profile.
+     * @return The profile modified if this operation succeeds.
+     * @throws com.stuffinder.exceptions.NotAuthenticatedException If the authentication is not done.
+     * @throws com.stuffinder.exceptions.IllegalFieldException     If one field (i.e. one information) is illegal. <br/>
+     *                                                             The possible fields with the reason(s) are : <br/>
+     *                                                             <ul>
+     *                                                             <li>{@link com.stuffinder.exceptions.IllegalFieldException#PROFILE_NAME Profile name} (reasons {@link com.stuffinder.exceptions.IllegalFieldException#REASON_VALUE_INCORRECT REASON_VALUE_INCORRECT} if it is syntactically incorrect, {@link com.stuffinder.exceptions.IllegalFieldException#REASON_VALUE_NOT_FOUND REASON_VALUE_NOT_FOUND} if there is no profile with this name and {@link com.stuffinder.exceptions.IllegalFieldException#REASON_VALUE_ALREADY_USED REASON_VALUE_ALREADY_USED} if you have already another profile with this name) </li>
+     *                                                             </ul>
+     * @throws com.stuffinder.exceptions.NetworkServiceException   If a network service error has occurred.
+     */
+    @Override
+    public Profile modifyProfileName(Profile profile, String newProfileName) throws NotAuthenticatedException, IllegalFieldException, NetworkServiceException {
+        return null;
+    }
+
     @Override
     public Profile addTagToProfile(Profile profile, Tag tag)
             throws NotAuthenticatedException, IllegalFieldException,
@@ -752,7 +819,37 @@ public class NetworkService implements NetworkServiceInterface {
         return null;
     }
 
+    /**
+     * Removes tags from a profile.
+     * <p/>
+     * <br/><br />Only the UID of the tags are used to perform this operation.
+     * <p/>
+     * <br />If one of these UID is incorrect or doesn't exist (i.e. no tag linked with the current account has this UID),
+     * an exception of type {@link com.stuffinder.exceptions.IllegalFieldException} is thrown to indicate this problem.
+     * Else, each tag of this tag list are removed in the specified profile if it contains this tag.
+     * <p/>
+     * <br /><br />At the end of the call, if the profile is modified, it is returned. Else, <code>null</code> is returned.
+     * <p/>
+     * <br /> <br /> To remove all tags from a profile, call the method {@link #replaceTagListOfProfile(com.stuffinder.data.Profile, java.util.List)} with an empty list as second parameter.
+     *
+     * @param profile The profile to be modified.
+     * @param tagList The tags to be removed from the specified profile.
+     * @return The profile modified if this operation succeeds.
+     * @throws com.stuffinder.exceptions.NotAuthenticatedException If the authentication is not done.
+     * @throws com.stuffinder.exceptions.IllegalFieldException     If one field (i.e. one information) is illegal. <br/>
+     *                                                             The possible fields with the reason(s) are : <br/>
+     *                                                             <ul>
+     *                                                             <li>{@link com.stuffinder.exceptions.IllegalFieldException#PROFILE_NAME Profile name} (reasons {@link com.stuffinder.exceptions.IllegalFieldException#REASON_VALUE_INCORRECT REASON_VALUE_INCORRECT} if it is syntactically incorrect and {@link com.stuffinder.exceptions.IllegalFieldException#REASON_VALUE_NOT_FOUND REASON_VALUE_NOT_FOUND} if there is no profile which has this name) </li>
+     *                                                             <li>{@link com.stuffinder.exceptions.IllegalFieldException#TAG_UID UID} of one tag of the list (reasons {@link com.stuffinder.exceptions.IllegalFieldException#REASON_VALUE_INCORRECT REASON_VALUE_INCORRECT} if it is syntactically incorrect and {@link com.stuffinder.exceptions.IllegalFieldException#REASON_VALUE_NOT_FOUND REASON_VALUE_NOT_FOUND} if no tag linked with the current account has this UID) </li>
+     *                                                             </ul>
+     * @throws com.stuffinder.exceptions.NetworkServiceException   If a network service error has occurred.
+     */
     @Override
+    public Profile removeTagsFromProfile(Profile profile, List<Tag> tagList) throws NotAuthenticatedException, IllegalFieldException, NetworkServiceException {
+        return null;
+    }
+
+
     public Profile removeAllFromProfile(Profile profile)
             throws NotAuthenticatedException, IllegalFieldException,
             NetworkServiceException {
@@ -768,7 +865,24 @@ public class NetworkService implements NetworkServiceInterface {
         return null;
     }
 
+    /**
+     * Removes a profile.
+     *
+     * @param profile The profile to be removed.
+     * @throws com.stuffinder.exceptions.NotAuthenticatedException If the authentication is not done.
+     * @throws com.stuffinder.exceptions.IllegalFieldException     If one field (i.e. one information) is illegal. <br/>
+     *                                                             The possible fields with the reason(s) are : <br/>
+     *                                                             <ul>
+     *                                                             <li>{@link com.stuffinder.exceptions.IllegalFieldException#PROFILE_NAME Profile name} (reasons {@link com.stuffinder.exceptions.IllegalFieldException#REASON_VALUE_INCORRECT REASON_VALUE_INCORRECT} if it is syntactically incorrect and {@link com.stuffinder.exceptions.IllegalFieldException#REASON_VALUE_NOT_FOUND REASON_VALUE_NOT_FOUND} if there is no profile which has this name) </li>
+     *                                                             </ul>
+     * @throws com.stuffinder.exceptions.NetworkServiceException   If a network error has occurred.
+     */
     @Override
+    public void removeProfile(Profile profile) throws NotAuthenticatedException, IllegalFieldException, NetworkServiceException {
+
+    }
+
+
     public Profile replaceTagListOfProfile(Profile profile, Tag[] tagList)
             throws NotAuthenticatedException, IllegalFieldException,
             NetworkServiceException {
