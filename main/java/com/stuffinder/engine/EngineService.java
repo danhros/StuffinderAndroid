@@ -69,6 +69,9 @@ public class EngineService {
             currentAccount = NetworkServiceProvider.getNetworkService().authenticate(pseudo, password);
             Logger.getLogger(getClass().getName()).log(Level.INFO, "account is : " + currentAccount);
             tags.addAll(NetworkServiceProvider.getNetworkService().getTags());
+            int lastTagsUpdate = NetworkServiceProvider.getNetworkService().getLastTagsUpdateTime();
+            int lastProfilesUpdate = NetworkServiceProvider.getNetworkService().getLastProfilesUpdateTime();
+
             for(Profile profile : NetworkServiceProvider.getNetworkService().getProfiles())
             {
                 Profile tmp = new Profile(profile.getName());
@@ -83,7 +86,7 @@ public class EngineService {
             if(isAutoSynchronizationEnabled()) // to start auto-synchronization.
             {
                 Logger.getLogger(getClass().getName()).log(Level.INFO, "Start auto-synchronization thread");
-                autoSynchronizer.startAutoSynchronization(currentAccount, tags, profiles, currentPassword);
+                autoSynchronizer.startAutoSynchronization(currentAccount, tags, profiles, currentPassword, lastTagsUpdate, lastProfilesUpdate);
                 Logger.getLogger(getClass().getName()).log(Level.INFO, "Auto-synchronization thread started");
             }
 
@@ -680,6 +683,9 @@ public class EngineService {
         private String password;
 
 
+        private int lastProfileUpdate;
+        private int lastTagsUpdate;
+
 //        private BlockingQueue<Request> failedRequestQueue;
 //        private BlockingQueue<IllegalFieldException> catchedExceptionQueue;
 
@@ -689,12 +695,12 @@ public class EngineService {
 
         AutoSynchronizer()
         {
-            requestsMutex = new Semaphore(1);
+            requestsMutex = new Semaphore(1, true);
             requests = new LinkedList<>();
 
             requestNumber = new Semaphore(0);
 
-            accountMutex = new Semaphore(1);
+            accountMutex = new Semaphore(1, true);
 
             errorOccurredOnData = false;
             failedOnPassword = false;
@@ -750,7 +756,7 @@ public class EngineService {
             return errorOccurredOnData;
         }
 
-        void startAutoSynchronization(Account account, List<Tag> tagList, List<Profile> profileList, String password)
+        void startAutoSynchronization(Account account, List<Tag> tagList, List<Profile> profileList, String password, int lastTagsUpdate, int lastProfileUpdate)
         {
             if(account == null || password == null)
                 throw new NullPointerException("account and password parameters can't be null");
@@ -773,6 +779,9 @@ public class EngineService {
 
                 profiles.add(tmp);
             }
+
+            this.lastTagsUpdate = lastTagsUpdate;
+            this.lastProfileUpdate = lastProfileUpdate;
 
             start();
         }
@@ -1123,6 +1132,40 @@ public class EngineService {
                     requestNumber.release();
                 } catch (InterruptedException e) {
                     Logger.getLogger(getClass().getName()).log(Level.INFO, "Interruption has occured :   " + e);
+                }
+
+                if(continueAutoSynchronization)
+                {
+                    try {
+                        int profileUpdate = NetworkServiceProvider.getNetworkService().getLastProfilesUpdateTime();
+                        int tagsUpdate = NetworkServiceProvider.getNetworkService().getLastTagsUpdateTime();
+
+                        if(tagsUpdate > lastTagsUpdate)
+                        {
+                            List<Tag> tagList = NetworkServiceProvider.getNetworkService().getTags();
+
+                            accountMutex.acquire();
+                            List<Tag> tagToUpdateImageFile = new LinkedList<>();
+                            //TODO finish the tag list update.
+                            accountMutex.release();
+
+                        }
+
+                        if(profileUpdate > lastProfileUpdate)
+                        {
+
+                        }
+                    }
+                    catch (NetworkServiceException e) {
+                        Logger.getLogger(getClass().getName()).log(Level.WARNING, "A network service error has occured : " + e.getMessage());
+                        e.printStackTrace();
+                    }
+                    catch (NotAuthenticatedException e) { // this case can't arrive.
+                        failedOnPassword = true;
+                        continueAutoSynchronization = false;
+                    } catch (InterruptedException e) { // will never occur.
+                        e.printStackTrace();
+                    }
                 }
             }
         }
