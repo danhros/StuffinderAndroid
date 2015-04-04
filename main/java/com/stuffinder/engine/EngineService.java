@@ -38,7 +38,7 @@ public class EngineService {
     List<Profile> profiles;
 
     /**
-     * the requests to do throw modifications on the server.
+     * The requests to do throw modifications on the server. Used when auto-synchronization is disabled.
      */
     List<Requests.Request> requests;
 
@@ -65,9 +65,9 @@ public class EngineService {
         if(currentAccount != null)
             logOut();
 
-        currentAccount = NetworkServiceProvider.getNetworkService().authenticate(pseudo, password);
-
         try {
+            currentAccount = NetworkServiceProvider.getNetworkService().authenticate(pseudo, password);
+            Logger.getLogger(getClass().getName()).log(Level.INFO, "account is : " + currentAccount);
             tags.addAll(NetworkServiceProvider.getNetworkService().getTags());
             for(Profile profile : NetworkServiceProvider.getNetworkService().getProfiles())
             {
@@ -95,6 +95,7 @@ public class EngineService {
             throw new NetworkServiceException("");
         } catch (NetworkServiceException e) {
             Logger.getLogger(getClass().getName()).log(Level.SEVERE, "A network service error has occured :    " + e.getMessage());
+            e.printStackTrace();
             currentAccount = null;
             tags.clear();
             profiles.clear();
@@ -659,6 +660,11 @@ public class EngineService {
 
             requestNumber = new Semaphore(0);
 
+            accountMutex = new Semaphore(1);
+
+            errorOccurredOnData = false;
+            failedOnPassword = false;
+
 //            requestQueue = new LinkedBlockingQueue<>();
 //            failedRequestQueue = new LinkedBlockingQueue<>();
 //            catchedExceptionQueue = new LinkedBlockingQueue<>();
@@ -986,9 +992,11 @@ public class EngineService {
                 } catch (NotAuthenticatedException e) { // this case can't arrive.
                     failedOnPassword = true;
                     continueAutoSynchronization = false;
+                    requestNumber.release();
                 } catch (NetworkServiceException e) {// maybe the connexion to the server has failed.
                     Logger.getLogger(getClass().getName()).log(Level.WARNING, "A network service error has occured : " + e.getMessage());
                     //TODO implement an optimized solution.
+                    requestNumber.release();
                 } catch (InterruptedException e) {
                     Logger.getLogger(getClass().getName()).log(Level.INFO, "Interruption has occured :   " + e);
                 }
