@@ -133,9 +133,12 @@ public class EngineService {
         return currentAccount;
     }
 
-    public void modifyEMailAddress(String newEmailAddress) throws NotAuthenticatedException, IllegalFieldException, NetworkServiceException {
+    public void modifyEMailAddress(String newEmailAddress) throws NotAuthenticatedException, IllegalFieldException, NetworkServiceException
+    {
         if(currentAccount == null)
             throw new NotAuthenticatedException();
+
+        checkForAccountUpdate();
 
         if(! FieldVerifier.verifyEMailAddress(newEmailAddress))
             throw  new IllegalFieldException(IllegalFieldException.EMAIL_ADDRESS, IllegalFieldException.REASON_VALUE_INCORRECT, newEmailAddress);
@@ -147,9 +150,12 @@ public class EngineService {
         }
     }
 
-    public void modifyPassword(String newPassword) throws NotAuthenticatedException, IllegalFieldException, NetworkServiceException {
+    public void modifyPassword(String newPassword) throws NotAuthenticatedException, IllegalFieldException, NetworkServiceException
+    {
         if(currentAccount == null)
             throw new NotAuthenticatedException();
+
+        checkForAccountUpdate();
 
         if(! FieldVerifier.verifyPassword(newPassword))
             throw  new IllegalFieldException(IllegalFieldException.PASSWORD, IllegalFieldException.REASON_VALUE_INCORRECT, newPassword);
@@ -157,9 +163,12 @@ public class EngineService {
         addRequest(new ModifyPasswordRequest(newPassword));
     }
 
-    public List<Tag> getTags() throws NotAuthenticatedException, NetworkServiceException {
+    public List<Tag> getTags() throws NotAuthenticatedException, NetworkServiceException
+    {
         if(currentAccount == null)
             throw new NotAuthenticatedException();
+
+        checkForAccountUpdate();
 
         return tags;
     }
@@ -167,6 +176,8 @@ public class EngineService {
     public Tag addTag(Tag tag) throws NotAuthenticatedException, IllegalFieldException, NetworkServiceException {
         if(currentAccount == null)
             throw new NotAuthenticatedException();
+
+        checkForAccountUpdate();
 
         if(! FieldVerifier.verifyTagUID(tag.getUid()))
             throw new IllegalFieldException(TAG_UID, REASON_VALUE_INCORRECT, tag.getUid());
@@ -196,6 +207,7 @@ public class EngineService {
         if(currentAccount == null)
             throw new NotAuthenticatedException();
 
+        checkForAccountUpdate();
 
         if(! FieldVerifier.verifyTagUID(tag.getUid()))
             throw new IllegalFieldException(TAG_UID, REASON_VALUE_INCORRECT, tag.getUid());
@@ -227,6 +239,8 @@ public class EngineService {
         if(currentAccount == null)
             throw new NotAuthenticatedException();
 
+        checkForAccountUpdate();
+
         if(! FieldVerifier.verifyTagUID(tag.getUid()))
             throw new IllegalFieldException(TAG_UID, REASON_VALUE_INCORRECT, tag.getUid());
         if(tag.getObjectImageName() != null && FieldVerifier.verifyImageFileName(newImageFileName) == false)
@@ -252,6 +266,8 @@ public class EngineService {
     {
         if(currentAccount == null)
             throw new NotAuthenticatedException();
+
+        checkForAccountUpdate();
 
         if(! FieldVerifier.verifyTagUID(tag.getUid()))
             throw new IllegalFieldException(TAG_UID, REASON_VALUE_INCORRECT, tag.getUid());
@@ -625,6 +641,24 @@ public class EngineService {
         return autoSynchronizer != null;
     }
 
+    private void checkForAccountUpdate()
+    {
+        if(isAutoSynchronizationEnabled() && autoSynchronizer.isErrorOccurredOnData())
+        {
+            AutoSynchronizer.AccountData accountData = autoSynchronizer.getAccountCopyUpdatedAfterErrorOnData();
+
+            currentAccount = accountData.getAccount();
+            currentPassword = accountData.getPassword();
+
+            tags.clear();
+            tags.addAll(currentAccount.getTags());
+            currentAccount.getTags().clear();
+
+            profiles.clear();
+            profiles.addAll(currentAccount.getProfiles());
+            currentAccount.getProfiles().clear();
+        }
+    }
 
     class AutoSynchronizer extends Thread
     {
@@ -706,8 +740,8 @@ public class EngineService {
             Object array[] = requests.toArray();
 
             List<Request> requestList = new ArrayList<>();
-            for(int i=0; i<array.length; i++)
-                requestList.add((Request) array[i]);
+            for (Object anArray : array)
+                requestList.add((Request) anArray);
 
             return requestList;
         }
@@ -743,7 +777,7 @@ public class EngineService {
             start();
         }
 
-        void restartAfterErrorOnPassword(String password)
+        void startAfterErrorOnPassword(String password)
         {
             if(isAlive() || ! failedOnPassword)
                 throw new IllegalStateException("Auto synchronizer already running.");
@@ -785,6 +819,96 @@ public class EngineService {
                 e.printStackTrace();
                 return null; // to be modified.
             }
+        }
+
+        class AccountData
+        {
+            private Account account;
+            private String password;
+
+            AccountData(Account account, String password)
+            {
+                this.account = account;
+                this.password = password;
+            }
+
+            public Account getAccount() {
+                return account;
+            }
+
+            public String getPassword() {
+                return password;
+            }
+        }
+
+        AccountData getAccountCopyUpdatedAfterErrorOnData()
+        {
+            try {
+                requestsMutex.acquire();
+                Account copy = getAccountCopy();
+
+                AccountData accountData = new AccountData(copy, password);
+
+                List<Request> requestList = getNotDoneRequests();
+                errorOccurredOnData = false;
+
+                requestsMutex.release();
+
+                for(Request request : requestList)
+                {
+
+                    switch (request.getRequestType()) {
+                        case MODIFY_EMAIL:
+                            ModifyEmailRequest modifyEmailRequest = (ModifyEmailRequest) request;
+
+                            account.setMailAddress(modifyEmailRequest.getNewEmailAddress());
+                            break;
+                        case MODIFY_PASSWORD:
+                            ModifyPasswordRequest modifyPasswordRequest = (ModifyPasswordRequest) request;
+                            password = modifyPasswordRequest.getNewPassword();
+                            break;
+                        case ADD_TAG:
+                            AddTagRequest addTagRequest = (AddTagRequest) request;
+                            if(! account.getTags().contains(addTagRequest.getNewTag()))
+                            {
+                                boolean applyAddition = true;
+                                for(Tag tag : account.getTags())
+                                    if(tag.getObjectName().equals(addTagRequest.getNewTag().getObjectName()))
+                                        applyAddition = false;
+                                if(applyAddition)
+                                    account.getTags().add(new Tag(addTagRequest.getNewTag().getUid(), addTagRequest.getNewTag().getObjectName(), addTagRequest.getNewTag().getObjectImageName()));
+                            }
+                            break;
+                        case MODIFY_TAG_OBJECT_NAME:
+                            ModifyTagObjectNameRequest modifyTagObjectNameRequest = (ModifyTagObjectNameRequest) request;
+                            int index = account.getTags().indexOf(modifyTagObjectNameRequest.getTag());
+                            if(index >= 0)
+                            {
+                                Tag tmp = account.getTags().get(index);
+                                boolean applyModification = true;
+                                for(Tag tag : account.getTags())
+                                    if(tag != tmp && tag.getObjectName().equals(modifyTagObjectNameRequest.getTag().getObjectName()))
+                                        applyModification = false;
+                                if(applyModification)
+                                    account.getTags().get(index).setObjectName(modifyTagObjectNameRequest.getNewObjectName());
+                            }
+                            break;
+                        case MODIFY_TAG_OBJECT_IMAGE:
+                            ModifyTagObjectImageRequest modifyTagObjectImageRequest = (ModifyTagObjectImageRequest) request;
+                            account.getTags().get(account.getTags().indexOf(modifyTagObjectImageRequest.getTag())).setObjectImageName(modifyTagObjectImageRequest.getNewObjectImageFilename());
+                            break;
+                        case REMOVE_TAG:
+                            RemoveTagRequest removeTagRequest = (RemoveTagRequest) request;
+                            account.getTags().remove(removeTagRequest.getTag());
+                            break;
+                    }
+                }
+
+                return accountData;
+            } catch (InterruptedException e) {
+                return null;
+            }
+
         }
 
 

@@ -14,7 +14,7 @@ import com.stuffinder.engine.EngineServiceProvider;
 import com.stuffinder.engine.NetworkServiceProvider;
 import com.stuffinder.exceptions.NetworkServiceException;
 import com.stuffinder.exceptions.NotAuthenticatedException;
-import com.stuffinder.webservice.NetworkService;
+import com.stuffinder.tests.NetworkServiceEmulator;
 
 
 public class Accueil extends BasicActivity {
@@ -41,7 +41,7 @@ public class Accueil extends BasicActivity {
         setContentView(R.layout.activity_accueil);
 
         EngineServiceProvider.setEngineService(EngineService.getInstance());
-        NetworkServiceProvider.setNetworkService(NetworkService.getInstance());
+        NetworkServiceProvider.setNetworkService(NetworkServiceEmulator.getInstance());
 
         try {
             NetworkServiceProvider.getNetworkService().initNetworkService();
