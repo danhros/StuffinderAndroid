@@ -4,6 +4,8 @@ import android.app.Activity;
 import android.widget.Toast;
 
 import java.util.Stack;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * Created by propriétaire on 28/03/2015.
@@ -12,7 +14,7 @@ public class BasicActivity extends Activity
 {
     private static Stack<BasicActivity> activityStack = new Stack<>();
 
-    public static Activity getCurrentActivity()
+    public static BasicActivity getCurrentActivity()
     {
         return activityStack.peek();
     }
@@ -22,6 +24,7 @@ public class BasicActivity extends Activity
     @Override
     protected void onStart() {
         super.onStart();
+        Logger.getLogger(this.getClass().getName()).log(Level.INFO, "Activity \"" + getClass() + "\" started.");
         activityStack.push(this);
     }
 
@@ -34,9 +37,11 @@ public class BasicActivity extends Activity
 
     @Override
     public void finish() {
+        Logger.getLogger(this.getClass().getName()).log(Level.INFO, "Activity \"" + getClass() + "\" finished.");
         activityStack.pop();
         super.finish();
     }
+
 
     public void showErrorMessage(String message)
     {

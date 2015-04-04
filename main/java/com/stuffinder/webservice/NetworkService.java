@@ -901,7 +901,7 @@ public class NetworkService implements NetworkServiceInterface {
     public List<Profile> getProfiles() throws NotAuthenticatedException,
             NetworkServiceException {
         // TODO Auto-generated method stub
-        return null;
+        return new ArrayList<>();
     }
 
     @Override

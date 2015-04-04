@@ -9,16 +9,24 @@ public class Requests {
 
     static abstract class  Request
     {
+        private static int nextRequestNumber = 0;
+
+        private final int requestNumber;
         private RequestType requestType;
 
         protected Request(RequestType requestType)
         {
+            requestNumber = nextRequestNumber++;
             this.requestType = requestType;
         }
 
-        RequestType getRequestType()
+        public RequestType getRequestType()
         {
             return requestType;
+        }
+
+        public int getRequestNumber() {
+            return requestNumber;
         }
     }
 

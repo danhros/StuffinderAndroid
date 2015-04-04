@@ -1,5 +1,6 @@
 package com.stuffinder.engine;
 
+import com.stuffinder.activities.BasicActivity;
 import com.stuffinder.data.Account;
 import com.stuffinder.data.Profile;
 import com.stuffinder.data.Tag;
@@ -14,9 +15,8 @@ import static com.stuffinder.engine.Requests.*;
 import static com.stuffinder.exceptions.IllegalFieldException.*;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
-import java.util.concurrent.BlockingQueue;
-import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.Semaphore;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -26,10 +26,13 @@ import java.util.logging.Logger;
  */
 public class EngineService {
 
-    Account currentAccount; // null if authentication done, non null otherwise.
-    String currentPassword;
 
-    Semaphore accountAccessMutex;
+    /**
+     * Mutex used to be sure auto-synchroniser and the rest of the engine service doesn't acces or modify account data at same time.
+     */
+
+    Account currentAccount; // non null if authentication done, null otherwise.
+    String currentPassword; // non null if authentication done, null otherwise.
 
     List<Tag> tags;
     List<Profile> profiles;
@@ -43,8 +46,6 @@ public class EngineService {
     {
         tags = new ArrayList<>();
         profiles = new ArrayList<>();
-
-        accountAccessMutex = new Semaphore(1);
 
         requests = new ArrayList<>();
     }
@@ -68,13 +69,21 @@ public class EngineService {
 
         try {
             tags.addAll(NetworkServiceProvider.getNetworkService().getTags());
-//            profiles.addAll(NetworkServiceProvider.getNetworkService().getProfiles()); //TODO add links with the tag object list.
+            for(Profile profile : NetworkServiceProvider.getNetworkService().getProfiles())
+            {
+                Profile tmp = new Profile(profile.getName());
+
+                for(Tag tag : profile.getTags())
+                    tmp.addTag(tags.get(tags.indexOf(tag)));
+
+                profiles.add(tmp);
+            }
             currentPassword = password;
 
             if(isAutoSynchronizationEnabled()) // to start auto-synchronization.
             {
                 Logger.getLogger(getClass().getName()).log(Level.INFO, "Start auto-synchronization thread");
-                autoSynchronizer.start();
+                autoSynchronizer.startAutoSynchronization(currentAccount, tags, profiles, currentPassword);
                 Logger.getLogger(getClass().getName()).log(Level.INFO, "Auto-synchronization thread started");
             }
 
@@ -98,11 +107,6 @@ public class EngineService {
     public void logOut() {
 
         Logger.getLogger(getClass().getName()).log(Level.INFO, "Log out will be done.");
-        currentAccount = null;
-        currentPassword = null;
-
-        tags.clear();
-        profiles.clear();
 
         if(isAutoSynchronizationEnabled()) // to stop and reinitialize auto-synchronization.
         {
@@ -111,6 +115,12 @@ public class EngineService {
             autoSynchronizer = new AutoSynchronizer();
             Logger.getLogger(getClass().getName()).log(Level.INFO, "Auto-synchronization thread stopped");
         }
+
+        currentAccount = null;
+        currentPassword = null;
+
+        tags.clear();
+        profiles.clear();
 
         Logger.getLogger(getClass().getName()).log(Level.INFO, "Log out operation done.");
     }
@@ -525,7 +535,7 @@ public class EngineService {
     }
 
 
-//TODO implement server version overwrite.
+//TODO implement server version overwrite. Not possible for the moment.
 
     public void overwriteServerVersion() throws NotAuthenticatedException, NetworkServiceException
     {
@@ -600,7 +610,7 @@ public class EngineService {
                     autoSynchronizer = null;
                     Logger.getLogger(getClass().getName()).log(Level.INFO, "Auto-synchronization stopped.");
                 } catch (InterruptedException e) {
-                    Logger.getLogger(getClass().getName()).log(Level.SEVERE, "Auto-synchronization stop failed becaose of an interruption : " + e);
+                    Logger.getLogger(getClass().getName()).log(Level.SEVERE, "Auto-synchronization stop failed because of an interruption : " + e);
                     e.printStackTrace();
                 }
             }
@@ -615,45 +625,70 @@ public class EngineService {
     }
 
 
-//TODO implement auto update about account information, tags and profiles.
-//TODO Implement a system for request errors processing.
     class AutoSynchronizer extends Thread
     {
-        private BlockingQueue<Request> requestQueue;
+//        private BlockingQueue<Request> requestQueue;
 
-        private BlockingQueue<Request> failedRequestQueue;
-        private BlockingQueue<IllegalFieldException> catchedExceptionQueue;
+        Semaphore requestsMutex;
+        private List<Request> requests;
+        private Semaphore requestNumber;
+
+        private boolean errorOccurredOnData;
+
+
+        private Semaphore accountMutex;
+
+        /**
+         * this account field is a version synchronized with server.
+         */
+        private Account account;
+        private String password;
+
+
+//        private BlockingQueue<Request> failedRequestQueue;
+//        private BlockingQueue<IllegalFieldException> catchedExceptionQueue;
 
         private boolean failedOnPassword;
-        private Semaphore requestNumber;
 
         private boolean continueAutoSynchronization;
 
         AutoSynchronizer()
         {
-            requestQueue = new LinkedBlockingQueue<>();
-            failedRequestQueue = new LinkedBlockingQueue<>();
-            catchedExceptionQueue = new LinkedBlockingQueue<>();
+            requestsMutex = new Semaphore(1);
+            requests = new LinkedList<>();
+
             requestNumber = new Semaphore(0);
+
+//            requestQueue = new LinkedBlockingQueue<>();
+//            failedRequestQueue = new LinkedBlockingQueue<>();
+//            catchedExceptionQueue = new LinkedBlockingQueue<>();
         }
 
         boolean appendRequest(Request request)
         {
-            boolean status = requestQueue.offer(request);
+            try {
+                requestsMutex.acquire();
+                requests.add(request);
+                requestsMutex.release();
 
-            requestNumber.release();
-            return status;
+                requestNumber.release();
+
+                return true;
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+                return false;
+            }
         }
 
-        BlockingQueue<Request> getFailedRequestQueue()
-        {
-            return failedRequestQueue;
-        }
-
-        BlockingQueue<IllegalFieldException> getCatchedExceptionQueue()
-        {
-            return catchedExceptionQueue;
-        }
+//        BlockingQueue<Request> getFailedRequestQueue()
+//        {
+//            return failedRequestQueue;
+//        }
+//
+//        BlockingQueue<IllegalFieldException> getCatchedExceptionQueue()
+//        {
+//            return catchedExceptionQueue;
+//        }
 
         boolean hasFailedOnPasswork()
         {
@@ -662,7 +697,7 @@ public class EngineService {
 
         List<Request> getNotDoneRequests()
         {
-            Object array[] = requestQueue.toArray();
+            Object array[] = requests.toArray();
 
             List<Request> requestList = new ArrayList<>();
             for(int i=0; i<array.length; i++)
@@ -671,71 +706,288 @@ public class EngineService {
             return requestList;
         }
 
+        boolean isErrorOccurredOnData() {
+            return errorOccurredOnData;
+        }
+
+        void startAutoSynchronization(Account account, List<Tag> tagList, List<Profile> profileList, String password)
+        {
+            if(account == null || password == null)
+                throw new NullPointerException("account and password parameters can't be null");
+
+            this.account = new Account(account.getPseudo(), account.getFirstName(), account.getLastName(), account.getEMailAddress());
+
+            List<Tag> tags = this.account.getTags();
+
+            for(Tag tag : tagList)
+                tags.add(new Tag(tag.getUid(), tag.getObjectName(), tag.getObjectImageName()));
+
+            List<Profile> profiles = this.account.getProfiles();
+
+            for(Profile profile : profileList)
+            {
+                Profile tmp = new Profile(profile.getName());
+
+                for(Tag tag : profile.getTags())
+                    tmp.addTag(tags.get(tags.indexOf(tag)));
+
+                profiles.add(tmp);
+            }
+
+            start();
+        }
+
+        void restartAfterErrorOnPassword(String password)
+        {
+            if(isAlive() || ! failedOnPassword)
+                throw new IllegalStateException("Auto synchronizer already running.");
+
+            failedOnPassword = false;
+
+            this.password = password;
+            start();
+        }
+
+        Account getAccountCopy()
+        {
+            try {
+                accountMutex.acquire();
+
+                Account accountCopy = new Account(account.getPseudo(), account.getFirstName(), account.getLastName(), account.getEMailAddress());
+
+                List<Tag> tags = accountCopy.getTags();
+
+                for(Tag tag : account.getTags())
+                    tags.add(new Tag(tag.getUid(), tag.getObjectName(), tag.getObjectImageName()));
+
+                List<Profile> profiles = accountCopy.getProfiles();
+
+                for(Profile profile : account.getProfiles())
+                {
+                    Profile tmp = new Profile(profile.getName());
+
+                    for(Tag tag : profile.getTags())
+                        tmp.addTag(tags.get(tags.indexOf(tag)));
+
+                    profiles.add(tmp);
+                }
+
+                accountMutex.release();
+
+                return accountCopy;
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+                return null; // to be modified.
+            }
+        }
+
+
         void stopAutoSynchronization()
         {
             continueAutoSynchronization = false;
             requestNumber.release();
         }
 
+        private void removeFirstRequest()
+        {
+            try {
+                requestsMutex.acquire();
+
+                requests.remove(0);
+                requestsMutex.release();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
+
+        private Request getFirstRequest()
+        {
+            try {
+                requestsMutex.acquire();
+
+                Request tmp = requests.get(0);
+                requestsMutex.release();
+
+                return tmp;
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+                return null;
+            }
+        }
+
+
         @Override
         public void run() {
             Request currentRequest = null;
             continueAutoSynchronization = true;
+            String errorMessage = null;
+
             while(continueAutoSynchronization)
             {
                 try {
                     requestNumber.acquire();
-                    if(continueAutoSynchronization == false) // means the method stopAutoSynchronization() has been called.
+                    if(! continueAutoSynchronization) // means the method stopAutoSynchronization() has been called.
                         return;
 
-                    currentRequest = requestQueue.peek();
+                    currentRequest = getFirstRequest();
 
                     Logger.getLogger(getClass().getName()).log(Level.INFO, "Begins request processing :   " + currentRequest);
 
                     switch (currentRequest.getRequestType()) {
                         case MODIFY_EMAIL:
-                            ModifyEmailRequest modifyEmailRequest = (ModifyEmailRequest) currentRequest;
-                            NetworkServiceProvider.getNetworkService().modifyEMailAddress(modifyEmailRequest.getNewEmailAddress());
+                            try
+                            {
+                                ModifyEmailRequest modifyEmailRequest = (ModifyEmailRequest) currentRequest;
+                                NetworkServiceProvider.getNetworkService().modifyEMailAddress(modifyEmailRequest.getNewEmailAddress());
+
+                                accountMutex.acquire();
+                                account.setMailAddress(modifyEmailRequest.getNewEmailAddress());
+                                accountMutex.release();
+                            }
+                            catch(IllegalFieldException e)
+                            {
+                                errorMessage = "Email address modification failed : \"" + e.getFieldValue() + "\" is incorrect.";
+                                throw e;
+                            }
                             break;
                         case MODIFY_PASSWORD:
-                            ModifyPasswordRequest modifyPasswordRequest = (ModifyPasswordRequest) currentRequest;
-                            NetworkServiceProvider.getNetworkService().modifyPassword(modifyPasswordRequest.getNewPassword());
+                            try
+                            {
+                                ModifyPasswordRequest modifyPasswordRequest = (ModifyPasswordRequest) currentRequest;
+                                NetworkServiceProvider.getNetworkService().modifyPassword(modifyPasswordRequest.getNewPassword());
+
+                                accountMutex.acquire();
+                                password = modifyPasswordRequest.getNewPassword();
+                                accountMutex.release();
+                            }
+                            catch(IllegalFieldException e)
+                            {
+                                errorMessage = "password modification failed : specified passxord is incorrect.";
+                                throw e;
+                            }
                             break;
                         case ADD_TAG:
-                            AddTagRequest addTagRequest = (AddTagRequest) currentRequest;
-                            NetworkServiceProvider.getNetworkService().addTag(addTagRequest.getNewTag());
+                            try
+                            {
+                                AddTagRequest addTagRequest = (AddTagRequest) currentRequest;
+                                NetworkServiceProvider.getNetworkService().addTag(addTagRequest.getNewTag());
+
+                                accountMutex.acquire();
+                                account.getTags().add(new Tag(addTagRequest.getNewTag().getUid(), addTagRequest.getNewTag().getObjectName(), addTagRequest.getNewTag().getObjectImageName()));
+                                accountMutex.release();
+                            }
+                            catch(IllegalFieldException e)
+                            {
+                                switch (e.getFieldId()) {
+                                    case IllegalFieldException.TAG_OBJECT_NAME:
+                                        if(e.getReason() == IllegalFieldException.REASON_VALUE_ALREADY_USED)
+                                            errorMessage = "Tag addition failed : object name \"" + e.getFieldValue() + "\" is already used.";
+                                        else
+                                            errorMessage = "Tag addition failed : object name \"" + e.getFieldValue() + "\" is incorrect.";
+                                        break;
+                                    case IllegalFieldException.TAG_OBJECT_IMAGE:
+                                        errorMessage = "Tag addition failed : image filename is incorrect";
+                                    case IllegalFieldException.TAG_UID:
+                                        if(e.getReason() == IllegalFieldException.REASON_VALUE_ALREADY_USED)
+                                            errorMessage = "Tag addition failed : tag UID \"" + e.getFieldValue() + "\" is already used.";
+                                        else
+                                            errorMessage = "Tag addition failed : tag UID \"" + e.getFieldValue() + "\" is incorrect.";
+                                        break;
+                                }
+                                throw e;
+                            }
                             break;
                         case MODIFY_TAG_OBJECT_NAME:
-                            ModifyTagObjectNameRequest modifyTagObjectNameRequest = (ModifyTagObjectNameRequest) currentRequest;
-                            NetworkServiceProvider.getNetworkService().modifyObjectName(modifyTagObjectNameRequest.getTag(), modifyTagObjectNameRequest.getNewObjectName());
+                            try
+                            {
+                                ModifyTagObjectNameRequest modifyTagObjectNameRequest = (ModifyTagObjectNameRequest) currentRequest;
+                                NetworkServiceProvider.getNetworkService().modifyObjectName(modifyTagObjectNameRequest.getTag(), modifyTagObjectNameRequest.getNewObjectName());
+
+                                accountMutex.acquire();
+                                account.getTags().get(account.getTags().indexOf(modifyTagObjectNameRequest.getTag())).setObjectName(modifyTagObjectNameRequest.getNewObjectName());
+                                accountMutex.release();
+                            }
+                            catch(IllegalFieldException e)
+                            {
+                                switch(e.getFieldId())
+                                {
+                                    case IllegalFieldException.TAG_UID:
+                                        if(e.getReason() == IllegalFieldException.REASON_VALUE_NOT_FOUND)
+                                            errorMessage = "Tag modification failed : tag with UID \"" + e.getFieldValue() + "\" is not found.";
+                                        else
+                                            errorMessage = "Tag modification failed : tag UID \"" + e.getFieldValue() + "\" is incorrect.";
+                                        break;
+                                    case IllegalFieldException.TAG_OBJECT_NAME:
+                                        if(e.getReason() == IllegalFieldException.REASON_VALUE_ALREADY_USED)
+                                            errorMessage = "Tag modification failed : object name \"" + e.getFieldValue() + "\" is already used.";
+                                        else
+                                            errorMessage = "Tag modification failed : object name \"" + e.getFieldValue() + "\" is incorrect.";
+                                        break;
+                                }
+                                throw e;
+                            }
                             break;
                         case MODIFY_TAG_OBJECT_IMAGE:
-                            ModifyTagObjectImageRequest modifyTagObjectImageRequest = (ModifyTagObjectImageRequest) currentRequest;
-                            NetworkServiceProvider.getNetworkService().modifyObjectImage(modifyTagObjectImageRequest.getTag(), modifyTagObjectImageRequest.getNewObjectImageFilename());
+                            try
+                            {
+                                ModifyTagObjectImageRequest modifyTagObjectImageRequest = (ModifyTagObjectImageRequest) currentRequest;
+                                NetworkServiceProvider.getNetworkService().modifyObjectImage(modifyTagObjectImageRequest.getTag(), modifyTagObjectImageRequest.getNewObjectImageFilename());
+
+                                accountMutex.acquire();
+                                account.getTags().get(account.getTags().indexOf(modifyTagObjectImageRequest.getTag())).setObjectImageName(modifyTagObjectImageRequest.getNewObjectImageFilename());
+                                accountMutex.release();
+                            }
+                            catch(IllegalFieldException e)
+                            {
+                                switch(e.getFieldId())
+                                {
+                                    case IllegalFieldException.TAG_UID:
+                                        if(e.getReason() == IllegalFieldException.REASON_VALUE_NOT_FOUND)
+                                            errorMessage = "Tag modification failed : tag with UID \"" + e.getFieldValue() + "\" is not found.";
+                                        else
+                                            errorMessage = "Tag modification failed : tag UID \"" + e.getFieldValue() + "\" is incorrect.";
+                                        break;
+                                    case IllegalFieldException.TAG_OBJECT_IMAGE :
+                                        errorMessage = "Tag addition failed : image filename is incorrect";
+                                        break;
+                                }
+                                throw e;
+                            }
                             break;
                         case REMOVE_TAG:
-                            RemoveTagRequest removeTagRequest = (RemoveTagRequest) currentRequest;
-                            NetworkServiceProvider.getNetworkService().removeTag(removeTagRequest.getTag());
+                            try
+                            {
+                                RemoveTagRequest removeTagRequest = (RemoveTagRequest) currentRequest;
+                                NetworkServiceProvider.getNetworkService().removeTag(removeTagRequest.getTag());
+
+                                accountMutex.acquire();
+                                account.getTags().remove(removeTagRequest.getTag());
+                                accountMutex.release();
+                            }
+                            catch(IllegalFieldException e) // the only possible error is about the tag UID.
+                            {
+                                if(e.getReason() == IllegalFieldException.REASON_VALUE_NOT_FOUND)
+                                    errorMessage = "Tag modification failed : tag with UID \"" + e.getFieldValue() + "\" is not found.";
+                                else
+                                    errorMessage = "Tag modification failed : tag UID \"" + e.getFieldValue() + "\" is incorrect.";
+
+                                throw e;
+                            }
                             break;
                     }
-                    requestQueue.take();
+                    removeFirstRequest();
 
                     Logger.getLogger(getClass().getName()).log(Level.INFO, "Ends request processing :   " + currentRequest);
                 } catch (IllegalFieldException e) { // means there is conflict between local version and server version.
-                    try {
-                        Logger.getLogger(getClass().getName()).log(Level.WARNING, "Exception of type IllegalFieldException has occurred while processing this request :   " + currentRequest);
-                        requestQueue.take();
-                        failedRequestQueue.put(currentRequest);
-                        catchedExceptionQueue.put(e);
-                    } catch (InterruptedException e1) {
-                        Logger.getLogger(getClass().getName()).log(Level.INFO, "Interruption has occured :   " + e1);
-                        e1.printStackTrace();
-                    }
-
+                    Logger.getLogger(getClass().getName()).log(Level.WARNING, "Exception of type IllegalFieldException has occurred while processing this request :   " + currentRequest + "   |   error message : " + errorMessage);
+                    removeFirstRequest();
+                    errorOccurredOnData = true;
+                    BasicActivity.getCurrentActivity().showErrorMessage(errorMessage);
                 } catch (NotAuthenticatedException e) { // this case can't arrive.
                     failedOnPassword = true;
                     continueAutoSynchronization = false;
                 } catch (NetworkServiceException e) {// maybe the connexion to the server has failed.
+                    Logger.getLogger(getClass().getName()).log(Level.WARNING, "A network service error has occured : " + e.getMessage());
                     //TODO implement an optimized solution.
                 } catch (InterruptedException e) {
                     Logger.getLogger(getClass().getName()).log(Level.INFO, "Interruption has occured :   " + e);
