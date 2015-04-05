@@ -18,4 +18,9 @@
     <string name="title_activity_tags">Gestion des puces</string>
     <string name="title_activity_localisation">Localisation</string>
 
+    <string name="password_dialog_title">Entrez votre mot de passe</string>
+    <string name="password_dialog_field_password">Mot de passe</string>
+    <string name="password_dialog_cancel_button">Annuler</string>
+    <string name="password_dialog_validate_button">Valider</string>
+
 </resources>

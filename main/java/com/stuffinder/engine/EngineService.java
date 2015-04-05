@@ -133,6 +133,8 @@ public class EngineService {
         if(currentAccount == null)
             throw new NotAuthenticatedException();
 
+        checkForAccountUpdate();
+
         return currentAccount;
     }
 
@@ -142,6 +144,7 @@ public class EngineService {
             throw new NotAuthenticatedException();
 
         checkForAccountUpdate();
+        checkAutoSynchronizerState();
 
         if(! FieldVerifier.verifyEMailAddress(newEmailAddress))
             throw  new IllegalFieldException(IllegalFieldException.EMAIL_ADDRESS, IllegalFieldException.REASON_VALUE_INCORRECT, newEmailAddress);
@@ -159,6 +162,7 @@ public class EngineService {
             throw new NotAuthenticatedException();
 
         checkForAccountUpdate();
+        checkAutoSynchronizerState();
 
         if(! FieldVerifier.verifyPassword(newPassword))
             throw  new IllegalFieldException(IllegalFieldException.PASSWORD, IllegalFieldException.REASON_VALUE_INCORRECT, newPassword);
@@ -172,6 +176,7 @@ public class EngineService {
             throw new NotAuthenticatedException();
 
         checkForAccountUpdate();
+        checkAutoSynchronizerState();
 
         return tags;
     }
@@ -181,12 +186,13 @@ public class EngineService {
             throw new NotAuthenticatedException();
 
         checkForAccountUpdate();
+        checkAutoSynchronizerState();
 
         if(! FieldVerifier.verifyTagUID(tag.getUid()))
             throw new IllegalFieldException(TAG_UID, REASON_VALUE_INCORRECT, tag.getUid());
         if(! FieldVerifier.verifyName(tag.getObjectName()))
             throw new IllegalFieldException(TAG_OBJECT_NAME, REASON_VALUE_INCORRECT, tag.getObjectName());
-        if(tag.getObjectImageName() != null && FieldVerifier.verifyImageFileName(tag.getObjectImageName()) == false)
+        if(tag.getObjectImageName() != null && tag.getObjectImageName().length() > 0 && ! FieldVerifier.verifyImageFileName(tag.getObjectImageName()))
             throw new IllegalFieldException(TAG_OBJECT_IMAGE, REASON_VALUE_INCORRECT, tag.getObjectImageName());
 
         for(Tag tmp : tags)
@@ -197,7 +203,7 @@ public class EngineService {
                 throw new IllegalFieldException(TAG_UID, REASON_VALUE_ALREADY_USED, tag.getUid());
         }
 
-        Tag tmp = new Tag(tag.getUid(), tag.getObjectName(), tag.getObjectImageName());
+        Tag tmp = new Tag(tag.getUid(), tag.getObjectName(), tag.getObjectImageName() == null ? "" : tag.getObjectImageName());
         tags.add(tmp);
 
         addRequest(new AddTagRequest(new Tag(tag.getUid(), tag.getObjectName(), tag.getObjectImageName()))); // new tag to be sure it will not be modified.
@@ -211,6 +217,7 @@ public class EngineService {
             throw new NotAuthenticatedException();
 
         checkForAccountUpdate();
+        checkAutoSynchronizerState();
 
         if(! FieldVerifier.verifyTagUID(tag.getUid()))
             throw new IllegalFieldException(TAG_UID, REASON_VALUE_INCORRECT, tag.getUid());
@@ -243,10 +250,13 @@ public class EngineService {
             throw new NotAuthenticatedException();
 
         checkForAccountUpdate();
+        checkAutoSynchronizerState();
+
+        newImageFileName = newImageFileName == null ? "" : newImageFileName;
 
         if(! FieldVerifier.verifyTagUID(tag.getUid()))
             throw new IllegalFieldException(TAG_UID, REASON_VALUE_INCORRECT, tag.getUid());
-        if(tag.getObjectImageName() != null && FieldVerifier.verifyImageFileName(newImageFileName) == false)
+        if(newImageFileName.length() > 0 && ! FieldVerifier.verifyImageFileName(newImageFileName))
             throw new IllegalFieldException(TAG_OBJECT_IMAGE, REASON_VALUE_INCORRECT, newImageFileName);
 
 
@@ -271,6 +281,7 @@ public class EngineService {
             throw new NotAuthenticatedException();
 
         checkForAccountUpdate();
+        checkAutoSynchronizerState();
 
         if(! FieldVerifier.verifyTagUID(tag.getUid()))
             throw new IllegalFieldException(TAG_UID, REASON_VALUE_INCORRECT, tag.getUid());
@@ -663,6 +674,27 @@ public class EngineService {
         }
     }
 
+    private void checkAutoSynchronizerState() throws NotAuthenticatedException {
+        if(isAutoSynchronizationEnabled() && autoSynchronizer.hasFailedOnPassword())
+        {
+            BasicActivity.getCurrentActivity().askPasswordAfterError();
+            throw new NotAuthenticatedException();
+        }
+    }
+
+    public void resolveErrorOnPassword(String password) throws NotAuthenticatedException {
+
+        if(password != null && FieldVerifier.verifyPassword(password))
+        {
+            currentPassword = password;
+            autoSynchronizer.startAfterErrorOnPassword(password);
+
+            Logger.getLogger(getClass().getName()).log(Level.INFO, "Password error resolved.");
+        }
+        else
+            throw new NotAuthenticatedException();
+    }
+
     class AutoSynchronizer extends Thread
     {
 //        private BlockingQueue<Request> requestQueue;
@@ -692,6 +724,8 @@ public class EngineService {
         private boolean failedOnPassword;
 
         private boolean continueAutoSynchronization;
+
+        Thread runningThread = null;
 
         AutoSynchronizer()
         {
@@ -736,7 +770,7 @@ public class EngineService {
 //            return catchedExceptionQueue;
 //        }
 
-        boolean hasFailedOnPasswork()
+        boolean hasFailedOnPassword()
         {
             return failedOnPassword;
         }
@@ -783,18 +817,21 @@ public class EngineService {
             this.lastTagsUpdate = lastTagsUpdate;
             this.lastProfileUpdate = lastProfileUpdate;
 
-            start();
+            runningThread = new Thread(this);
+            runningThread.start();
         }
 
         void startAfterErrorOnPassword(String password)
         {
-            if(isAlive() || ! failedOnPassword)
+            if(runningThread.isAlive() || ! failedOnPassword)
                 throw new IllegalStateException("Auto synchronizer already running.");
 
-            failedOnPassword = false;
-
             this.password = password;
-            start();
+
+            Logger.getLogger(getClass().getName()).log(Level.INFO, "Auto synchronization will be restarted after failure on password.");
+
+            runningThread = new Thread(this);
+            runningThread.start();
         }
 
         Account getAccountCopy()
@@ -957,13 +994,21 @@ public class EngineService {
 
         @Override
         public void run() {
+            if(failedOnPassword)
+                ; //TODO add a method to update password of the network service.
+
             Request currentRequest = null;
             continueAutoSynchronization = true;
+            failedOnPassword = false;
             String errorMessage = null;
+
+            Logger.getLogger(getClass().getName()).log(Level.INFO, "Auto synchronization is started.");
 
             while(continueAutoSynchronization)
             {
                 try {
+
+                    Logger.getLogger(getClass().getName()).log(Level.INFO, "Will wait for another request to process.");
                     requestNumber.acquire();
                     if(! continueAutoSynchronization) // means the method stopAutoSynchronization() has been called.
                         return;
@@ -1124,8 +1169,18 @@ public class EngineService {
                     BasicActivity.getCurrentActivity().showErrorMessage(errorMessage);
                 } catch (NotAuthenticatedException e) { // this case can't arrive.
                     failedOnPassword = true;
+                    Logger.getLogger(getClass().getName()).log(Level.WARNING, "An authentication error has occured (it has failed on password.)");
                     continueAutoSynchronization = false;
                     requestNumber.release();
+//                    new Thread() {
+//                        @Override
+//                        public void run() {
+                            BasicActivity.getCurrentActivity().askPasswordAfterError();
+//                        }
+//                    }.start();
+
+                    Logger.getLogger(getClass().getName()).log(Level.WARNING, "Thread to ask password started.");
+
                 } catch (NetworkServiceException e) {// maybe the connexion to the server has failed.
                     Logger.getLogger(getClass().getName()).log(Level.WARNING, "A network service error has occured : " + e.getMessage());
                     //TODO implement an optimized solution.
@@ -1136,9 +1191,17 @@ public class EngineService {
 
                 if(continueAutoSynchronization)
                     checkForUpdates();
+
+                Logger.getLogger(getClass().getName()).log(Level.WARNING, "now up to date.");
             }
+
+            Logger.getLogger(getClass().getName()).log(Level.INFO, "Auto synchronization is ending.");
         }
 
+        /**
+         * Check if the local data are up to date or not. If it's not this case, it updates the local data.
+         * The use of this method supposes the account data will not be modified on the server until this method call is not finished.
+         */
         private void checkForUpdates()
         {
             try {
@@ -1146,7 +1209,7 @@ public class EngineService {
                 int tagsUpdate = NetworkServiceProvider.getNetworkService().getLastTagsUpdateTime();
 
                 List<Tag> tagList = null;
-                List<Profile> profileList;
+                List<Profile> profileList = null;
 
                 //TODO update for personnal information, like email address.
 
@@ -1170,16 +1233,16 @@ public class EngineService {
                     {
                         int res = tagList.get(i).getUid().compareTo(account.getTags().get(j).getUid());
 
-                        if(res == 0)
+                        if(res == 0) // the tag is in the two lists. the fields of this will be updated.
                         {
-                            if(! tagList.get(i).getObjectImageName().equals(account.getTags().get(j).getObjectImageName()))
+                            if(! tagList.get(i).getObjectImageName().equals(account.getTags().get(j).getObjectImageName())) // update image file if necessary.
                             {
                                 //TODO add code to delete old image file.
                                 account.getTags().get(j).setObjectImageName(tagList.get(i).getObjectImageName());
                                 tagToUpdateImageFile.add(account.getTags().get(j));
                             }
 
-                            account.getTags().get(j).setObjectName(tagList.get(i).getObjectName());
+                            account.getTags().get(j).setObjectName(tagList.get(i).getObjectName()); // update object name.
 
                             i++;
                             j++;
@@ -1195,7 +1258,7 @@ public class EngineService {
                         else // a tag has been removed.
                         {
                             account.getTags().remove(j);
-                            //TODO add code to delete associted image file.
+                            //TODO add code to delete associated image file.
                             size--;
                         }
                     }
@@ -1214,7 +1277,20 @@ public class EngineService {
                             account.getTags().remove(j);
                 }
 
-                //TODO implement the profiles update and make links with tags of the tag list.
+                if(profileList != null)
+                {
+                    account.getProfiles().clear();
+                    SortUtility.sortTagListByUID(account.getTags());
+
+                    for(Profile profile : profileList)
+                    {
+                        Profile tmp = new Profile(profile.getName());
+                        for(Tag tag : profile.getTags())
+                            tmp.getTags().add(SortUtility.getTagByUID(account.getTags(), tag.getUid()));
+
+                        account.getProfiles().add(tmp);
+                    }
+                }
 
                 accountMutex.release();
             }

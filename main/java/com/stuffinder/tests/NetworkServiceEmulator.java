@@ -1,9 +1,14 @@
 package com.stuffinder.tests;
 
+import java.net.URI;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Random;
 import java.util.Set;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import com.stuffinder.data.Account;
 import com.stuffinder.data.Profile;
@@ -161,7 +166,9 @@ public class NetworkServiceEmulator implements NetworkServiceInterface
 	{
 		if(authenticatedAccount == null)
 			throw new NotAuthenticatedException();
-		
+
+        simulateRealBehavior();
+
 		if(! FieldVerifier.verifyEMailAddress(emailAddress))
 			throw new IllegalFieldException(IllegalFieldException.EMAIL_ADDRESS, IllegalFieldException.REASON_VALUE_INCORRECT, emailAddress);
 		
@@ -172,6 +179,8 @@ public class NetworkServiceEmulator implements NetworkServiceInterface
 	{
 		if(authenticatedAccount == null)
 			throw new NotAuthenticatedException();
+
+        simulateRealBehavior();
 
 		if(! FieldVerifier.verifyPassword(newPassword))
 			throw new IllegalFieldException(IllegalFieldException.PASSWORD, IllegalFieldException.REASON_VALUE_INCORRECT, newPassword, "Password must contain 6 characters or more.");
@@ -193,14 +202,16 @@ public class NetworkServiceEmulator implements NetworkServiceInterface
 	{
 		if(authenticatedAccount == null)
 			throw new NotAuthenticatedException();
-		
+
+        simulateRealBehavior();
+
 		if(! FieldVerifier.verifyTagUID(tag.getUid()))
 			throw new IllegalFieldException(IllegalFieldException.TAG_UID, IllegalFieldException.REASON_VALUE_INCORRECT, tag.getUid());
 		
 		if(! FieldVerifier.verifyTagName(tag.getObjectName()))
 			throw new IllegalFieldException(IllegalFieldException.TAG_OBJECT_NAME, IllegalFieldException.REASON_VALUE_INCORRECT, tag.getObjectName());
 		
-		if(tag.getObjectImageName() != null && FieldVerifier.verifyImageFileName(tag.getObjectImageName()) == false)
+		if(tag.getObjectImageName() != null && tag.getObjectImageName().length() > 0 && ! FieldVerifier.verifyImageFileName(tag.getObjectImageName()))
 			throw new IllegalFieldException(IllegalFieldException.TAG_OBJECT_IMAGE, IllegalFieldException.REASON_VALUE_INCORRECT, tag.getObjectImageName());
 		
 		for(Tag tmp : authenticatedAccount.getTags())
@@ -235,6 +246,8 @@ public class NetworkServiceEmulator implements NetworkServiceInterface
         if(authenticatedAccount == null)
             throw new NotAuthenticatedException();
 
+        simulateRealBehavior();
+
         if(! FieldVerifier.verifyTagUID(tag.getUid()))
             throw new IllegalFieldException(TAG_UID, REASON_VALUE_INCORRECT, tag.getUid());
 
@@ -255,7 +268,8 @@ public class NetworkServiceEmulator implements NetworkServiceInterface
 	{
 		if(authenticatedAccount == null)
 			throw new NotAuthenticatedException();
-		
+
+        simulateRealBehavior();
 
 		if(! FieldVerifier.verifyTagUID(tag.getUid()))
 			throw new IllegalFieldException(IllegalFieldException.TAG_UID, IllegalFieldException.REASON_VALUE_INCORRECT, tag.getUid());
@@ -283,12 +297,13 @@ public class NetworkServiceEmulator implements NetworkServiceInterface
 	{
 		if(authenticatedAccount == null)
 			throw new NotAuthenticatedException();
-		
+
+        simulateRealBehavior();
 
 		if(! FieldVerifier.verifyTagUID(tag.getUid()))
 			throw new IllegalFieldException(IllegalFieldException.TAG_UID, IllegalFieldException.REASON_VALUE_INCORRECT, tag.getUid());
 
-		if(tag.getObjectImageName() != null && FieldVerifier.verifyImageFileName(newImageFileName) == false)
+		if(newImageFileName != null && newImageFileName.length() > 0 && ! FieldVerifier.verifyImageFileName(newImageFileName))
 			throw new IllegalFieldException(IllegalFieldException.TAG_OBJECT_IMAGE, IllegalFieldException.REASON_VALUE_INCORRECT, newImageFileName);
 		
 		
@@ -298,7 +313,7 @@ public class NetworkServiceEmulator implements NetworkServiceInterface
 			throw new IllegalFieldException(IllegalFieldException.TAG_UID, IllegalFieldException.REASON_VALUE_NOT_FOUND, tag.getUid());
 		else
 		{
-			authenticatedAccount.getTags().get(index).setObjectImageName(newImageFileName);
+			authenticatedAccount.getTags().get(index).setObjectImageName(newImageFileName == null ? "" : newImageFileName);
 			return authenticatedAccount.getTags().get(index);
 		}
 	}
@@ -308,6 +323,7 @@ public class NetworkServiceEmulator implements NetworkServiceInterface
 		if(authenticatedAccount == null)
 			throw new NotAuthenticatedException();
 
+        simulateRealBehavior();
 
 		if(! FieldVerifier.verifyTagUID(tag.getUid()))
 			throw new IllegalFieldException(IllegalFieldException.TAG_UID, IllegalFieldException.REASON_VALUE_INCORRECT, tag.getUid());
@@ -337,7 +353,9 @@ public class NetworkServiceEmulator implements NetworkServiceInterface
 	{
 		if(authenticatedAccount == null)
 			throw new NotAuthenticatedException();
-		
+
+        simulateRealBehavior();
+
 		if(!FieldVerifier.verifyName(profileName))
 			throw new IllegalFieldException(PROFILE_NAME, REASON_VALUE_INCORRECT, profileName);
 		
@@ -357,6 +375,8 @@ public class NetworkServiceEmulator implements NetworkServiceInterface
 	{
 		if(authenticatedAccount == null)
 			throw new NotAuthenticatedException();
+
+        simulateRealBehavior();
 
 		if(!FieldVerifier.verifyName(profileName))
 			throw new IllegalFieldException(PROFILE_NAME, REASON_VALUE_INCORRECT, profileName);
@@ -393,7 +413,8 @@ public class NetworkServiceEmulator implements NetworkServiceInterface
 		if(authenticatedAccount == null)
 			throw new NotAuthenticatedException();
 
-		
+        simulateRealBehavior();
+
 		if(!FieldVerifier.verifyName(profile.getName()))
 			throw new IllegalFieldException(PROFILE_NAME, REASON_VALUE_INCORRECT, profile.getName());
 		
@@ -427,6 +448,8 @@ public class NetworkServiceEmulator implements NetworkServiceInterface
 	{
 		if(authenticatedAccount == null)
 			throw new NotAuthenticatedException();
+
+        simulateRealBehavior();
 
 		if(!FieldVerifier.verifyName(profile.getName()))
 			throw new IllegalFieldException(PROFILE_NAME, REASON_VALUE_INCORRECT, profile.getName());
@@ -470,7 +493,8 @@ public class NetworkServiceEmulator implements NetworkServiceInterface
 		if(authenticatedAccount == null)
 			throw new NotAuthenticatedException();
 
-		
+        simulateRealBehavior();
+
 		if(!FieldVerifier.verifyName(profile.getName()))
 			throw new IllegalFieldException(PROFILE_NAME, REASON_VALUE_INCORRECT, profile.getName());
 		
@@ -506,6 +530,8 @@ public class NetworkServiceEmulator implements NetworkServiceInterface
 	{
 		if(authenticatedAccount == null)
 			throw new NotAuthenticatedException();
+
+        simulateRealBehavior();
 
 		if(!FieldVerifier.verifyName(profile.getName()))
 			throw new IllegalFieldException(PROFILE_NAME, REASON_VALUE_INCORRECT, profile.getName());
@@ -549,6 +575,8 @@ public class NetworkServiceEmulator implements NetworkServiceInterface
 		if(authenticatedAccount == null)
 			throw new NotAuthenticatedException();
 
+        simulateRealBehavior();
+
 		if(!FieldVerifier.verifyName(profile.getName()))
 			throw new IllegalFieldException(PROFILE_NAME, REASON_VALUE_INCORRECT, profile.getName());
 		
@@ -589,7 +617,8 @@ public class NetworkServiceEmulator implements NetworkServiceInterface
 		if(authenticatedAccount == null)
 			throw new NotAuthenticatedException();
 
-		
+        simulateRealBehavior();
+
 		if(!FieldVerifier.verifyName(profile.getName()))
 			throw new IllegalFieldException(PROFILE_NAME, REASON_VALUE_INCORRECT, profile.getName());
 		
@@ -608,7 +637,8 @@ public class NetworkServiceEmulator implements NetworkServiceInterface
 		if(authenticatedAccount == null)
 			throw new NotAuthenticatedException();
 
-		
+        simulateRealBehavior();
+
 		if(!FieldVerifier.verifyName(profileName))
 			throw new IllegalFieldException(PROFILE_NAME, REASON_VALUE_INCORRECT, profileName);
 		
@@ -625,7 +655,7 @@ public class NetworkServiceEmulator implements NetworkServiceInterface
 	{
 		if(authenticatedAccount == null)
 			throw new NotAuthenticatedException();
-		
+
 		return authenticatedAccount.getProfiles();
 	}
 
@@ -670,6 +700,8 @@ public class NetworkServiceEmulator implements NetworkServiceInterface
         if(authenticatedAccount == null)
             throw new NotAuthenticatedException();
 
+        simulateRealBehavior();
+
         if(!FieldVerifier.verifyName(newProfileName))
             throw new IllegalFieldException(PROFILE_NAME, REASON_VALUE_INCORRECT, newProfileName);
 
@@ -687,6 +719,28 @@ public class NetworkServiceEmulator implements NetworkServiceInterface
         tmp.setName(newProfileName);
 
         return tmp;
+    }
+
+    private Random random = new Random();
+
+    private void simulateRealBehavior() throws NetworkServiceException, NotAuthenticatedException {
+        try {
+            Thread.sleep((long) 100 * (random.nextInt(20) + 4), 0);
+        } catch (InterruptedException e) {
+            Logger.getLogger(getClass().getName()).log(Level.WARNING, "Sleep operation interrupted.");
+        }
+
+        if(random.nextInt(15) == 0)
+        {
+            Logger.getLogger(getClass().getName()).log(Level.INFO, "Network service emulator will simulate a network problem.");
+            throw new NetworkServiceException("A network error has occured.");
+        }
+
+        if(random.nextInt(4) == 0)
+        {
+            Logger.getLogger(getClass().getName()).log(Level.INFO, "Network service emulator will simulate an authentication problem, i.e. the password is wrong.");
+            throw new NotAuthenticatedException();
+        }
     }
 
     public static NetworkServiceEmulator getInstance()
