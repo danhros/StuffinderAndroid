@@ -45,7 +45,7 @@ public class BasicActivity extends Activity
 
     public void showErrorMessage(String message)
     {
-        Toast.makeText(this, message, Toast.LENGTH_LONG);
+        Toast.makeText(this, message, Toast.LENGTH_LONG).show();
     }
 
 }

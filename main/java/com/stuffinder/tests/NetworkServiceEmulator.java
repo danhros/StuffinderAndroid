@@ -630,6 +630,15 @@ public class NetworkServiceEmulator implements NetworkServiceInterface
 	}
 
     /**
+     * @return the last update time about account personnal information .
+     * @throws com.stuffinder.exceptions.NetworkServiceException
+     */
+    @Override
+    public int getLastPersonnalInformationUpdateTime() throws NetworkServiceException, NotAuthenticatedException {
+        return 0;
+    }
+
+    /**
      * @return the last update time about tags.
      * @throws com.stuffinder.exceptions.NetworkServiceException
      */

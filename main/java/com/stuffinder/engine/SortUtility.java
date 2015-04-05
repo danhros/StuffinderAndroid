@@ -40,4 +40,28 @@ public class SortUtility {
             }
         });
     }
+
+    public static Tag getTagByUID(List<Tag> tagList, String UID)
+    {
+        return getTagByUID1(tagList, UID, 0, tagList.size() - 1);
+    }
+
+    private static Tag getTagByUID1(List<Tag> tagList, String UID, int begin, int end)
+    {
+        if(begin > end)
+            return null;
+
+        int middle = (end - begin)/2 + begin;
+
+        Tag middleTag = tagList.get(middle);
+        int res = UID.compareTo(middleTag.getUid());
+
+        if(res == 0)
+            return middleTag;
+        else if(res > 0) // means middleTag.getUID() < UID
+            return getTagByUID1(tagList, UID, middle + 1, end);
+        else
+            return getTagByUID1(tagList, UID, begin, middle - 1);
+
+    }
 }

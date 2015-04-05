@@ -1135,38 +1135,98 @@ public class EngineService {
                 }
 
                 if(continueAutoSynchronization)
+                    checkForUpdates();
+            }
+        }
+
+        private void checkForUpdates()
+        {
+            try {
+                int profileUpdate = NetworkServiceProvider.getNetworkService().getLastProfilesUpdateTime();
+                int tagsUpdate = NetworkServiceProvider.getNetworkService().getLastTagsUpdateTime();
+
+                List<Tag> tagList = null;
+                List<Profile> profileList;
+
+                //TODO update for personnal information, like email address.
+
+                if(tagsUpdate > lastTagsUpdate) // the tag list isn't up to date.
+                    tagList = NetworkServiceProvider.getNetworkService().getTags();
+
+                if(profileUpdate > lastProfileUpdate) // the profile list isn't up to date.
+                    profileList = NetworkServiceProvider.getNetworkService().getProfiles();
+
+                accountMutex.acquire();
+                if(tagList != null) // there is an update to apply for tags.
                 {
-                    try {
-                        int profileUpdate = NetworkServiceProvider.getNetworkService().getLastProfilesUpdateTime();
-                        int tagsUpdate = NetworkServiceProvider.getNetworkService().getLastTagsUpdateTime();
+                    List<Tag> tagToUpdateImageFile = new LinkedList<>();
+                    SortUtility.sortTagListByUID(tagList);
+                    SortUtility.sortTagListByUID(account.getTags());
 
-                        if(tagsUpdate > lastTagsUpdate)
+                    int size = account.getTags().size();
+                    int i, j;
+
+                    for(i=0, j=0; i<tagList.size() && j<size;)
+                    {
+                        int res = tagList.get(i).getUid().compareTo(account.getTags().get(j).getUid());
+
+                        if(res == 0)
                         {
-                            List<Tag> tagList = NetworkServiceProvider.getNetworkService().getTags();
+                            if(! tagList.get(i).getObjectImageName().equals(account.getTags().get(j).getObjectImageName()))
+                            {
+                                //TODO add code to delete old image file.
+                                account.getTags().get(j).setObjectImageName(tagList.get(i).getObjectImageName());
+                                tagToUpdateImageFile.add(account.getTags().get(j));
+                            }
 
-                            accountMutex.acquire();
-                            List<Tag> tagToUpdateImageFile = new LinkedList<>();
-                            //TODO finish the tag list update.
-                            accountMutex.release();
+                            account.getTags().get(j).setObjectName(tagList.get(i).getObjectName());
 
+                            i++;
+                            j++;
                         }
-
-                        if(profileUpdate > lastProfileUpdate)
+                        else if(res > 0) //there is a new tag.
                         {
+                            Tag tag = new Tag(tagList.get(i).getUid(), tagList.get(i).getObjectName(), tagList.get(i).getObjectImageName());
+                            account.getTags().add(tag);
+                            tagToUpdateImageFile.add(tag);
 
+                            i++;
+                        }
+                        else // a tag has been removed.
+                        {
+                            account.getTags().remove(j);
+                            //TODO add code to delete associted image file.
+                            size--;
                         }
                     }
-                    catch (NetworkServiceException e) {
-                        Logger.getLogger(getClass().getName()).log(Level.WARNING, "A network service error has occured : " + e.getMessage());
-                        e.printStackTrace();
+
+                    if(i < tagList.size()) // there is new tags to add.
+                    {
+                        for(; i < tagList.size(); i++)
+                        {
+                            Tag tag = new Tag(tagList.get(i).getUid(), tagList.get(i).getObjectName(), tagList.get(i).getObjectImageName());
+                            account.getTags().add(tag);
+                            tagToUpdateImageFile.add(tag);
+                        }
                     }
-                    catch (NotAuthenticatedException e) { // this case can't arrive.
-                        failedOnPassword = true;
-                        continueAutoSynchronization = false;
-                    } catch (InterruptedException e) { // will never occur.
-                        e.printStackTrace();
-                    }
+                    else if(j < size) // there is tags to remove
+                        for(; j<size; size--)
+                            account.getTags().remove(j);
                 }
+
+                //TODO implement the profiles update and make links with tags of the tag list.
+
+                accountMutex.release();
+            }
+            catch (NetworkServiceException e) {
+                Logger.getLogger(getClass().getName()).log(Level.WARNING, "A network service error has occured : " + e.getMessage());
+                e.printStackTrace();
+            }
+            catch (NotAuthenticatedException e) { // this case can't arrive.
+                failedOnPassword = true;
+                continueAutoSynchronization = false;
+            } catch (InterruptedException e) { // will never occur.
+                e.printStackTrace();
             }
         }
     }

@@ -414,6 +414,13 @@ public interface NetworkServiceInterface
 
     /**
      *
+     * @return the last update time about account personnal information .
+     * @throws NetworkServiceException
+     */
+    public int getLastPersonnalInformationUpdateTime() throws NetworkServiceException, NotAuthenticatedException;
+
+    /**
+     *
      * @return the last update time about tags.
      * @throws NetworkServiceException
      */
