@@ -199,11 +199,11 @@ public class NetworkServiceEmulator implements NetworkServiceInterface
 		
 		if(! FieldVerifier.verifyTagName(tag.getObjectName()))
 			throw new IllegalFieldException(IllegalFieldException.TAG_OBJECT_NAME, IllegalFieldException.REASON_VALUE_INCORRECT, tag.getObjectName());
-		
-		if(tag.getObjectImageName() != null && FieldVerifier.verifyImageFileName(tag.getObjectImageName()) == false)
-			throw new IllegalFieldException(IllegalFieldException.TAG_OBJECT_IMAGE, IllegalFieldException.REASON_VALUE_INCORRECT, tag.getObjectImageName());
-		
-		for(Tag tmp : authenticatedAccount.getTags())
+
+        if(tag.getObjectImageName() != null && tag.getObjectImageName().length() > 0 && ! FieldVerifier.verifyImageFileName(tag.getObjectImageName()))
+            throw new IllegalFieldException(IllegalFieldException.TAG_OBJECT_IMAGE, IllegalFieldException.REASON_VALUE_INCORRECT, tag.getObjectImageName());
+
+        for(Tag tmp : authenticatedAccount.getTags())
 			if(tmp.getObjectName().equals(tag.getObjectName()))
 				throw new IllegalFieldException(IllegalFieldException.TAG_OBJECT_NAME, IllegalFieldException.REASON_VALUE_ALREADY_USED, tag.getObjectName());
 
@@ -283,24 +283,23 @@ public class NetworkServiceEmulator implements NetworkServiceInterface
 	{
 		if(authenticatedAccount == null)
 			throw new NotAuthenticatedException();
-		
 
-		if(! FieldVerifier.verifyTagUID(tag.getUid()))
-			throw new IllegalFieldException(IllegalFieldException.TAG_UID, IllegalFieldException.REASON_VALUE_INCORRECT, tag.getUid());
+        if(! FieldVerifier.verifyTagUID(tag.getUid()))
+            throw new IllegalFieldException(IllegalFieldException.TAG_UID, IllegalFieldException.REASON_VALUE_INCORRECT, tag.getUid());
 
-		if(tag.getObjectImageName() != null && FieldVerifier.verifyImageFileName(newImageFileName) == false)
-			throw new IllegalFieldException(IllegalFieldException.TAG_OBJECT_IMAGE, IllegalFieldException.REASON_VALUE_INCORRECT, newImageFileName);
-		
-		
-		int index = authenticatedAccount.getTags().indexOf(tag);
-		
-		if(index < 0)
-			throw new IllegalFieldException(IllegalFieldException.TAG_UID, IllegalFieldException.REASON_VALUE_NOT_FOUND, tag.getUid());
-		else
-		{
-			authenticatedAccount.getTags().get(index).setObjectImageName(newImageFileName);
-			return authenticatedAccount.getTags().get(index);
-		}
+        if(newImageFileName != null && newImageFileName.length() > 0 && ! FieldVerifier.verifyImageFileName(newImageFileName))
+            throw new IllegalFieldException(IllegalFieldException.TAG_OBJECT_IMAGE, IllegalFieldException.REASON_VALUE_INCORRECT, newImageFileName);
+
+
+        int index = authenticatedAccount.getTags().indexOf(tag);
+
+        if(index < 0)
+            throw new IllegalFieldException(IllegalFieldException.TAG_UID, IllegalFieldException.REASON_VALUE_NOT_FOUND, tag.getUid());
+        else
+        {
+            authenticatedAccount.getTags().get(index).setObjectImageName(newImageFileName == null ? "" : newImageFileName);
+            return authenticatedAccount.getTags().get(index);
+        }
 	}
 	
 	public void removeTag(Tag tag) throws NotAuthenticatedException, IllegalFieldException, NetworkServiceException
