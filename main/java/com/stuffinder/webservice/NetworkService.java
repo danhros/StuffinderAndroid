@@ -958,6 +958,15 @@ public class NetworkService implements NetworkServiceInterface {
         return null;
     }
 
+    /**
+     * @return the last update time about account personnal information .
+     * @throws com.stuffinder.exceptions.NetworkServiceException
+     */
+    @Override
+    public int getLastPersonnalInformationUpdateTime() throws NetworkServiceException, NotAuthenticatedException {
+        return 0;
+    }
+
     @Override
     public int getLastTagsUpdateTime() throws NetworkServiceException {
         return 0;

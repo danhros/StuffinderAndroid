@@ -1,5 +1,7 @@
 package com.stuffinder.engine;
 
+import android.content.Context;
+
 import com.stuffinder.activities.BasicActivity;
 import com.stuffinder.data.Account;
 import com.stuffinder.data.Profile;
@@ -14,6 +16,7 @@ import com.stuffinder.exceptions.SynchronisationConflictException;
 import static com.stuffinder.engine.Requests.*;
 import static com.stuffinder.exceptions.IllegalFieldException.*;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
@@ -50,8 +53,18 @@ public class EngineService {
         requests = new ArrayList<>();
     }
 
-    public void initEngineService() throws NetworkServiceException {
-        // nothing to do.
+    public void initEngineService(Context context) throws EngineServiceException {
+        File imageFolder = new File(context.getApplicationContext().getFilesDir().getAbsolutePath() + File.separator + "images");
+
+        if(! (imageFolder.exists() || imageFolder.mkdir()))
+        {
+            Logger.getLogger(getClass().getName()).log(Level.SEVERE, "Error : image folder initialization failed : " + imageFolder.getAbsolutePath());
+            throw  new EngineServiceException("Error : image folder initialization failed.");
+        }
+
+        Constants.setImageFolder(imageFolder);
+
+        Logger.getLogger(getClass().getName()).log(Level.INFO, "Directory for images initialized : " + imageFolder.getAbsolutePath());
     }
 
     public void createAccount(Account newAccount, String newPassword) throws IllegalFieldException, NetworkServiceException {

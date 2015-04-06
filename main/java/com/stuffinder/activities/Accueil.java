@@ -12,6 +12,7 @@ import com.stuffinder.R;
 import com.stuffinder.engine.EngineService;
 import com.stuffinder.engine.EngineServiceProvider;
 import com.stuffinder.engine.NetworkServiceProvider;
+import com.stuffinder.exceptions.EngineServiceException;
 import com.stuffinder.exceptions.NetworkServiceException;
 import com.stuffinder.exceptions.NotAuthenticatedException;
 import com.stuffinder.tests.NetworkServiceEmulator;
@@ -45,12 +46,15 @@ public class Accueil extends BasicActivity {
 
         try {
             NetworkServiceProvider.getNetworkService().initNetworkService();
-            EngineServiceProvider.getEngineService().initEngineService();
+            EngineServiceProvider.getEngineService().initEngineService(this);
             try {
                 EngineServiceProvider.getEngineService().setAutoSynchronization(true);
             } catch (NotAuthenticatedException e) { // this error will never occur.
             }
         } catch (NetworkServiceException e) {
+            Toast.makeText(this, "L'initialisation de l'application a échoué. L'application va être arrêté.", Toast.LENGTH_LONG).show();
+            finish();
+        } catch (EngineServiceException e) {
             Toast.makeText(this, "L'initialisation de l'application a échoué. L'application va être arrêté.", Toast.LENGTH_LONG).show();
             finish();
         }
