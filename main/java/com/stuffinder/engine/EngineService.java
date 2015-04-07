@@ -85,7 +85,9 @@ public class EngineService {
             int lastTagsUpdate = NetworkServiceProvider.getNetworkService().getLastTagsUpdateTime();
             int lastProfilesUpdate = NetworkServiceProvider.getNetworkService().getLastProfilesUpdateTime();
 
-            for(Profile profile : NetworkServiceProvider.getNetworkService().getProfiles())
+            List<Profile> profileList = NetworkServiceProvider.getNetworkService().getProfiles();
+
+            for(Profile profile : profileList)
             {
                 Profile tmp = new Profile(profile.getName());
 
@@ -674,6 +676,10 @@ public class EngineService {
         }
     }
 
+    /**
+     *
+     * @return true if auto-synchronization is enabled, false otherwise.
+     */
     public boolean isAutoSynchronizationEnabled()
     {
         return autoSynchronizer != null;
@@ -716,7 +722,7 @@ public class EngineService {
 
     /**
      * To resolve the authentication error detected with the method checkAutoSynchronizerState().
-     * @param password
+     * @param password the password to use to resolve the error.
      * @throws NotAuthenticatedException
      */
     public void resolveAutoSynchronizationErrorOnPassword(String password) throws NotAuthenticatedException {
@@ -830,7 +836,11 @@ public class EngineService {
             List<Tag> tags = this.account.getTags();
 
             for(Tag tag : tagList)
-                tags.add(new Tag(tag.getUid(), tag.getObjectName(), tag.getObjectImageName()));
+            {
+                Tag tmp = new Tag(tag.getUid(), tag.getObjectName(), tag.getObjectImageName());
+                tmp.setImageVersion(tag.getImageVersion());
+                tags.add(tmp);
+            }
 
             List<Profile> profiles = this.account.getProfiles();
 
@@ -1023,9 +1033,16 @@ public class EngineService {
 
 
         @Override
-        public void run() {
+        public void run()
+        {
             if(failedOnPassword)
-                ; //TODO add a method to update password of the network service.
+                try {
+                    NetworkServiceProvider.getNetworkService().updatePassword(password);
+                    Logger.getLogger(getClass().getName()).log(Level.INFO, "Password successfully updated on the network service to resolve the password problem about authentication.");
+                } catch (NotAuthenticatedException e) { // this case will normally never occur.
+                    e.printStackTrace();
+                    return;
+                }
 
             Request currentRequest = null;
             continueAutoSynchronization = true;
@@ -1169,9 +1186,9 @@ public class EngineService {
                             }
                             break;
                         case REMOVE_TAG:
+                            RemoveTagRequest removeTagRequest = (RemoveTagRequest) currentRequest;
                             try
                             {
-                                RemoveTagRequest removeTagRequest = (RemoveTagRequest) currentRequest;
                                 NetworkServiceProvider.getNetworkService().removeTag(removeTagRequest.getTag());
 
                                 accountMutex.acquire();
@@ -1180,8 +1197,11 @@ public class EngineService {
                             }
                             catch(IllegalFieldException e) // the only possible error is about the tag UID.
                             {
-                                if(e.getReason() == IllegalFieldException.REASON_VALUE_NOT_FOUND)
+                                if(e.getReason() == IllegalFieldException.REASON_VALUE_NOT_FOUND) // means this tag has already been removed from the server.
+                                {
+                                    account.getTags().remove(removeTagRequest.getTag());
                                     errorMessage = "Tag modification failed : tag with UID \"" + e.getFieldValue() + "\" is not found.";
+                                }
                                 else
                                     errorMessage = "Tag modification failed : tag UID \"" + e.getFieldValue() + "\" is incorrect.";
 

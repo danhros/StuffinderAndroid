@@ -764,7 +764,7 @@ public class NetworkServiceEmulator implements NetworkServiceInterface
             throw new NetworkServiceException("A network error has occured.");
         }
 
-        if(random.nextInt(2) == 0)
+        if(random.nextInt(3) == 0)
         {
             Logger.getLogger(getClass().getName()).log(Level.INFO, "Network service emulator will simulate an authentication problem, i.e. the password is wrong.");
             throw new NotAuthenticatedException();
