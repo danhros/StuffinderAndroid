@@ -116,11 +116,6 @@ public class LocalisationActivity extends BasicActivity {
 
         positionTextView = (TextView)findViewById(R.id.textViewPosition);
 
-        if (!getPackageManager().hasSystemFeature(PackageManager.FEATURE_BLUETOOTH_LE)) { //alerte support BLE
-            Toast.makeText(this, "BLE feature not supported.", Toast.LENGTH_SHORT).show();
-            finish();
-        }
-
         BluetoothManager bluetoothManager = (BluetoothManager) getSystemService(Context.BLUETOOTH_SERVICE); //initialisation du bluetooth manager
         mBluetoothAdapter = bluetoothManager.getAdapter();
 

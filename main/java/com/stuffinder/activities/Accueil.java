@@ -14,7 +14,6 @@ import com.stuffinder.engine.EngineServiceProvider;
 import com.stuffinder.engine.NetworkServiceProvider;
 import com.stuffinder.exceptions.EngineServiceException;
 import com.stuffinder.exceptions.NetworkServiceException;
-import com.stuffinder.exceptions.NotAuthenticatedException;
 import com.stuffinder.tests.NetworkServiceEmulator;
 
 

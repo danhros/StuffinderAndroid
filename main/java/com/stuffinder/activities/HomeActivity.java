@@ -69,7 +69,8 @@ public class HomeActivity extends BasicActivity {
 
     public void goToConfiguration(View view){
         Intent intentConf = new Intent(HomeActivity.this, ConfigurationActivity.class);
-        startActivity(intentConf);}
+        startActivity(intentConf);
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
