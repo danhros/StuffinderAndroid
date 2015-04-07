@@ -10,6 +10,8 @@ public class Tag
 	private String objectName;
 
 	private String objectImageName;
+
+    private long imageVersion;
 	
 	private List<Position> lastPositions;
 	
@@ -63,7 +65,15 @@ public class Tag
 		this.objectImageName = objectImageName;
 	}
 
-	public void addLastPosition(Position p)
+    public long getImageVersion() {
+        return imageVersion;
+    }
+
+    public void setImageVersion(long imageVersion) {
+        this.imageVersion = imageVersion;
+    }
+
+    public void addLastPosition(Position p)
 	{
 		lastPositions.add(p);
 	}
