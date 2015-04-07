@@ -1,6 +1,5 @@
 package com.stuffinder.activities;
 
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
@@ -15,12 +14,12 @@ import android.widget.Toast;
 
 import com.stuffinder.R;
 import com.stuffinder.data.Tag;
-import com.stuffinder.engine.NetworkServiceProvider;
+import com.stuffinder.engine.EngineServiceProvider;
 import com.stuffinder.exceptions.IllegalFieldException;
 import com.stuffinder.exceptions.NetworkServiceException;
 import com.stuffinder.exceptions.NotAuthenticatedException;
 
-public class InfoTagActivity extends Activity {
+public class InfoTagActivity extends BasicActivity {
 
     EditText editTextNom;
     EditText editTextImage;
@@ -45,6 +44,7 @@ public class InfoTagActivity extends Activity {
             //editTextImage.setText(tagModif.getObjectImageName(), TextView.BufferType.EDITABLE);
 
         String s = tagModif.getObjectImageName();
+        s = s == null ? "" : s;
 
         if (s.equals("bag")) {
             imageView.setImageResource(R.drawable.bag);
@@ -82,7 +82,7 @@ public class InfoTagActivity extends Activity {
             if(! objectName.equals(tagModif.getObjectName())) // the object name is modified.
             {
                 try {
-                    tagModif = NetworkServiceProvider.getNetworkService().modifyObjectName(tagModif, objectName);
+                    tagModif = EngineServiceProvider.getEngineService().modifyObjectName(tagModif, objectName);
                 } catch (IllegalFieldException e) {
                     switch(e.getFieldId())
                     {
@@ -155,7 +155,7 @@ public class InfoTagActivity extends Activity {
 
         int i=0;
         try {
-            NetworkServiceProvider.getNetworkService().removeTag(tagModif);
+            EngineServiceProvider.getEngineService().removeTag(tagModif);
             oneTagRemoved = true;
             finish();
         } catch (IllegalFieldException e) {// abnormal error.

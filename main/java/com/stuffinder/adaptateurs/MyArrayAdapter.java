@@ -37,6 +37,7 @@ public class MyArrayAdapter extends ArrayAdapter {
         // Change icon based on name
 
         String s = listTag.get(position).getObjectImageName();
+        s = s == null ? "" : s;
 
         if (s.equals("bag")) {
             imageView.setImageResource(R.drawable.bag);

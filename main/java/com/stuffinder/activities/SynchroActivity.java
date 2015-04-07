@@ -1,6 +1,5 @@
 package com.stuffinder.activities;
 
-import android.app.Activity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.View;
@@ -11,7 +10,7 @@ import android.widget.Switch;
 
 import com.stuffinder.R;
 
-public class SynchroActivity extends Activity {
+public class SynchroActivity extends BasicActivity {
 
 
     private Switch mySwitch;
