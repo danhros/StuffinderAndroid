@@ -1,40 +1,39 @@
 package com.stuffinder.activities;
 
+
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.Window;
+import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
-import android.widget.Toast;
 
 import com.stuffinder.R;
-import com.stuffinder.data.Account;
 import com.stuffinder.data.Profile;
 import com.stuffinder.data.Tag;
-import com.stuffinder.engine.NetworkServiceProvider;
-import com.stuffinder.exceptions.NotAuthenticatedException;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
+public class ModifierProfileActivity extends Activity {
 
-public class ExterieurActivity extends Activity {
 
-        private ListView listView = null ;
-        private static List<Profile> listProfiles = new ArrayList<>();
-        private List<String> listNames = new ArrayList<>();
+
+    private ListView listView = null ;
+    private static List<Profile> listProfiles = new ArrayList<>();
+    private List<String> listNames = new ArrayList<>();
 
 
 
 
     public static void ChangeListProfiles ( List<Profile> list) {        // Méthode qui agit sur la variable de classe listProfiles, elle met à jour les données de la liste des profils
-    listProfiles.clear();                                               // Enelève les anciens profils de la liste
-    listProfiles.addAll(list);                                          // Ajoute les profils à jour
-    Collections.sort(listProfiles, new Comparator<Profile>() {          // Classe par ordre alphabétique
+        listProfiles.clear();                                               // Enelève les anciens profils de la liste
+        listProfiles.addAll(list);                                          // Ajoute les profils à jour
+        Collections.sort(listProfiles, new Comparator<Profile>() {          // Classe par ordre alphabétique
             @Override
             public int compare(Profile lhs, Profile rhs) {
                 return lhs.getName().compareTo(rhs.getName());
@@ -42,15 +41,28 @@ public class ExterieurActivity extends Activity {
         });
     }
 
+    public void goToModoficiation(View view){
+
+        int rang = listView.getCheckedItemPosition() ;
+        Profile profile = listProfiles.get(rang);
+
+       ModifierProfileBisActivity.changeProfile(profile);
+       Intent intent = new Intent (this, ModifierProfileBisActivity.class);
+
+        finish();
+        startActivity(intent);
+
+    }
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_modifier_profile);
 
-        this.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        setContentView(R.layout.activity_exterieur);
 
-        listView = (ListView) findViewById(R.id.listExt);
+        listView = (ListView) findViewById(R.id.listModProf);
 
 
         for (int i = 0 ; i < listProfiles.size(); i ++  ) { listNames.add(listProfiles.get(i).getName()); }
@@ -58,8 +70,8 @@ public class ExterieurActivity extends Activity {
         ArrayAdapter<String> profileArrayAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_single_choice);
         profileArrayAdapter.addAll(listNames);
 
-       listView.setAdapter(profileArrayAdapter);
-       listView.setItemChecked(0,true); }
+        listView.setAdapter(profileArrayAdapter);
+        listView.setItemChecked(0,true); }
 
 
 
@@ -70,7 +82,7 @@ public class ExterieurActivity extends Activity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_exterieur, menu);
+        getMenuInflater().inflate(R.menu.menu_modifier_profile, menu);
         return true;
     }
 

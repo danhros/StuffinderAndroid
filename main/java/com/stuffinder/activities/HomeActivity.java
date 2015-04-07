@@ -11,6 +11,7 @@ import android.view.Window;
 import android.widget.Toast;
 
 import com.stuffinder.R;
+import com.stuffinder.data.Profile;
 import com.stuffinder.data.Tag;
 import com.stuffinder.engine.EngineServiceProvider;
 import com.stuffinder.exceptions.NetworkServiceException;
@@ -48,8 +49,23 @@ public class HomeActivity extends BasicActivity {
     }
 
     public void goToExterieur(View view){
-        Intent intentExt = new Intent(HomeActivity.this, ExterieurActivity.class);
-        startActivity(intentExt);}
+
+        try {
+            List<Profile> list = NetworkServiceProvider.getNetworkService().getProfiles();
+
+            ExterieurActivity.ChangeListProfiles(list); // Si on arrive à récupérer les infos , on les envoies à l'activié suivante , " extérieurActivity"//
+
+            Intent intentExt = new Intent (HomeActivity.this, ExterieurActivity.class);
+            startActivity(intentExt);
+
+        } catch (NotAuthenticatedException e) {// abnormal error.
+            Toast.makeText(this, "Une erreur anormale est survenue. Veuiller redémarrer l'application", Toast.LENGTH_LONG).show();
+        } catch (NetworkServiceException e) {
+            Toast.makeText(this, "Une erreur réseau est survenue.", Toast.LENGTH_LONG).show();
+        }
+
+
+    }
 
     public void goToConfiguration(View view){
         Intent intentConf = new Intent(HomeActivity.this, ConfigurationActivity.class);

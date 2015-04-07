@@ -1,50 +1,25 @@
 package com.stuffinder.activities;
 
-import android.content.Intent;
+import android.app.Activity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
-import android.view.Window;
 
 import com.stuffinder.R;
 
-
-public class ConfigurationActivity extends BasicActivity {
+public class AjouterProfilsActivity extends Activity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        this.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        setContentView(R.layout.activity_configuration);
+        setContentView(R.layout.activity_ajouter_profils);
     }
 
-    public void goToInfoPerso(View view){
-        Intent intent = new Intent( ConfigurationActivity.this, InfoPersoActivity.class);
-        startActivity(intent);}
-
-
-    public void goToPuces (View view) {
-        Intent intentPuces = new Intent ( ConfigurationActivity.this, TagsActivity.class);
-        startActivity(intentPuces);
-    }
-
-
- public void goToConfProf ( View view) {
-     Intent intentConfProfile = new Intent(ConfigurationActivity.this, ConfigurationProfilsActivity.class );
-     startActivity(intentConfProfile);
-
- }
-
-    public void retour1 (View view) {
-        finish();
-    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_configuration, menu);
+        getMenuInflater().inflate(R.menu.menu_ajouter_profils, menu);
         return true;
     }
 
