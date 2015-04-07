@@ -51,7 +51,7 @@ public class HomeActivity extends BasicActivity {
     public void goToExterieur(View view){
 
         try {
-            List<Profile> list = NetworkServiceProvider.getNetworkService().getProfiles();
+            List<Profile> list = EngineServiceProvider.getEngineService().getProfiles();
 
             ExterieurActivity.ChangeListProfiles(list); // Si on arrive à récupérer les infos , on les envoies à l'activié suivante , " extérieurActivity"//
 

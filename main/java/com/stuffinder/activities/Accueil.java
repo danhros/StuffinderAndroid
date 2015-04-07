@@ -47,10 +47,8 @@ public class Accueil extends BasicActivity {
         try {
             NetworkServiceProvider.getNetworkService().initNetworkService();
             EngineServiceProvider.getEngineService().initEngineService(this);
-            try {
+
                 EngineServiceProvider.getEngineService().setAutoSynchronization(true);
-            } catch (NotAuthenticatedException e) { // this error will never occur.
-            }
         } catch (NetworkServiceException e) {
             Toast.makeText(this, "L'initialisation de l'application a échoué. L'application va être arrêté.", Toast.LENGTH_LONG).show();
             finish();

@@ -7,14 +7,9 @@ import android.view.MenuItem;
 import android.view.Window;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
-import android.widget.Toast;
 
 import com.stuffinder.R;
-import com.stuffinder.data.Account;
 import com.stuffinder.data.Profile;
-import com.stuffinder.data.Tag;
-import com.stuffinder.engine.NetworkServiceProvider;
-import com.stuffinder.exceptions.NotAuthenticatedException;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -59,7 +54,8 @@ public class ExterieurActivity extends Activity {
         profileArrayAdapter.addAll(listNames);
 
        listView.setAdapter(profileArrayAdapter);
-       listView.setItemChecked(0,true); }
+       listView.setItemChecked(0,true);
+    }
 
 
 

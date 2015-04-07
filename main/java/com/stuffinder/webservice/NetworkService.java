@@ -252,6 +252,18 @@ public class NetworkService implements NetworkServiceInterface {
         return currentAccount;
     }
 
+    /**
+     * To update the used password if it became incorrect after the authentication was performed.
+     *
+     * @param password The password
+     * @throws com.stuffinder.exceptions.NotAuthenticatedException If the authentication isn't done.
+     * @throws com.stuffinder.exceptions.IllegalFieldException     If the given password is syntactically incorrect.
+     */
+    @Override
+    public void updatePassword(String password) throws NotAuthenticatedException, IllegalFieldException {
+
+    }
+
     // convert inputstream to String
     private static String convertInputStreamToString(InputStream inputStream) throws IOException, InterruptedException {
         InputStreamConverter inputStreamConverter = new InputStreamConverter(inputStream);
