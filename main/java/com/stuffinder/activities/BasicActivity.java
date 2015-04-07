@@ -109,7 +109,7 @@ public class BasicActivity extends Activity
                             if(FieldVerifier.verifyPassword(password))
                             {
                                 try {
-                                    EngineServiceProvider.getEngineService().resolveErrorOnPassword(password);
+                                    EngineServiceProvider.getEngineService().resolveAutoSynchronizationErrorOnPassword(password);
                                     alertDialog.dismiss();
                                     onValidateButton();
                                 } catch (NotAuthenticatedException e) { // will never occur.

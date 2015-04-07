@@ -349,7 +349,10 @@ public class EngineService {
     }
 
 
-
+    /**
+     * To use only for manual synchronization.
+     * @param request The request to be added for the next manual synchronization.
+     */
     private void addRequest(Request request)
     {
         Logger.getLogger(getClass().getName()).log(Level.INFO, "Add request : " + request);
@@ -621,11 +624,19 @@ public class EngineService {
 
 
 
+
 // For auto-synchronization.
 
+    /**
+     * The auto-synchronizer. Non null if the auto-synchronization is enabled, null otherwise.
+     */
     private AutoSynchronizer autoSynchronizer;
 
-    public void setAutoSynchronization(boolean enable) throws NotAuthenticatedException
+    /**
+     * Enable/disable the auto-synchronization.
+     * @param enable set to true to enable the auto-synchronization, false to disable it.
+     */
+    public void setAutoSynchronization(boolean enable)
     {
         if(autoSynchronizer == null && enable)
         {
@@ -668,6 +679,9 @@ public class EngineService {
         return autoSynchronizer != null;
     }
 
+    /**
+     * apply changes from the server's data on the local version.
+     */
     private void checkForAccountUpdate()
     {
         if(isAutoSynchronizationEnabled() && autoSynchronizer.isErrorOccurredOnData())
@@ -687,6 +701,11 @@ public class EngineService {
         }
     }
 
+    /**
+     * To check if an error has occurred about authentication information.
+     * If there is a such error, the dialog box to ask again the password to the user is started and an exception of type NotAuthenticatedException is thrown.
+     * @throws NotAuthenticatedException If there is an error about authentication information.
+     */
     private void checkAutoSynchronizerState() throws NotAuthenticatedException {
         if(isAutoSynchronizationEnabled() && autoSynchronizer.hasFailedOnPassword())
         {
@@ -695,7 +714,12 @@ public class EngineService {
         }
     }
 
-    public void resolveErrorOnPassword(String password) throws NotAuthenticatedException {
+    /**
+     * To resolve the authentication error detected with the method checkAutoSynchronizerState().
+     * @param password
+     * @throws NotAuthenticatedException
+     */
+    public void resolveAutoSynchronizationErrorOnPassword(String password) throws NotAuthenticatedException {
 
         if(password != null && FieldVerifier.verifyPassword(password))
         {
@@ -731,9 +755,6 @@ public class EngineService {
         private int lastProfileUpdate;
         private int lastTagsUpdate;
 
-//        private BlockingQueue<Request> failedRequestQueue;
-//        private BlockingQueue<IllegalFieldException> catchedExceptionQueue;
-
         private boolean failedOnPassword;
 
         private boolean continueAutoSynchronization;
@@ -751,10 +772,6 @@ public class EngineService {
 
             errorOccurredOnData = false;
             failedOnPassword = false;
-
-//            requestQueue = new LinkedBlockingQueue<>();
-//            failedRequestQueue = new LinkedBlockingQueue<>();
-//            catchedExceptionQueue = new LinkedBlockingQueue<>();
         }
 
         boolean appendRequest(Request request)

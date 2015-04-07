@@ -95,9 +95,25 @@ public class NetworkServiceEmulator implements NetworkServiceInterface
 
 		testAccount.getProfiles().add(profile1);
 		testAccount.getProfiles().add(profile2);
-		
-		accounts.add(testAccount);
+
+
+        Account testAccount2 = new Account("jdupouy", "Joe", "Dupouy", "joe.dupouy@gmail.com");
+
+        tag1 = new Tag("identifiant", "Home keys");
+        tag2 = new Tag("bd3496e342ce674", "Car key");
+
+
+        testAccount2.getTags().add(tag1);
+        testAccount2.getTags().add(tag2);
+
+        tags.add(tag1);
+        tags.add(tag2);
+
+        accounts.add(testAccount);
 		passwords.add("123456");
+
+        accounts.add(testAccount2);
+        passwords.add("azerty");
 	}
 	
 	public void initNetworkService() throws NetworkServiceException
@@ -736,7 +752,7 @@ public class NetworkServiceEmulator implements NetworkServiceInterface
             throw new NetworkServiceException("A network error has occured.");
         }
 
-        if(random.nextInt(4) == 0)
+        if(random.nextInt(2) == 0)
         {
             Logger.getLogger(getClass().getName()).log(Level.INFO, "Network service emulator will simulate an authentication problem, i.e. the password is wrong.");
             throw new NotAuthenticatedException();
