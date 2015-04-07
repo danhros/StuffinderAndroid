@@ -30,11 +30,30 @@ public class SupprTagActivity extends Activity {
 
     private ListView mListSuppr = null;
     private ArrayAdapter<Tag> tagArrayAdapter;
-
     private Button mSend = null;
-
-
     private static List<Tag> tagsList = new ArrayList<>();
+
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+        this.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        setContentView(R.layout.activity_suppr_tag);
+
+        mListSuppr = (ListView) findViewById(R.id.listSuppr);
+
+        mSend = (Button) findViewById(R.id.send);
+
+        tagArrayAdapter = new ArrayAdapter<Tag>(this, android.R.layout.simple_list_item_multiple_choice);
+        tagArrayAdapter.addAll(tagsList);
+
+        mListSuppr.setAdapter(tagArrayAdapter);
+
+
+
+
+    }
 
     public void retour4 (View view) {
         finish();
@@ -110,26 +129,6 @@ public class SupprTagActivity extends Activity {
         dialog.show();
     }
 
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-
-        this.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        setContentView(R.layout.activity_suppr_tag);
-
-        mListSuppr = (ListView) findViewById(R.id.listSuppr);
-
-        mSend = (Button) findViewById(R.id.send);
-
-        tagArrayAdapter = new ArrayAdapter<Tag>(this, android.R.layout.simple_list_item_multiple_choice);
-        tagArrayAdapter.addAll(tagsList);
-
-        mListSuppr.setAdapter(tagArrayAdapter);
-
-
-
-
-    }
 
     public static void changeTagsList(List<Tag> list)
     {

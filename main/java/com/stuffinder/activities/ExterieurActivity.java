@@ -12,16 +12,36 @@ import android.widget.Toast;
 import com.stuffinder.R;
 import com.stuffinder.data.Account;
 import com.stuffinder.data.Profile;
+import com.stuffinder.data.Tag;
 import com.stuffinder.engine.NetworkServiceProvider;
 import com.stuffinder.exceptions.NotAuthenticatedException;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 
 public class ExterieurActivity extends Activity {
 
-        ListView listView ;
+        private ListView listView = null ;
+        private static List<Profile> listProfiles = new ArrayList<>();
+
+
+
+
+    public static void ChangeListProfiles ( List<Profile> list) {        // Méthode qui agit sur la variable de classe listProfiles, elle met à jour les données de la liste des profils
+    listProfiles.clear();                                               // Enelève les anciens profils de la liste
+    listProfiles.addAll(list);                                          // Ajoute les profils à jour
+    Collections.sort(listProfiles, new Comparator<Profile>() {          // Classe par ordre alphabétique
+            @Override
+            public int compare(Profile lhs, Profile rhs) {
+                return lhs.getName().compareTo(rhs.getName());
+            }
+        });
+    }
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -29,28 +49,16 @@ public class ExterieurActivity extends Activity {
         this.requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.activity_exterieur);
 
-        listView= (ListView)findViewById(R.id.listView);
-        try {
-            Account account = NetworkServiceProvider.getNetworkService().getCurrentAccount();
+        listView = (ListView) findViewById(R.id.listInt);
 
-            List<Profile> profiles = account.getProfiles();
-            ArrayList<String> liste = new ArrayList<String>();
-            int size = profiles.size();
+        ArrayAdapter<Profile> tagArrayAdapter = new ArrayAdapter<Profile>(this, android.R.layout.simple_list_item_single_choice);
+        tagArrayAdapter.addAll(listProfiles);
 
-            for ( int i=0; i<size; i++ ) {
-                String name = profiles.get(i).getName();
-                liste.add(name);
-            }
-
-            ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.list_content, liste);
-           listView.setAdapter(adapter);
-        }
-
-        catch ( NotAuthenticatedException e ) {
-            Toast.makeText(ExterieurActivity.this, "Nous n'avons pas réussi à récupérer les informations de votre compte, veuillez réassyer", Toast.LENGTH_LONG).show();}
+       listView.setAdapter(tagArrayAdapter);
+       listView.setItemChecked(0,true); }
 
 
-    }
+
 
 
 
