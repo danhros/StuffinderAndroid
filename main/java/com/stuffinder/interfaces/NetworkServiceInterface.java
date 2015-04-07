@@ -56,7 +56,15 @@ public interface NetworkServiceInterface
 	 * @throws NetworkServiceException If a network service error has occurred.
 	 */
 	public Account authenticate(String pseudo, String password) throws AccountNotFoundException, NetworkServiceException;
-	
+
+    /**
+     * To update the used password if it became incorrect after the authentication was performed.
+     * @param password The password
+     * @throws NotAuthenticatedException If the authentication isn't done.
+     * @throws IllegalFieldException If the given password is syntactically incorrect.
+     */
+    public void updatePassword(String password) throws NotAuthenticatedException, IllegalFieldException;
+
 	/**
 	 * To logout.
 	 */

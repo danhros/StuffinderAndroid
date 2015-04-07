@@ -143,7 +143,16 @@ public class NetworkServiceEmulator implements NetworkServiceInterface
 		throw new AccountNotFoundException();
 	}
 
-	public void logOut()
+    @Override
+    public void updatePassword(String password) throws NotAuthenticatedException, IllegalFieldException {
+        if(authenticatedAccount == null)
+            throw new NotAuthenticatedException();
+
+        if(! FieldVerifier.verifyPassword(password))
+            throw new IllegalFieldException(PASSWORD, REASON_VALUE_INCORRECT, "");
+    }
+
+    public void logOut()
 	{
 		authenticatedAccount = null;
 	}
@@ -209,7 +218,9 @@ public class NetworkServiceEmulator implements NetworkServiceInterface
 
 		if(! tags.add(tag)) // because the method add() returns true if this operation is successful, false if there is already a tag with the specifed tag UID. 
 			throw new IllegalFieldException(IllegalFieldException.TAG_UID, IllegalFieldException.REASON_VALUE_ALREADY_USED, tag.getUid());
-		
+
+        tag.setImageVersion(0);
+
 		authenticatedAccount.getTags().add(tag);
 		return tag;
 		
@@ -297,6 +308,7 @@ public class NetworkServiceEmulator implements NetworkServiceInterface
             throw new IllegalFieldException(IllegalFieldException.TAG_UID, IllegalFieldException.REASON_VALUE_NOT_FOUND, tag.getUid());
         else
         {
+            authenticatedAccount.getTags().get(index).setImageVersion(authenticatedAccount.getTags().get(index).getImageVersion() + 1);
             authenticatedAccount.getTags().get(index).setObjectImageName(newImageFileName == null ? "" : newImageFileName);
             return authenticatedAccount.getTags().get(index);
         }
