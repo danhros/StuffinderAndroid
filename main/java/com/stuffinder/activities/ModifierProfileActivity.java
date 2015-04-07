@@ -12,7 +12,6 @@ import android.widget.ListView;
 
 import com.stuffinder.R;
 import com.stuffinder.data.Profile;
-import com.stuffinder.data.Tag;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -41,6 +40,10 @@ public class ModifierProfileActivity extends Activity {
         });
     }
 
+    public void retour(View view){
+        finish();
+    }
+
     public void goToModoficiation(View view){
 
         int rang = listView.getCheckedItemPosition() ;
@@ -65,13 +68,16 @@ public class ModifierProfileActivity extends Activity {
         listView = (ListView) findViewById(R.id.listModProf);
 
 
-        for (int i = 0 ; i < listProfiles.size(); i ++  ) { listNames.add(listProfiles.get(i).getName()); }
+        for (int i = 0 ; i < listProfiles.size(); i ++  ) {
+            listNames.add(listProfiles.get(i).getName());
+        }
 
         ArrayAdapter<String> profileArrayAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_single_choice);
         profileArrayAdapter.addAll(listNames);
 
         listView.setAdapter(profileArrayAdapter);
-        listView.setItemChecked(0,true); }
+        listView.setItemChecked(0,true);
+    }
 
 
 

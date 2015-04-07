@@ -346,8 +346,15 @@ public class EngineService {
         return null;
     }
 
-    public List<Profile> getProfiles() throws NotAuthenticatedException, NetworkServiceException {
-        return null;
+    public List<Profile> getProfiles() throws NotAuthenticatedException, NetworkServiceException
+    {
+        if(currentAccount == null)
+            throw new NotAuthenticatedException();
+
+        checkForAccountUpdate();
+        checkAutoSynchronizerState();
+
+        return profiles;
     }
 
 

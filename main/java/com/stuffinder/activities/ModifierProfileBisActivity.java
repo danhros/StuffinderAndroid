@@ -1,9 +1,10 @@
 package com.stuffinder.activities;
 
-import android.app.Activity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.view.Window;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
@@ -15,7 +16,7 @@ import com.stuffinder.data.Tag;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ModifierProfileBisActivity extends Activity {
+public class ModifierProfileBisActivity extends BasicActivity {
 
 
 
@@ -29,6 +30,8 @@ public class ModifierProfileBisActivity extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        this.requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.activity_modifier_profile_bis);
 
 
@@ -47,6 +50,9 @@ public class ModifierProfileBisActivity extends Activity {
         }
     }
 
+    public void retour(View view){
+        finish();
+    }
 
     public static void changeProfile ( Profile profile) {
         ModifierProfileBisActivity.profile = profile;

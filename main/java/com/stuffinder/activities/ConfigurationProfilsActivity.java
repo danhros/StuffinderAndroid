@@ -1,39 +1,43 @@
 package com.stuffinder.activities;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.Window;
 import android.widget.Toast;
 import android.view.View;
 
 import com.stuffinder.R;
 import com.stuffinder.data.Profile;
-import com.stuffinder.data.Tag;
-import com.stuffinder.engine.NetworkServiceProvider;
+import com.stuffinder.engine.EngineServiceProvider;
 import com.stuffinder.exceptions.NetworkServiceException;
 import com.stuffinder.exceptions.NotAuthenticatedException;
 
 import java.util.List;
 
-public class ConfigurationProfilsActivity extends Activity {
+public class ConfigurationProfilsActivity extends BasicActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        this.requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.activity_configuration_profils);
 
 
     }
 
+    public void retour(View view){
+        finish();
+    }
 
     public void goToModif (View view ) {
 
 
         try {
 
-            List<Profile> list = NetworkServiceProvider.getNetworkService().getProfiles();
+            List<Profile> list = EngineServiceProvider.getEngineService().getProfiles();
             ModifierProfileActivity.ChangeListProfiles(list);
             Intent intentModProf = new Intent (ConfigurationProfilsActivity.this, ModifierProfileActivity.class);
             startActivity(intentModProf);
