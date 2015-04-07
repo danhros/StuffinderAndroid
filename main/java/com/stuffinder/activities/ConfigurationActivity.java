@@ -31,6 +31,13 @@ public class ConfigurationActivity extends Activity {
         startActivity(intentPuces);
     }
 
+
+ public void goToConfProf ( View view) {
+     Intent intentConfProfile = new Intent(ConfigurationActivity.this, ConfigurationProfilsActivity.class );
+     startActivity(intentConfProfile);
+
+ }
+
     public void retour1 (View view) {
         finish();
     }

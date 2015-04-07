@@ -1,11 +1,21 @@
 package com.stuffinder.activities;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Toast;
+import android.view.View;
 
 import com.stuffinder.R;
+import com.stuffinder.data.Profile;
+import com.stuffinder.data.Tag;
+import com.stuffinder.engine.NetworkServiceProvider;
+import com.stuffinder.exceptions.NetworkServiceException;
+import com.stuffinder.exceptions.NotAuthenticatedException;
+
+import java.util.List;
 
 public class ConfigurationProfilsActivity extends Activity {
 
@@ -13,7 +23,29 @@ public class ConfigurationProfilsActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_configuration_profils);
+
+
     }
+
+
+    public void goToModif (View view ) {
+
+
+        try {
+
+            List<Profile> list = NetworkServiceProvider.getNetworkService().getProfiles();
+            ModifierProfileActivity.ChangeListProfiles(list);
+            Intent intentModProf = new Intent (ConfigurationProfilsActivity.this, ModifierProfileActivity.class);
+            startActivity(intentModProf);
+
+
+        } catch (NotAuthenticatedException e) {  // anormal error.
+            Toast.makeText(this, "Une erreur anormale est survenue. Veuiller redémarrer l'application", Toast.LENGTH_LONG).show();
+        } catch (NetworkServiceException e) {
+            Toast.makeText(this, "Une erreur réseau est survenue.", Toast.LENGTH_LONG).show();
+        }
+    }
+
 
 
     @Override

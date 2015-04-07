@@ -51,8 +51,6 @@ public class SupprTagActivity extends Activity {
         mListSuppr.setAdapter(tagArrayAdapter);
 
 
-
-
     }
 
     public void retour4 (View view) {

@@ -22,5 +22,6 @@
     <string name="title_activity_configuration_profils">ConfigurationProfilsActivity</string>
     <string name="title_activity_ajouter_profils">AjouterProfilsActivity</string>
     <string name="title_activity_modifier_profile">ModifierProfileActivity</string>
+    <string name="title_activity_modifier_profile_bis">ModifierProfileBisActivity</string>
 
 </resources>

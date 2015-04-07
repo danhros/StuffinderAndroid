@@ -101,6 +101,10 @@
             android:name=".activities.ModifierProfileActivity"
             android:label="@string/title_activity_modifier_profile" >
         </activity>
+        <activity
+            android:name=".activities.ModifierProfileBisActivity"
+            android:label="@string/title_activity_modifier_profile_bis" >
+        </activity>
     </application>
 
 </manifest>

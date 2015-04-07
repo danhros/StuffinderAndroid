@@ -1,19 +1,82 @@
 package com.stuffinder.activities;
 
-import android.support.v7.app.ActionBarActivity;
+
+import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.ArrayAdapter;
+import android.widget.ListView;
 
 import com.stuffinder.R;
+import com.stuffinder.data.Profile;
+import com.stuffinder.data.Tag;
 
-public class ModifierProfileActivity extends ActionBarActivity {
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
+
+public class ModifierProfileActivity extends Activity {
+
+
+
+    private ListView listView = null ;
+    private static List<Profile> listProfiles = new ArrayList<>();
+    private List<String> listNames = new ArrayList<>();
+
+
+
+
+    public static void ChangeListProfiles ( List<Profile> list) {        // Méthode qui agit sur la variable de classe listProfiles, elle met à jour les données de la liste des profils
+        listProfiles.clear();                                               // Enelève les anciens profils de la liste
+        listProfiles.addAll(list);                                          // Ajoute les profils à jour
+        Collections.sort(listProfiles, new Comparator<Profile>() {          // Classe par ordre alphabétique
+            @Override
+            public int compare(Profile lhs, Profile rhs) {
+                return lhs.getName().compareTo(rhs.getName());
+            }
+        });
+    }
+
+    public void goToModoficiation(View view){
+
+        int rang = listView.getCheckedItemPosition() ;
+        Profile profile = listProfiles.get(rang);
+
+       ModifierProfileBisActivity.changeProfile(profile);
+       Intent intent = new Intent (this, ModifierProfileBisActivity.class);
+
+        finish();
+        startActivity(intent);
+
+    }
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_modifier_profile);
-    }
+
+
+        listView = (ListView) findViewById(R.id.listModProf);
+
+
+        for (int i = 0 ; i < listProfiles.size(); i ++  ) { listNames.add(listProfiles.get(i).getName()); }
+
+        ArrayAdapter<String> profileArrayAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_single_choice);
+        profileArrayAdapter.addAll(listNames);
+
+        listView.setAdapter(profileArrayAdapter);
+        listView.setItemChecked(0,true); }
+
+
+
+
+
 
 
     @Override
