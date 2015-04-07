@@ -20,7 +20,6 @@ import com.stuffinder.exceptions.TagNotDetectedException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.logging.Handler;
 
 
 public class LocalisationActivity extends BasicActivity {
@@ -105,6 +104,59 @@ public class LocalisationActivity extends BasicActivity {
         finish();
     }
 
+    public void onLed (View view) {
+
+    }
+
+    public void onSon (View view) {
+
+    }
+
+    public void retenter (View view) {
+
+        positionTextView = (TextView)findViewById(R.id.textViewPosition);
+
+        if (!getPackageManager().hasSystemFeature(PackageManager.FEATURE_BLUETOOTH_LE)) { //alerte support BLE
+            Toast.makeText(this, "BLE feature not supported.", Toast.LENGTH_SHORT).show();
+            finish();
+        }
+
+        BluetoothManager bluetoothManager = (BluetoothManager) getSystemService(Context.BLUETOOTH_SERVICE); //initialisation du bluetooth manager
+        mBluetoothAdapter = bluetoothManager.getAdapter();
+
+        if (mBluetoothAdapter == null || !mBluetoothAdapter.isEnabled()) { //activation du ble sur le terminal
+            Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
+            startActivity(enableBtIntent);
+
+            mBluetoothAdapter = bluetoothManager.getAdapter();
+            if (mBluetoothAdapter == null || !mBluetoothAdapter.isEnabled()) {
+                finish();
+                return;
+            }
+        }
+
+        if(isConnected(tagLoc.getUid())){
+            try {
+                if (distance(tagLoc.getUid())==1)
+                {
+                    positionTextView.setText("est tres proche");
+                }
+                else {
+                    if (distance(tagLoc.getUid())==2)
+                        positionTextView.setText("est moyennement proche");
+
+                    else
+                        positionTextView.setText("est loin");
+                }
+
+            } catch (TagNotDetectedException e) {
+                Toast.makeText(this, "Une erreur anormale est survenue. Veuillez relancer l'application.", Toast.LENGTH_SHORT).show();
+            }
+        }
+        else {
+            positionTextView.setText("n'a pas été localisé.");
+        }
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {

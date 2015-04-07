@@ -28,5 +28,7 @@
     <string name="password_dialog_field_password">Mot de passe</string>
     <string name="password_dialog_cancel_button">Annuler</string>
     <string name="password_dialog_validate_button">Valider</string>
+    
+    <string name="title_activity_synchro">SynchroActivity</string>
 
 </resources>

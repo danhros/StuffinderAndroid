@@ -1,5 +1,6 @@
 package com.stuffinder.activities;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
@@ -10,7 +11,7 @@ import android.view.Window;
 import com.stuffinder.R;
 
 
-public class ConfigurationActivity extends BasicActivity {
+public class ConfigurationActivity extends Activity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,6 +36,11 @@ public class ConfigurationActivity extends BasicActivity {
         Intent intentConfProfile = new Intent(ConfigurationActivity.this, ConfigurationProfilsActivity.class );
         startActivity(intentConfProfile);
 
+    }
+
+    public void goToSynch (View view) {
+        Intent intentSynch = new Intent ( ConfigurationActivity.this, SynchroActivity.class);
+        startActivity(intentSynch);
     }
 
     public void retour1 (View view) {
