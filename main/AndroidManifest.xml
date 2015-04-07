@@ -97,6 +97,10 @@
             android:name=".activities.AjouterProfilsActivity"
             android:label="@string/title_activity_ajouter_profils" >
         </activity>
+        <activity
+            android:name=".activities.ModifierProfileActivity"
+            android:label="@string/title_activity_modifier_profile" >
+        </activity>
     </application>
 
 </manifest>

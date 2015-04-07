@@ -26,6 +26,7 @@ public class ExterieurActivity extends Activity {
 
         private ListView listView = null ;
         private static List<Profile> listProfiles = new ArrayList<>();
+        private List<String> listNames = new ArrayList<>();
 
 
 
@@ -49,12 +50,15 @@ public class ExterieurActivity extends Activity {
         this.requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.activity_exterieur);
 
-        listView = (ListView) findViewById(R.id.listInt);
+        listView = (ListView) findViewById(R.id.listExt);
 
-        ArrayAdapter<Profile> tagArrayAdapter = new ArrayAdapter<Profile>(this, android.R.layout.simple_list_item_single_choice);
-        tagArrayAdapter.addAll(listProfiles);
 
-       listView.setAdapter(tagArrayAdapter);
+        for (int i = 0 ; i < listProfiles.size(); i ++  ) { listNames.add(listProfiles.get(i).getName()); }
+
+        ArrayAdapter<String> profileArrayAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_single_choice);
+        profileArrayAdapter.addAll(listNames);
+
+       listView.setAdapter(profileArrayAdapter);
        listView.setItemChecked(0,true); }
 
 
