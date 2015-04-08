@@ -74,10 +74,6 @@
             android:label="@string/title_activity_modif_tag" >
         </activity>
         <activity
-            android:name=".activities.SupprTagActivity"
-            android:label="@string/title_activity_suppr_tag" >
-        </activity>
-        <activity
             android:name=".activities.TagsActivity"
             android:label="@string/title_activity_tags" >
         </activity>
