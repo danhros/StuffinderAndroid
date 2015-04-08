@@ -70,6 +70,8 @@ public class InfoTagActivity extends Activity {
     }
 
     public void goToPics (View view) {
+
+        PicturesActivity.getTag(tagModif);
         Intent intentPics = new Intent (this, PicturesActivity.class);
         startActivity(intentPics);
     }
