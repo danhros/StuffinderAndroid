@@ -1,6 +1,7 @@
 package com.stuffinder.activities;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -29,7 +30,6 @@ public class AjoutTagActivity extends Activity {
         setContentView(R.layout.activity_ajout_tag);
 
         EditTextNom = (EditText)findViewById(R.id.editTextNom) ;
-        EditTextImage = (EditText)findViewById(R.id.editTextImage) ;
         EditTextId = (EditText)findViewById(R.id.editTextId) ;
     }
 
@@ -37,13 +37,19 @@ public class AjoutTagActivity extends Activity {
         finish();
     }
 
+    public void choosePic (View view) {
+
+        Intent intentPics = new Intent (this, PicturesActivity.class);
+        startActivity(intentPics);
+    }
+
     public void creerTag (View view) {
 
-
-
         String nom = EditTextNom.getText().toString();
-        String image = EditTextImage.getText().toString();
+
         String identifiant = EditTextId.getText().toString();
+
+        String image = null;
 
         if(nom.length() == 0)
             Toast.makeText(this, "Entrer nom", Toast.LENGTH_LONG).show();

@@ -43,6 +43,7 @@ public class MyArrayAdapter extends ArrayAdapter {
 
         // Change icon based on name
 
+        s = s==null ? "" : s;
 
 
         if (s.equals("bag")) {
@@ -59,7 +60,7 @@ public class MyArrayAdapter extends ArrayAdapter {
             imageView.setImageResource(R.drawable.tag);
         }else if (s.equals("wallet")) {
             imageView.setImageResource(R.drawable.wallet);
-        }
+        }else {imageView.setImageResource(R.drawable.question);}
 
         return rowView;
     }

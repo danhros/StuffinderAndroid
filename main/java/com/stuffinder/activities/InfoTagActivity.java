@@ -47,6 +47,8 @@ public class InfoTagActivity extends Activity {
 
         String s = tagModif.getObjectImageName();
 
+        s = s==null ? "" : s;
+
         if (s.equals("bag")) {
             imageView.setImageResource(R.drawable.bag);
         } else if (s.equals("carkey")) {
@@ -61,7 +63,7 @@ public class InfoTagActivity extends Activity {
             imageView.setImageResource(R.drawable.tag);
         }else if (s.equals("wallet")) {
             imageView.setImageResource(R.drawable.wallet);
-        }
+        }else {imageView.setImageResource(R.drawable.question);}
 
     }
 
