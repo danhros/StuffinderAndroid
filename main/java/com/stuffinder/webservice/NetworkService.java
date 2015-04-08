@@ -464,7 +464,7 @@ public class NetworkService implements NetworkServiceInterface {
                             org.json.JSONArray arrayOfJsonTag = obj.getJSONArray("listTags");
                             for (int i = 0; i < arrayOfJsonTag.length(); i++) {
                                 JSONObject tagjson = arrayOfJsonTag.getJSONObject(i);
-                                Tag tag = new Tag(tagjson.getString("tag_id"), tagjson.getString("object_name"), tagjson.getString("picture_name"));
+                                Tag tag = new Tag(tagjson.getString("tag_id"), tagjson.getString("object_name"));
                                 res.add(tag);
                             }
                         }
@@ -516,7 +516,7 @@ public class NetworkService implements NetworkServiceInterface {
         if(currentAccount == null) { throw new NotAuthenticatedException(); }
         try {
             // make GET request to the given URL
-            HttpResponse httpResponse = executeRequest(new HttpGet(server_address + "addtag?pseudo=" + URLEncoder.encode(currentAccount.getPseudo(), "UTF-8") + "&password=" + URLEncoder.encode(currentPassword, "UTF-8") + "&id=" + URLEncoder.encode(tag.getUid(), "UTF-8") + "&object_name=" + URLEncoder.encode(tag.getObjectName(), "UTF-8") + "&picture_name=" + URLEncoder.encode(tag.getObjectImageName(), "UTF-8")));
+            HttpResponse httpResponse = executeRequest(new HttpGet(server_address + "addtag?pseudo=" + URLEncoder.encode(currentAccount.getPseudo(), "UTF-8") + "&password=" + URLEncoder.encode(currentPassword, "UTF-8") + "&id=" + URLEncoder.encode(tag.getUid(), "UTF-8") + "&object_name=" + URLEncoder.encode(tag.getObjectName(), "UTF-8")));
             StatusLine statusLine = httpResponse.getStatusLine();
             int statusCode = statusLine.getStatusCode();
             if (statusCode == 200) {
@@ -580,7 +580,7 @@ public class NetworkService implements NetworkServiceInterface {
         String result = "";
         try {
             // make GET request to the given URL
-            HttpResponse httpResponse = executeRequest(new HttpGet(server_address + "modifyobjectname?pseudo=" + URLEncoder.encode(currentAccount.getPseudo(), "UTF-8") + "&password=" + URLEncoder.encode(currentPassword, "UTF-8") + "&id=" + URLEncoder.encode(tag.getUid(), "UTF-8")));
+            HttpResponse httpResponse = executeRequest(new HttpGet(server_address + "downloadobjectimage?pseudo=" + URLEncoder.encode(currentAccount.getPseudo(), "UTF-8") + "&password=" + URLEncoder.encode(currentPassword, "UTF-8") + "&id=" + URLEncoder.encode(tag.getUid(), "UTF-8")));
             StatusLine statusLine = httpResponse.getStatusLine();
             int statusCode = statusLine.getStatusCode();
             if (statusCode == 200) {
@@ -850,7 +850,7 @@ public class NetworkService implements NetworkServiceInterface {
                             throw new NetworkServiceException("Illegal use of special character");
 
                         } else {
-                            throw new IllegalFieldException(IllegalFieldException.PSEUDO, IllegalFieldException.REASON_VALUE_INCORRECT, profileName);
+                            throw new IllegalFieldException(IllegalFieldException.PROFILE_NAME, IllegalFieldException.REASON_VALUE_INCORRECT, profileName);
                         }
                     } catch (JSONException e) {
                         throw new NetworkServiceException("Server response might be invalid.");
@@ -1413,7 +1413,7 @@ public class NetworkService implements NetworkServiceInterface {
         String result = "";
         try {
             // make GET request to the given URL
-            HttpResponse httpResponse = client.execute(new HttpGet(server_address + "getprofiles?pseudo="+ URLEncoder.encode(currentAccount.getPseudo(), "UTF_8") + "&password=" + URLEncoder.encode(currentPassword, "UTF_8")));
+            HttpResponse httpResponse = client.execute(new HttpGet(server_address + "getprofiles?pseudo="+ URLEncoder.encode(currentAccount.getPseudo(), "UTF-8") + "&password=" + URLEncoder.encode(currentPassword, "UTF-8")));
             StatusLine statusLine = httpResponse.getStatusLine();
             int statusCode = statusLine.getStatusCode();
             if (statusCode == 200) {
@@ -1493,12 +1493,12 @@ public class NetworkService implements NetworkServiceInterface {
     }
 
     @Override
-    public int getLastTagsUpdateTime() throws NetworkServiceException {
+    public long getLastTagsUpdateTime() throws NetworkServiceException {
         return 0;
     }
 
     @Override
-    public int getLastProfilesUpdateTime() throws NetworkServiceException {
+    public long getLastProfilesUpdateTime() throws NetworkServiceException {
         return 0;
     }
 
