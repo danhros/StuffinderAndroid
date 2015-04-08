@@ -3,6 +3,7 @@ package com.stuffinder.activities;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -66,6 +67,11 @@ public class InfoTagActivity extends Activity {
 
     public void retour7 (View view) {
         finish();
+    }
+
+    public void goToPics (View view) {
+        Intent intentPics = new Intent (this, PicturesActivity.class);
+        startActivity(intentPics);
     }
 
     public void modifierTag(View view) {

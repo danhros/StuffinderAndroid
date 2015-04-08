@@ -34,9 +34,16 @@ public class MyArrayAdapter extends ArrayAdapter {
         textView.setText(listTag.get(position).getObjectName());
 
 
+        String s = listTag.get(position).getObjectImageName();
+//        File imgFile = new File(s);
+//        if (imgFile.exists()){
+//            Bitmap myBitmap = BitmapFactory.decodeFile(imgFile.getAbsolutePath());
+//            imageView.setImageBitmap(myBitmap);
+//        }
+
         // Change icon based on name
 
-        String s = listTag.get(position).getObjectImageName();
+
 
         if (s.equals("bag")) {
             imageView.setImageResource(R.drawable.bag);

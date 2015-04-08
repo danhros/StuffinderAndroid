@@ -89,6 +89,10 @@
             android:name=".activities.SynchroActivity"
             android:label="@string/title_activity_synchro" >
         </activity>
+        <activity
+            android:name=".activities.PicturesActivity"
+            android:label="@string/title_activity_pictures" >
+        </activity>
     </application>
 
 </manifest>

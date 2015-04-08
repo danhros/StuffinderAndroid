@@ -140,7 +140,7 @@ public class SupprTagActivity extends Activity {
         Collections.sort(tagsList, new Comparator<Tag>() {
             @Override
             public int compare(Tag lhs, Tag rhs) {
-                return lhs.getObjectName().compareTo(rhs.getObjectName());
+                return lhs.getObjectName().compareToIgnoreCase(rhs.getObjectName());
             }
         });
     }

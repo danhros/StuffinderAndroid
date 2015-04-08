@@ -64,7 +64,7 @@ public class InterieurActivity extends Activity {
         Collections.sort(arrayAdapter, new Comparator<Tag>() {
             @Override
             public int compare(Tag lhs, Tag rhs) {
-                return lhs.getObjectName().compareTo(rhs.getObjectName());
+                return lhs.getObjectName().compareToIgnoreCase(rhs.getObjectName());
             }
         });
     }
