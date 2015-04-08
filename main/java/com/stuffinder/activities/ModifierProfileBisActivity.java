@@ -6,13 +6,20 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import com.stuffinder.R;
+import com.stuffinder.data.Account;
 import com.stuffinder.data.Profile;
 import com.stuffinder.data.Tag;
+import com.stuffinder.engine.NetworkServiceProvider;
+import com.stuffinder.exceptions.NotAuthenticatedException;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 public class ModifierProfileBisActivity extends Activity {
@@ -20,37 +27,77 @@ public class ModifierProfileBisActivity extends Activity {
 
 
     private ListView listView = null;
-    private ArrayAdapter<Tag> tagArrayAdapter;
+    private ArrayAdapter<Tag> tagProfArrayAdapter;
     private Button buttonModifier = null;
     private static List<Tag> tagsList = new ArrayList<>();
-
     private static Profile profile;
+    private EditText editTextModifierNom = null;
+
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_modifier_profile_bis);
 
-
-        listView = (ListView) findViewById(R.id.listView);
-
+        listView = (ListView) findViewById(R.id.listModiProf);
         buttonModifier = (Button) findViewById(R.id.buttonCreer);
+        editTextModifierNom= (EditText)findViewById(R.id.editTextModifierNomProf);
 
-        tagArrayAdapter = new ArrayAdapter<Tag>(this, android.R.layout.simple_list_item_multiple_choice);
-        tagArrayAdapter.addAll(tagsList);
+        editTextModifierNom.setText(profile.getName());
 
-        listView.setAdapter(tagArrayAdapter);
+        tagProfArrayAdapter = new ArrayAdapter<Tag>(this, android.R.layout.simple_list_item_multiple_choice);
+        tagProfArrayAdapter.addAll(tagsList);
+        listView.setAdapter(tagProfArrayAdapter);
 
         for ( int i = 0; i< tagsList.size(); i++ )
         { if ( profile.getTags().contains(tagsList.get(i)) ) {
             listView.setItemChecked(i,true);}
         }
+
+
     }
+
+
+
+
+
+
 
 
     public static void changeProfile ( Profile profile) {
         ModifierProfileBisActivity.profile = profile;
     }
+
+
+    public static void changeTagsList(List<Tag> list)
+    {
+        tagsList.clear();
+        tagsList.addAll(list);
+         Collections.sort(tagsList, new Comparator<Tag>() {
+            @Override
+            public int compare(Tag lhs, Tag rhs) {
+                return lhs.getObjectName().compareTo(rhs.getObjectName());
+            }
+        });
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
     @Override

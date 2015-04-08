@@ -9,10 +9,14 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import com.stuffinder.R;
 import com.stuffinder.data.Profile;
 import com.stuffinder.data.Tag;
+import com.stuffinder.engine.NetworkServiceProvider;
+import com.stuffinder.exceptions.NetworkServiceException;
+import com.stuffinder.exceptions.NotAuthenticatedException;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -43,14 +47,26 @@ public class ModifierProfileActivity extends Activity {
 
     public void goToModoficiation(View view){
 
-        int rang = listView.getCheckedItemPosition() ;
-        Profile profile = listProfiles.get(rang);
+        try {
 
-       ModifierProfileBisActivity.changeProfile(profile);
-       Intent intent = new Intent (this, ModifierProfileBisActivity.class);
+            int rang = listView.getCheckedItemPosition() ;
+            Profile profile = listProfiles.get(rang);
+            List<Tag> list = NetworkServiceProvider.getNetworkService().getTags();
 
-        finish();
-        startActivity(intent);
+            ModifierProfileBisActivity.changeProfile(profile);
+            ModifierProfileBisActivity.changeTagsList(list);
+
+            Intent intent = new Intent (this, ModifierProfileBisActivity.class);
+
+            finish();
+            startActivity(intent);
+
+        } catch (NotAuthenticatedException e) {// abnormal error.
+            Toast.makeText(this, "Une erreur anormale est survenue. Veuiller redémarrer l'application", Toast.LENGTH_LONG).show();
+        } catch (NetworkServiceException e) {
+            Toast.makeText(this, "Une erreur réseau est survenue.", Toast.LENGTH_LONG).show();
+        }
+
 
     }
 
