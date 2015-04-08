@@ -24,5 +24,6 @@
     <string name="title_activity_modifier_profile">ModifierProfileActivity</string>
     <string name="title_activity_modifier_profile_bis">ModifierProfileBisActivity</string>
     <string name="title_activity_supprimer_profil">SupprimerProfilActivity</string>
+    <string name="title_activity_creer_profil">CreerProfilActivity</string>
 
 </resources>
