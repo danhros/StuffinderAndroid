@@ -2,6 +2,7 @@ package com.stuffinder.activities;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.util.SparseBooleanArray;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ArrayAdapter;
@@ -9,6 +10,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.view.View;
 
 import com.stuffinder.R;
 import com.stuffinder.data.Account;
@@ -59,6 +61,15 @@ public class ModifierProfileBisActivity extends Activity {
 
     }
 
+    public void modifierProfil ( View view ) {
+
+        SparseBooleanArray tab = listView.getCheckedItemPositions() ;
+        List<Tag> newTagsProfileList = new ArrayList<>();
+
+        for ( int i = 0 ; i<tagsList.size(); i++ ) {
+        if (tab.get(i) == true) { newTagsProfileList.add(tagsList.get(i)); } }
+
+    }
 
 
 

@@ -17,7 +17,7 @@
         android:id="@+id/buttonCreer"
         android:background="#ff5e6eff"
         android:textColor="#ffffffff"
-        android:onClick="modifierNom"
+        android:onClick="modifierProfil"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true" />
 
