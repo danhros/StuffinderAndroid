@@ -5,12 +5,13 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     android:paddingBottom="@dimen/activity_vertical_margin"
     tools:context="com.stuffinder.activities.ConfigurationProfilsActivity"
-    android:background="#ff24088f">
+    android:background="#ff24088f"
+    android:id="@+id/">
 
     <Button
         android:layout_width="200dp"
         android:layout_height="60dp"
-        android:text="Ajouter un Profils"
+        android:text="Ajouter un Profil"
         android:id="@+id/buttonAjoutTag"
         android:background="#ff5e6eff"
         android:clickable="true"
@@ -27,7 +28,7 @@
     <Button
         android:layout_width="200dp"
         android:layout_height="60dp"
-        android:text="Modifier un Profils"
+        android:text="Modifier un Profil"
         android:id="@+id/buttonModifTag"
         android:background="#ff5e6eff"
         android:textColor="#ffffffff"
@@ -43,7 +44,7 @@
     <Button
         android:layout_width="200dp"
         android:layout_height="60dp"
-        android:text="Supprimer un Profils"
+        android:text="Supprimer un Profil"
         android:id="@+id/buttonSupprTag"
         android:background="#ff5e6eff"
         android:textColor="#ffffffff"

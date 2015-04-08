@@ -105,6 +105,10 @@
             android:name=".activities.ModifierProfileBisActivity"
             android:label="@string/title_activity_modifier_profile_bis" >
         </activity>
+        <activity
+            android:name=".activities.SupprimerProfilActivity"
+            android:label="@string/title_activity_supprimer_profil" >
+        </activity>
     </application>
 
 </manifest>

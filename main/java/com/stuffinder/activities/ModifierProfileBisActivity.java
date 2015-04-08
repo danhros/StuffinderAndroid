@@ -11,14 +11,21 @@ import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.view.View;
+import android.widget.Toast;
+import android.content.Intent;
+
 
 import com.stuffinder.R;
 import com.stuffinder.data.Account;
 import com.stuffinder.data.Profile;
 import com.stuffinder.data.Tag;
 import com.stuffinder.engine.NetworkServiceProvider;
+import com.stuffinder.exceptions.IllegalFieldException;
+import com.stuffinder.exceptions.NetworkServiceException;
 import com.stuffinder.exceptions.NotAuthenticatedException;
 
+
+import static com.stuffinder.exceptions.IllegalFieldException.*;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -65,19 +72,47 @@ public class ModifierProfileBisActivity extends Activity {
 
         SparseBooleanArray tab = listView.getCheckedItemPositions() ;
         List<Tag> newTagsProfileList = new ArrayList<>();
+        int tagPourProfils = 0 ;
+        String nomProfil = editTextModifierNom.getText().toString();
 
         for ( int i = 0 ; i<tagsList.size(); i++ ) {
-        if (tab.get(i) == true) { newTagsProfileList.add(tagsList.get(i)); } }
+            if (tab.get(i) == true) { newTagsProfileList.add(tagsList.get(i));
+                                      tagPourProfils ++ ; }}
+
+
+
+        if ( nomProfil.length() == 0 ) { Toast.makeText(this, "Entrez un nom de profils.", Toast.LENGTH_LONG).show(); }
+        else {
+         try { NetworkServiceProvider.getNetworkService().modifyProfileName(profile, nomProfil); }
+
+        catch ( NotAuthenticatedException e ) { Toast.makeText(this, "Une erreur anormale est survenue.", Toast.LENGTH_LONG).show(); }
+        catch ( NetworkServiceException e ) { Toast.makeText(this, "Une erreur réseau est survenue.", Toast.LENGTH_LONG).show(); }
+        catch ( IllegalFieldException e ) { switch (e.getFieldId()) {
+            case IllegalFieldException.REASON_VALUE_ALREADY_USED :
+                Toast.makeText(this, "Nom de Profil déjà utilisé.", Toast.LENGTH_LONG).show();
+            case IllegalFieldException.REASON_VALUE_INCORRECT :
+                Toast.makeText(this, "Nom de Profils Incorrect", Toast.LENGTH_LONG).show(); }
+            }}
+
+
+
+        if ( tagPourProfils == 0  ) { Toast.makeText(this, "Aucune puce n'est sélectionnée , votre profil sera vide", Toast.LENGTH_LONG).show();}
+        else {
+            try {  NetworkServiceProvider.getNetworkService().replaceTagListOfProfile(profile, newTagsProfileList) ;
+                   Intent intentGotoConfiProf = new Intent ( this, ConfigurationProfilsActivity.class );
+                   finish(); }
+        catch ( NetworkServiceException e ) {
+            Toast.makeText(this, "Une erreur réseau est survenue.", Toast.LENGTH_LONG).show(); }
+        catch ( IllegalFieldException e ) { }
+        catch ( NotAuthenticatedException e ) { Toast.makeText(this, "Une erreur anormale est survenue.", Toast.LENGTH_LONG).show();} }
+
 
     }
 
 
 
 
-
-
-
-    public static void changeProfile ( Profile profile) {
+            public static void changeProfile ( Profile profile) {
         ModifierProfileBisActivity.profile = profile;
     }
 
