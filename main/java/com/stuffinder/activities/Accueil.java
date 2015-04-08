@@ -9,6 +9,7 @@ import android.view.Window;
 import android.widget.Toast;
 
 import com.stuffinder.R;
+import com.stuffinder.ble.BLEService;
 import com.stuffinder.engine.EngineService;
 import com.stuffinder.engine.EngineServiceProvider;
 import com.stuffinder.engine.NetworkServiceProvider;
@@ -46,6 +47,7 @@ public class Accueil extends BasicActivity {
         try {
             NetworkServiceProvider.getNetworkService().initNetworkService();
             EngineServiceProvider.getEngineService().initEngineService(this);
+            BLEService.getInstance().initBLEService(this);
 
                 EngineServiceProvider.getEngineService().setAutoSynchronization(true);
         } catch (NetworkServiceException e) {
