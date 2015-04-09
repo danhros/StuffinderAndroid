@@ -22,6 +22,7 @@ import android.util.Log;
 
 import com.stuffinder.activities.BasicActivity;
 import com.stuffinder.data.Tag;
+import com.stuffinder.exceptions.BLEServiceException;
 
 import java.util.UUID;
 
@@ -37,31 +38,70 @@ public class BLEService  extends Service{
     private BluetoothManager mBluetoothManager;
     private BluetoothAdapter bluetoothAdapter;
 
-    /**
-     * the address of the connected bluetooth device.
-     */
-    private String mBluetoothDeviceAddress;
 
-    /**
-     * Gatt connected the bluetooth device which has {@link #mBluetoothDeviceAddress} as address.
-     */
-    private BluetoothGatt mBluetoothGatt;
-
-    private boolean serviceRunning;
-
-    private Context context;
-
-    public boolean initBLEService(Context context)
+    public static void startBLEService(Context context)
     {
-        if(serviceRunning) //TODO modify to optimise.
-            return true;
+        Intent gattServiceIntent = new Intent(context, BLEService.class);
+        context.startService(gattServiceIntent);
+    }
 
-        this.context = context;
+    public static BLEServiceConnection connectToService(Context context)
+    {
+        Intent intent = new Intent(context, BLEService.class);
+        BLEServiceConnection bleServiceConnection = new BLEServiceConnection();
 
+        context.bindService(intent, bleServiceConnection, Context.BIND_AUTO_CREATE);
+
+        return bleServiceConnection;
+    }
+
+    public static void disconnectToService(Context context, BLEServiceConnection bleServiceConnection)
+    {
+        context.unbindService(bleServiceConnection);
+    }
+
+    public static void stopBLEService(Context context)
+    {
+        Intent gattServiceIntent = new Intent(context, BLEService.class);
+        context.stopService(gattServiceIntent);
+    }
+
+    static class BLEServiceConnection implements ServiceConnection{
+
+        @Override
+        public void onServiceConnected(ComponentName componentName, IBinder service) {
+
+//            if (! bluetoothAdapter.isEnabled()) {
+//                Log.e(getClass().getName(), "Unable to initialize Bluetooth");
+//                return;
+//            }
+            // Automatically connects to the device upon successful start-up
+            // initialization.
+
+//            connect(mDeviceAddress);
+        }
+
+        @Override
+        public void onServiceDisconnected(ComponentName componentName) {
+        }
+    }
+
+    private void verifyIfBLESupported() throws BLEServiceException
+    {
+        if(! isBLESuported)
+        {
+            Log.e(getClass().getName(), "BLE feature not supported.");
+            throw new BLEServiceException("BLE not supported.");
+        }
+    }
+
+    @Override
+    public void onCreate()
+    {
         isBLESuported = getPackageManager().hasSystemFeature(PackageManager.FEATURE_BLUETOOTH_LE);
 
         if(! isBLESuported)
-            return false;
+            return;
 
         mBluetoothManager = (BluetoothManager) getSystemService(Context.BLUETOOTH_SERVICE);
         bluetoothAdapter = mBluetoothManager.getAdapter();
@@ -69,52 +109,30 @@ public class BLEService  extends Service{
         if(bluetoothAdapter == null)
         {
             isBLESuported = false;
-            return false;
+            return;
         }
 
         if(! enableBluetooth())
-            return false;
+            return;
 
-        // to launch the bluetooth service.
-        Intent gattServiceIntent = new Intent(context, BLEService.class);
-        context.startService(gattServiceIntent);
-
-        //TODO add code to lauch service.
-        return true;
+        //TODO add code to launch the thread for surveillance.
     }
 
-    public void startBLEService()
+    @Override
+    public int onStartCommand(Intent intent, int flags, int startId)
     {
-        if(isBLESuported && enableBluetooth())
-        {
-            Intent gattServiceIntent = new Intent(context, BLEService.class);
-            context.startService(gattServiceIntent);
-        }
+        return super.onStartCommand(intent, flags, startId);
     }
 
-    public void connectToService(Context context)
+    @Override
+    public void onDestroy()
     {
-        Intent intent = new Intent(context, BLEService.class);
-        context.bindService(intent, mServiceConnection, Context.BIND_AUTO_CREATE);
-    }
-
-    public void disconnectToService(Context context)
-    {
-        Intent intent = new Intent(context, BLEService.class);
-        context.unbindService(mServiceConnection);
-    }
-
-    public void stopBLEService()
-    {
-        if(isBLESuported)
-        {
-            Intent gattServiceIntent = new Intent(context, BLEService.class);
-            context.stopService(gattServiceIntent);
-        }
+        //TODO add code to properly stop surveillance thread and remove all bluetooth connections.
     }
 
 
-    public boolean enableBluetooth()
+
+    private boolean enableBluetooth()
     {
         if (!bluetoothAdapter.isEnabled()) {
             Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
@@ -125,47 +143,81 @@ public class BLEService  extends Service{
     }
 
 
+
+    /**
+     * Bluetooth gatt used to communicate with the located tag.
+     */
+    private BluetoothGatt locationBluetoothGatt;
+    private Tag locatedTag;
+
+    //methods used for location.
+
     //TODO implement these methods.
-    public boolean connectToTag(Tag tag){
 
-        return false;
-    }
+    /**
+     * to perform connection with a tag.
+     * @param tag
+     * @return true if the connection is established, false if the tag is not found.
+     * @throws BLEServiceException
+     * @throws IllegalArgumentException
+     */
+    public boolean connectToTag(Tag tag) throws BLEServiceException, IllegalArgumentException
+    {
+        verifyIfBLESupported();
 
-    public boolean disconnectFromTag(){
-        return false;
-    }
-
-    public boolean enableTagLED(boolean enable) {
-        return false;
-    }
-
-    public boolean enableTagSound(boolean enable) {
-        return false;
-    }
-
-    public boolean enableTagBuzzer(boolean enable) {
-        return false;
-    }
-
-    private final ServiceConnection mServiceConnection = new ServiceConnection() {
-
-        @Override
-        public void onServiceConnected(ComponentName componentName, IBinder service) {
-
-            if (! bluetoothAdapter.isEnabled()) {
-                Log.e(getClass().getName(), "Unable to initialize Bluetooth");
-                return;
-            }
-            // Automatically connects to the device upon successful start-up
-            // initialization.
-
-//            connect(mDeviceAddress);
+        if(locationBluetoothGatt != null)
+        {
+            disconnect(locationBluetoothGatt);
+            close(locationBluetoothGatt);
         }
 
-        @Override
-        public void onServiceDisconnected(ComponentName componentName) {
+        locationBluetoothGatt = connect(tag.getUid());
+
+        if(locationBluetoothGatt == null)
+            return false;
+
+        locatedTag = tag;
+        return true;
+    }
+
+    /**
+     * To disconnect the location service with the current tag.
+     */
+    public void disconnectFromTag() throws BLEServiceException
+    {
+        verifyIfBLESupported();
+
+        if(locationBluetoothGatt != null)
+        {
+            disconnect(locationBluetoothGatt);
+            close(locationBluetoothGatt);
+            locationBluetoothGatt = null;
+            locatedTag = null;
         }
-    };
+    }
+
+    public boolean enableTagLED(boolean enable) throws BLEServiceException
+    {
+        verifyIfBLESupported();
+
+        return false;
+    }
+
+    public boolean enableTagSound(boolean enable) throws BLEServiceException
+    {
+        verifyIfBLESupported();
+
+        return false;
+    }
+
+    public boolean enableTagBuzzer(boolean enable) throws BLEServiceException
+    {
+        verifyIfBLESupported();
+
+        return false;
+    }
+
+
 
 
     // constants used for the gatt state.
@@ -292,54 +344,33 @@ public class BLEService  extends Service{
 
 
     /**
+     * Gatt connected the bluetooth device.
+     */
+    private BluetoothGatt mBluetoothGatt;
+
+
+    /**
      * Establish the connection between this service and a bluetooth device.
      * @param address the address of the bluetooth device.
-     * @return true on success, false otherwise.
+     * @return the gatt on success, null if the device is not found.
      */
-    public boolean connect(String address)
+    private BluetoothGatt connect(String address) throws BLEServiceException
     {
-        if (bluetoothAdapter == null || address == null)
+        verifyIfBLESupported();
+
+        if (address == null || address.length() == 0)
         {
             Log.w(getClass().getName(), "BluetoothAdapter not initialized or unspecified address.");
-            return false;
-        }
-
-        // Previously connected device. Try to reconnect.
-        // if the device which has the address address is already connected, do disconnection and establish a new connection.
-        if (mBluetoothDeviceAddress != null && address.equals(mBluetoothDeviceAddress) && mBluetoothGatt != null)
-        {
-            Log.d(getClass().getName(), "Trying to use an existing mBluetoothGatt for connection.");
-            if (mBluetoothGatt.connect()) {
-                return true;
-            } else {
-                return false;
-            }
-        }
-        else if(mBluetoothGatt != null) // already connected to another device.
-        {
-            disconnect();
-            close();
+            throw new IllegalArgumentException("device address can't be null.");
         }
 
         BluetoothDevice device = bluetoothAdapter.getRemoteDevice(address);
 
-        // to detect the bluetooth device.
-        if (device == null) // if the device is not found.
-        {
-            Log.w(getClass().getName(), "Device not found.  Unable to connect.");
-            return false;
-        }
-        // We want to directly connect to the device, so we are setting the
-        // autoConnect
-        // parameter to false.
+        // We want to directly connect to the device, so we are setting the autoConnect parameter to false.
+        Log.d(getClass().getName(), "Trying to create a new connection with the device which has address \"" + address + "\".");
+        BluetoothGatt bluetoothGatt = device.connectGatt(this, false, mGattCallback);
 
-        // to perform the connection.
-
-        Log.d(getClass().getName(), "Trying to create a new connection.");
-        mBluetoothGatt = device.connectGatt(this, false, mGattCallback);
-        mBluetoothDeviceAddress = address;
-
-        return true;
+        return bluetoothGatt;
     }
 
     /**
@@ -347,25 +378,36 @@ public class BLEService  extends Service{
      * disconnection result is reported asynchronously through the
      * {@code BluetoothGattCallback#onConnectionStateChange(android.bluetooth.BluetoothGatt, int, int)}
      * callback.
+     * @param bluetoothGatt gatt to use to do disconnection.
+     * @throws BLEServiceException
      */
-    public void disconnect() {
-        if (bluetoothAdapter == null || mBluetoothGatt == null) {
-            Log.w(getClass().getName(), "BluetoothAdapter not initialized");
-            return;
+    private void disconnect(BluetoothGatt bluetoothGatt) throws BLEServiceException
+    {
+        verifyIfBLESupported();
+
+        if (bluetoothGatt == null) {
+            Log.w(getClass().getName(), "bluetooth gatt can't be null.");
+            throw new IllegalArgumentException("parameter must be not null.");
         }
-        mBluetoothGatt.disconnect();
+        bluetoothGatt.disconnect();
     }
 
     /**
      * After using a given BLE device, the app must call this method to ensure
      * resources are released properly.
+     * @param bluetoothGatt gatt to close to release resource properly.
+     * @throws BLEServiceException
      */
-    public void close() {
-        if (mBluetoothGatt == null) {
-            return;
+    private void close(BluetoothGatt bluetoothGatt) throws BLEServiceException
+    {
+        verifyIfBLESupported();
+
+        if (bluetoothGatt == null) {
+            Log.w(getClass().getName(), "bluetooth gatt can't be null.");
+            throw new IllegalArgumentException("parameter must be not null.");
         }
-        mBluetoothGatt.close();
-        mBluetoothGatt = null;
+
+        bluetoothGatt.close();
     }
 
 
@@ -379,31 +421,34 @@ public class BLEService  extends Service{
      * @param characteristic
      *            The characteristic to read from.
      */
-    public void readCharacteristic(BluetoothGattCharacteristic characteristic) {
-        if (bluetoothAdapter == null || mBluetoothGatt == null) {
-            Log.w(getClass().getName(), "BluetoothAdapter not initialized");
-            return;
-        }
+    public void readCharacteristic(BluetoothGatt bluetoothGatt, BluetoothGattCharacteristic characteristic) throws BLEServiceException
+    {
+        verifyIfBLESupported();
 
-        mBluetoothGatt.readCharacteristic(characteristic);
+        if (bluetoothGatt == null)
+            throw new IllegalArgumentException("bluetooth gatt can't be null");
+
+        bluetoothGatt.readCharacteristic(characteristic);
     }
 
-    public void readRssi() {
-        if (bluetoothAdapter == null || mBluetoothGatt == null) {
-            Log.w(getClass().getName(), "BluetoothAdapter not initialized");
-            return;
-        }
+    public void readRssi(BluetoothGatt bluetoothGatt) throws BLEServiceException
+    {
+        verifyIfBLESupported();
 
-        mBluetoothGatt.readRemoteRssi();
+        if (bluetoothGatt == null)
+            throw new IllegalArgumentException("bluetooth gatt can't be null");
+
+        bluetoothGatt.readRemoteRssi();
     }
 
-    public void writeCharacteristic(BluetoothGattCharacteristic characteristic) {
-        if (bluetoothAdapter == null || mBluetoothGatt == null) {
-            Log.w(getClass().getName(), "BluetoothAdapter not initialized !");
-            return;
-        }
+    public void writeCharacteristic(BluetoothGatt bluetoothGatt, BluetoothGattCharacteristic characteristic) throws BLEServiceException
+    {
+        verifyIfBLESupported();
 
-        mBluetoothGatt.writeCharacteristic(characteristic);
+        if (bluetoothGatt == null)
+            throw new IllegalArgumentException("bluetooth gatt can't be null");
+
+        bluetoothGatt.writeCharacteristic(characteristic);
     }
 
     /**
@@ -414,21 +459,20 @@ public class BLEService  extends Service{
      * @param enabled
      *            If true, enable notification. False otherwise.
      */
-    public void setCharacteristicNotification(
-            BluetoothGattCharacteristic characteristic, boolean enabled) {
-        if (bluetoothAdapter == null || mBluetoothGatt == null) {
-            Log.w(getClass().getName(), "BluetoothAdapter not initialized");
-            return;
-        }
-        mBluetoothGatt.setCharacteristicNotification(characteristic, enabled);
+    public void setCharacteristicNotification(BluetoothGatt bluetoothGatt, BluetoothGattCharacteristic characteristic, boolean enabled) throws BLEServiceException
+    {
+        verifyIfBLESupported();
 
-        if (UUID_BLE_SHIELD_RX.equals(characteristic.getUuid())) {
-            BluetoothGattDescriptor descriptor = characteristic
-                    .getDescriptor(UUID
-                            .fromString(RBLGattAttributes.CLIENT_CHARACTERISTIC_CONFIG));
-            descriptor
-                    .setValue(BluetoothGattDescriptor.ENABLE_NOTIFICATION_VALUE);
-            mBluetoothGatt.writeDescriptor(descriptor);
+        if (bluetoothGatt == null)
+            throw new IllegalArgumentException("bluetooth gatt can't be null");
+
+        bluetoothGatt.setCharacteristicNotification(characteristic, enabled);
+
+        if (UUID_BLE_SHIELD_RX.equals(characteristic.getUuid()))
+        {
+            BluetoothGattDescriptor descriptor = characteristic.getDescriptor(UUID.fromString(RBLGattAttributes.CLIENT_CHARACTERISTIC_CONFIG));
+            descriptor.setValue(BluetoothGattDescriptor.ENABLE_NOTIFICATION_VALUE);
+            bluetoothGatt.writeDescriptor(descriptor);
         }
     }
 
@@ -439,11 +483,12 @@ public class BLEService  extends Service{
      *
      * @return A {@code List} of supported services.
      */
-    public BluetoothGattService getSupportedGattService() {
-        if (mBluetoothGatt == null)
-            return null;
+    public BluetoothGattService getSupportedGattService(BluetoothGatt bluetoothGatt)
+    {
+        if (bluetoothGatt == null)
+            throw new IllegalArgumentException("bluetooth gatt can't be null");
 
-        return mBluetoothGatt.getService(UUID_BLE_SHIELD_SERVICE);
+        return bluetoothGatt.getService(UUID_BLE_SHIELD_SERVICE);
     }
 
 
@@ -468,7 +513,7 @@ public class BLEService  extends Service{
         // such that resources are cleaned up properly. In this particular
         // example, close() is
         // invoked when the UI is disconnected from the Service.
-        close();
+//        close();
         return super.onUnbind(intent);
     }
 
