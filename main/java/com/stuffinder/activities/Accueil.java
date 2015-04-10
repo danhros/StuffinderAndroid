@@ -47,7 +47,7 @@ public class Accueil extends BasicActivity {
         try {
             NetworkServiceProvider.getNetworkService().initNetworkService();
             EngineServiceProvider.getEngineService().initEngineService(this);
-            BLEService.getInstance().initBLEService(this);
+            BLEService.startBLEService(this);
 
                 EngineServiceProvider.getEngineService().setAutoSynchronization(true);
         } catch (NetworkServiceException e) {

@@ -1,6 +1,8 @@
 package com.stuffinder.engine;
 
 import android.content.Context;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 
 import com.stuffinder.activities.BasicActivity;
 import com.stuffinder.data.Account;
@@ -65,7 +67,19 @@ public class EngineService {
         Constants.setImageFolder(imageFolder);
 
         Logger.getLogger(getClass().getName()).log(Level.INFO, "Directory for images initialized : " + imageFolder.getAbsolutePath());
+
+        connectivityManager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
     }
+
+    private ConnectivityManager connectivityManager;
+
+    private boolean isInternetConnectionDone()
+    {
+        NetworkInfo activeNetwork = connectivityManager.getActiveNetworkInfo();
+        return activeNetwork != null &&
+                activeNetwork.isConnectedOrConnecting();
+    }
+
 
     public void createAccount(Account newAccount, String newPassword) throws IllegalFieldException, NetworkServiceException {
         NetworkServiceProvider.getNetworkService().createAccount(newAccount, newPassword);
@@ -753,6 +767,8 @@ public class EngineService {
         private List<Request> requests;
         private Semaphore requestNumber;
 
+
+
         private boolean errorOccurredOnData;
 
 
@@ -803,15 +819,32 @@ public class EngineService {
             }
         }
 
-//        BlockingQueue<Request> getFailedRequestQueue()
-//        {
-//            return failedRequestQueue;
-//        }
-//
-//        BlockingQueue<IllegalFieldException> getCatchedExceptionQueue()
-//        {
-//            return catchedExceptionQueue;
-//        }
+        private void removeFirstRequest()
+        {
+            try {
+                requestsMutex.acquire();
+
+                requests.remove(0);
+                requestsMutex.release();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
+
+        private Request getFirstRequest()
+        {
+            try {
+                requestsMutex.acquire();
+
+                Request tmp = requests.get(0);
+                requestsMutex.release();
+
+                return tmp;
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+                return null;
+            }
+        }
 
         boolean hasFailedOnPassword()
         {
@@ -833,7 +866,7 @@ public class EngineService {
             return errorOccurredOnData;
         }
 
-        void startAutoSynchronization(Account account, List<Tag> tagList, List<Profile> profileList, String password, int lastTagsUpdate, int lastProfileUpdate)
+        synchronized void startAutoSynchronization(Account account, List<Tag> tagList, List<Profile> profileList, String password, int lastTagsUpdate, int lastProfileUpdate)
         {
             if(account == null || password == null)
                 throw new NullPointerException("account and password parameters can't be null");
@@ -868,7 +901,7 @@ public class EngineService {
             runningThread.start();
         }
 
-        void startAfterErrorOnPassword(String password)
+        synchronized void startAfterErrorOnPassword(String password)
         {
             if(runningThread.isAlive() || ! failedOnPassword)
                 throw new IllegalStateException("Auto synchronizer already running.");
@@ -1004,44 +1037,36 @@ public class EngineService {
 
         }
 
-
         void stopAutoSynchronization()
         {
             continueAutoSynchronization = false;
             requestNumber.release();
         }
 
-        private void removeFirstRequest()
-        {
-            try {
-                requestsMutex.acquire();
-
-                requests.remove(0);
-                requestsMutex.release();
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-        }
-
-        private Request getFirstRequest()
-        {
-            try {
-                requestsMutex.acquire();
-
-                Request tmp = requests.get(0);
-                requestsMutex.release();
-
-                return tmp;
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-                return null;
-            }
-        }
-
+        private boolean connectedToInternet;
 
         @Override
         public void run()
         {
+            if(! isInternetConnectionDone())
+            {
+                connectedToInternet = false;
+                Logger.getLogger(getClass().getName()).log(Level.WARNING, "A network service error has occured because internet connection is down. trying to resole the problem.");
+                BasicActivity.getCurrentActivity().showErrorMessage("Error : Internet connection is down.");
+                while(continueAutoSynchronization && ! connectedToInternet)
+                {
+                    // to wait 5 seconds before checking again internet connection.
+                    try {
+                        Thread.sleep(5000);
+                    } catch (InterruptedException e1) {
+                        e1.printStackTrace();
+                    }
+                    connectedToInternet = isInternetConnectionDone();
+                }
+            }
+            else
+                connectedToInternet = true;
+
             if(failedOnPassword)
                 try {
                     NetworkServiceProvider.getNetworkService().updatePassword(password);
@@ -1225,22 +1250,38 @@ public class EngineService {
                     errorOccurredOnData = true;
                     BasicActivity.getCurrentActivity().showErrorMessage(errorMessage);
                 } catch (NotAuthenticatedException e) { // this case can't arrive.
-                    failedOnPassword = true;
                     Logger.getLogger(getClass().getName()).log(Level.WARNING, "An authentication error has occured (it has failed on password.)");
                     continueAutoSynchronization = false;
                     requestNumber.release();
-//                    new Thread() {
-//                        @Override
-//                        public void run() {
-                            BasicActivity.getCurrentActivity().askPasswordAfterError();
-//                        }
-//                    }.start();
+
+                    failedOnPassword = true;
+
+                    BasicActivity.getCurrentActivity().askPasswordAfterError();
 
                     Logger.getLogger(getClass().getName()).log(Level.WARNING, "Thread to ask password started.");
 
                 } catch (NetworkServiceException e) {// maybe the connexion to the server has failed.
                     Logger.getLogger(getClass().getName()).log(Level.WARNING, "A network service error has occured : " + e.getMessage());
-                    //TODO implement an optimized solution.
+
+                    if(! isInternetConnectionDone())
+                    {
+                        connectedToInternet = false;
+                        Logger.getLogger(getClass().getName()).log(Level.WARNING, "A network service error has occured because internet connection is down. trying to resole the problem.");
+                        BasicActivity.getCurrentActivity().showErrorMessage("Error : Internet connection is down.");
+                        while(continueAutoSynchronization && ! connectedToInternet)
+                        {
+                            // to wait 5 seconds before checking again internet connection.
+                            try {
+                                Thread.sleep(5000);
+                            } catch (InterruptedException e1) {
+                                e1.printStackTrace();
+                            }
+                            connectedToInternet = isInternetConnectionDone();
+                        }
+
+                        if(connectedToInternet)
+                            BasicActivity.getCurrentActivity().showErrorMessage("Internet connection available again");
+                    }
                     requestNumber.release();
                 } catch (InterruptedException e) {
                     Logger.getLogger(getClass().getName()).log(Level.INFO, "Interruption has occured :   " + e);

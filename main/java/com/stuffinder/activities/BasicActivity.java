@@ -53,7 +53,7 @@ public class BasicActivity extends Activity
     }
 
 
-    public void showErrorMessage(String message)
+    public synchronized void showErrorMessage(String message)
     {
         runOnUiThread(new ErrorMessageProcessor(message));
     }
