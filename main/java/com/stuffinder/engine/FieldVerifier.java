@@ -40,14 +40,16 @@ public class FieldVerifier
 
     public static boolean verifyImageFileName(String imageFileName)
     {
-        File file = new File(imageFileName);
-
-        if (file == null || !file.exists()) {
+        return verifyImageFileName(new File(imageFileName));
+    }
+    public static boolean verifyImageFileName(File imageFile)
+    {
+        if (imageFile == null || !imageFile.exists())
             return false;
-        }
+
         BitmapFactory.Options options = new BitmapFactory.Options();
         options.inJustDecodeBounds = true;
-        BitmapFactory.decodeFile(file.getPath(), options);
+        BitmapFactory.decodeFile(imageFile.getAbsolutePath(), options);
         return options.outWidth != -1 && options.outHeight != -1;
     }
 

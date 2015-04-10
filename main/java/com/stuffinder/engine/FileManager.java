@@ -111,6 +111,21 @@ public class FileManager {
     }
 
 
+    public static boolean removeFileFromRequestFolder(String filename)
+    {
+        return new File(requestImageFolder, filename).delete();
+    }
+
+    public static boolean removeFileFromUserFolder(String filename)
+    {
+        return new File(userImageFolder, filename).delete();
+    }
+
+    public static boolean removeFileFromAutoSyncFolder(String filename)
+    {
+        return new File(autoSyncImageFolder, filename).delete();
+    }
+
 
     static void cleanFolder(File folder)
     {
@@ -169,20 +184,18 @@ public class FileManager {
 
 
 
-    public static File getTagImageFileForRequest(Tag tag)
+    public static File getTagImageFileForRequest(int requestNumber)
     {
-        return tag.getObjectImageName() == null || tag.getObjectImageName().length() == 0 ? null : new File(requestImageFolder.getAbsolutePath(), tag.getUid() + "_" + ".jpg"); // TODO traiter les differents types de fichiers images.
+        return new File(requestImageFolder.getAbsolutePath(), "img_" + requestNumber + ".jpg"); // TODO traiter les differents types de fichiers images.
     }
 
     public static File getTagImageFileForUser(Tag tag)
     {
-        return tag.getObjectImageName() == null || tag.getObjectImageName().length() == 0 ? null : new File(userImageFolder.getAbsolutePath(), tag.getUid() + "_" + ".jpg"); // TODO traiter les differents types de fichiers images.
+        return new File(userImageFolder.getAbsolutePath(), tag.getUid().replaceAll("\\:", "_") + ".jpg"); // TODO traiter les differents types de fichiers images.
     }
 
     public static File getTagImageFileForAutoSynchronization(Tag tag)
     {
-        return tag.getObjectImageName() == null || tag.getObjectImageName().length() == 0 ? null : new File(autoSyncImageFolder.getAbsolutePath(), tag.getUid() + "_" + ".jpg"); // TODO traiter les differents types de fichiers images.
+        return new File(autoSyncImageFolder.getAbsolutePath(), tag.getUid().replaceAll("\\:", "_") + ".jpg"); // TODO traiter les differents types de fichiers images.
     }
-
-
 }

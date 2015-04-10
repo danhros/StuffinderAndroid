@@ -19,6 +19,7 @@ import static com.stuffinder.engine.Requests.*;
 import static com.stuffinder.exceptions.IllegalFieldException.*;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.LinkedList;
@@ -208,6 +209,10 @@ public class EngineService {
     }
 
     public Tag addTag(Tag tag) throws NotAuthenticatedException, IllegalFieldException, NetworkServiceException {
+        return addTag(tag, tag.getObjectImageName() == null || tag.getObjectImageName().length() == 0 ? null : new File(tag.getObjectImageName()));
+    }
+
+    public Tag addTag(Tag tag, File imageFile) throws NotAuthenticatedException, IllegalFieldException, NetworkServiceException {
         if(currentAccount == null)
             throw new NotAuthenticatedException();
 
@@ -218,7 +223,7 @@ public class EngineService {
             throw new IllegalFieldException(TAG_UID, REASON_VALUE_INCORRECT, tag.getUid());
         if(! FieldVerifier.verifyName(tag.getObjectName()))
             throw new IllegalFieldException(TAG_OBJECT_NAME, REASON_VALUE_INCORRECT, tag.getObjectName());
-        if(tag.getObjectImageName() != null && tag.getObjectImageName().length() > 0 && ! FieldVerifier.verifyImageFileName(tag.getObjectImageName()))
+        if(imageFile != null && ! FieldVerifier.verifyImageFileName(imageFile))
             throw new IllegalFieldException(TAG_OBJECT_IMAGE, REASON_VALUE_INCORRECT, tag.getObjectImageName());
 
         for(Tag tmp : tags)
@@ -229,10 +234,24 @@ public class EngineService {
                 throw new IllegalFieldException(TAG_UID, REASON_VALUE_ALREADY_USED, tag.getUid());
         }
 
-        Tag tmp = new Tag(tag.getUid(), tag.getObjectName(), tag.getObjectImageName() == null ? "" : tag.getObjectImageName());
+        AddTagRequest request = new AddTagRequest(new Tag(tag.getUid(), tag.getObjectName(), imageFile == null ? null : imageFile.getPath()));
+
+        Tag tmp = new Tag(tag.getUid(), tag.getObjectName(), null);
+
+        if(imageFile != null) // if an image is added.
+        {
+            try {
+                FileManager.copyFileToRequestFolder(imageFile, "img_" + request.getRequestNumber() + ".jpg");
+                FileManager.copyFileToUserFolder(imageFile, tmp.getUid().replaceAll("\\:", "_") + ".jpg");
+
+                tmp.setObjectImageName(FileManager.getTagImageFileForUser(tmp).getAbsolutePath());
+            } catch (FileNotFoundException e) {
+                throw new IllegalFieldException(TAG_OBJECT_IMAGE, REASON_VALUE_NOT_FOUND, imageFile.getPath());
+            }
+        }
         tags.add(tmp);
 
-        addRequest(new AddTagRequest(new Tag(tag.getUid(), tag.getObjectName(), tag.getObjectImageName()))); // new tag to be sure it will not be modified.
+        addRequest(request); // new tag to be sure it will not be modified.
 
         return tmp;
     }
@@ -270,21 +289,26 @@ public class EngineService {
         }
     }
 
-    public Tag modifyObjectImage(Tag tag, String newImageFileName) throws NotAuthenticatedException, IllegalFieldException, NetworkServiceException {
 
+    public Tag modifyObjectImage(Tag tag, String newImageFileName) throws NotAuthenticatedException, IllegalFieldException, NetworkServiceException
+    {
+        newImageFileName = newImageFileName == null ? "" : newImageFileName;
+
+        return modifyObjectImage(tag, newImageFileName.length() == 0 ? null : new File(newImageFileName));
+    }
+
+    public Tag modifyObjectImage(Tag tag, File newImageFile) throws NotAuthenticatedException, IllegalFieldException, NetworkServiceException
+    {
         if(currentAccount == null)
             throw new NotAuthenticatedException();
 
         checkForAccountUpdate();
         checkAutoSynchronizerState();
 
-        newImageFileName = newImageFileName == null ? "" : newImageFileName;
-
         if(! FieldVerifier.verifyTagUID(tag.getUid()))
             throw new IllegalFieldException(TAG_UID, REASON_VALUE_INCORRECT, tag.getUid());
-        if(newImageFileName.length() > 0 && ! FieldVerifier.verifyImageFileName(newImageFileName))
-            throw new IllegalFieldException(TAG_OBJECT_IMAGE, REASON_VALUE_INCORRECT, newImageFileName);
-
+        if(newImageFile != null && ! FieldVerifier.verifyImageFileName(newImageFile))
+            throw new IllegalFieldException(TAG_OBJECT_IMAGE, REASON_VALUE_INCORRECT, newImageFile.getPath());
 
         int index = tags.indexOf(tag);
 
@@ -293,9 +317,27 @@ public class EngineService {
         else
         {
             Tag tmp = tags.get(index);
-            tmp.setObjectImageName(newImageFileName);
 
-            addRequest(new ModifyTagObjectImageRequest(tag, newImageFileName));
+            ModifyTagObjectImageRequest request = new ModifyTagObjectImageRequest(tag, newImageFile == null ? null : newImageFile.getPath());
+
+            if(newImageFile != null) // if the image is added or modified.
+            {
+                try {
+                    FileManager.copyFileToRequestFolder(newImageFile, "img_" + request.getRequestNumber() + ".jpg");
+                    FileManager.copyFileToUserFolder(newImageFile, tmp.getUid().replaceAll("\\:", "_") + ".jpg");
+
+                    tmp.setObjectImageName(FileManager.getTagImageFileForUser(tmp).getAbsolutePath());
+                } catch (FileNotFoundException e) {
+                    throw new IllegalFieldException(TAG_OBJECT_IMAGE, REASON_VALUE_NOT_FOUND, newImageFile.getPath());
+                }
+            }
+            else if(tmp.getObjectImageName() != null && tmp.getObjectImageName().length() > 0) // if the image is removed.
+            {
+                FileManager.removeFileFromUserFolder(tmp.getObjectImageName());
+                tmp.setObjectImageName(null);
+            }
+
+            addRequest(request);
 
             return tmp;
         }
@@ -318,7 +360,12 @@ public class EngineService {
             throw new IllegalFieldException(IllegalFieldException.TAG_UID, IllegalFieldException.REASON_VALUE_NOT_FOUND, tag.getUid());
         else
         {
-            addRequest(new RemoveTagRequest(tags.get(index)));
+            Tag tmp = tags.get(index);
+            addRequest(new RemoveTagRequest(tmp));
+
+            if(tmp.getObjectImageName() != null && tmp.getObjectImageName().length() > 0) // removes the associated image if there is one.
+                FileManager.removeFileFromUserFolder(tmp.getObjectImageName());
+
             tags.remove(index);
         }
     }
