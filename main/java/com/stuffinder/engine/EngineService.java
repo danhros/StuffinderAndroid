@@ -19,6 +19,7 @@ import static com.stuffinder.engine.Requests.*;
 import static com.stuffinder.exceptions.IllegalFieldException.*;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
@@ -56,17 +57,13 @@ public class EngineService {
     }
 
     public void initEngineService(Context context) throws EngineServiceException {
-        File imageFolder = new File(context.getApplicationContext().getFilesDir().getAbsolutePath() + File.separator + "images");
+        File rootFolder = context.getApplicationContext().getFilesDir();
 
-        if(! (imageFolder.exists() || imageFolder.mkdir()))
-        {
-            Logger.getLogger(getClass().getName()).log(Level.SEVERE, "Error : image folder initialization failed : " + imageFolder.getAbsolutePath());
-            throw  new EngineServiceException("Error : image folder initialization failed.");
+        try {
+            FileManager.initFileManager(rootFolder.getAbsolutePath());
+        } catch (IOException e) {
+            throw new EngineServiceException("File manager initialization failed.");
         }
-
-        Constants.setImageFolder(imageFolder);
-
-        Logger.getLogger(getClass().getName()).log(Level.INFO, "Directory for images initialized : " + imageFolder.getAbsolutePath());
 
         connectivityManager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
     }
@@ -1255,24 +1252,21 @@ public class EngineService {
                     requestNumber.release();
 
                     failedOnPassword = true;
-
                     BasicActivity.getCurrentActivity().askPasswordAfterError();
-
-                    Logger.getLogger(getClass().getName()).log(Level.WARNING, "Thread to ask password started.");
-
                 } catch (NetworkServiceException e) {// maybe the connexion to the server has failed.
                     Logger.getLogger(getClass().getName()).log(Level.WARNING, "A network service error has occured : " + e.getMessage());
 
-                    if(! isInternetConnectionDone())
+                    if(! isInternetConnectionDone()) // if the internet connection is down, it will wait until it is up again.
                     {
                         connectedToInternet = false;
                         Logger.getLogger(getClass().getName()).log(Level.WARNING, "A network service error has occured because internet connection is down. trying to resole the problem.");
                         BasicActivity.getCurrentActivity().showErrorMessage("Error : Internet connection is down.");
+
                         while(continueAutoSynchronization && ! connectedToInternet)
                         {
                             // to wait 5 seconds before checking again internet connection.
                             try {
-                                Thread.sleep(5000);
+                                Thread.sleep(3000);
                             } catch (InterruptedException e1) {
                                 e1.printStackTrace();
                             }
@@ -1282,6 +1276,9 @@ public class EngineService {
                         if(connectedToInternet)
                             BasicActivity.getCurrentActivity().showErrorMessage("Internet connection available again");
                     }
+                    else
+                        BasicActivity.getCurrentActivity().showErrorMessage("A network error has occured.");
+
                     requestNumber.release();
                 } catch (InterruptedException e) {
                     Logger.getLogger(getClass().getName()).log(Level.INFO, "Interruption has occured :   " + e);
