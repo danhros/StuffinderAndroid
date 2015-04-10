@@ -127,6 +127,11 @@ public class BLEService  extends Service{
     @Override
     public void onDestroy()
     {
+        try {
+            disconnectFromTag();
+        } catch (BLEServiceException e) {
+            e.printStackTrace();
+        }
         //TODO add code to properly stop surveillance thread and remove all bluetooth connections.
     }
 
@@ -148,7 +153,7 @@ public class BLEService  extends Service{
      * Bluetooth gatt used to communicate with the located tag.
      */
     private BluetoothGatt locationBluetoothGatt;
-    private Tag locatedTag;
+    private String tagAddress;
 
     //methods used for location.
 
@@ -173,10 +178,11 @@ public class BLEService  extends Service{
 
         locationBluetoothGatt = connect(tag.getUid());
 
+
         if(locationBluetoothGatt == null)
             return false;
 
-        locatedTag = tag;
+        tagAddress = tag.getUid();
         return true;
     }
 
@@ -192,8 +198,15 @@ public class BLEService  extends Service{
             disconnect(locationBluetoothGatt);
             close(locationBluetoothGatt);
             locationBluetoothGatt = null;
-            locatedTag = null;
+            tagAddress = null;
         }
+    }
+
+    public int getLocatedTagDistance()throws BLEServiceException
+    {
+        verifyIfBLESupported();
+
+        return 0;
     }
 
     public boolean enableTagLED(boolean enable) throws BLEServiceException
