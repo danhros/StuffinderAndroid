@@ -91,4 +91,16 @@
         android:layout_centerVertical="true"
         android:layout_centerHorizontal="true" />
 
+    <Button
+        style="@android:style/ButtonBar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Changer l&apos;image"
+        android:id="@+id/button5"
+        android:background="#ff3672d5"
+        android:textColor="#ffffffff"
+        android:onClick="goToPics"
+        android:layout_below="@+id/imageViewTag"
+        android:layout_centerHorizontal="true" />
+
 </RelativeLayout>

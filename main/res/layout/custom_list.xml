@@ -19,7 +19,8 @@
         android:layout_height="wrap_content"
         android:text="@+id/label"
         android:textSize="17sp"
-        android:textColor="#ffffffff">
+        android:textColor="#ffffffff"
+        android:layout_gravity="center_vertical">
     </TextView>
 
 </LinearLayout>

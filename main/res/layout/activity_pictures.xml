@@ -1,0 +1,34 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="#ff24088f">
+
+    <Button
+        style="@android:style/MediaButton.Previous"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Retour"
+        android:id="@+id/button4"
+        android:background="#ff24088f"
+        android:textColor="#ffffffff"
+        android:textSize="10dp"
+        android:layout_alignParentTop="true"
+        android:layout_toEndOf="@+id/textView"
+        android:layout_alignBottom="@+id/textView"
+        android:onClick="retour11" />
+
+    <GridView
+
+android:gravity="center"
+android:columnWidth="150dp"
+android:stretchMode="columnWidth"
+android:layout_width="fill_parent"
+android:layout_height="fill_parent"
+android:id="@+id/grid"
+android:horizontalSpacing="1dp"
+android:numColumns="auto_fit"
+android:verticalSpacing="1dp"
+    />
+    </LinearLayout>

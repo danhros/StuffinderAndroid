@@ -19,6 +19,7 @@
     <string name="title_activity_localisation">Localisation</string>
     <string name="title_activity_configuration_tags">ConfigurationTagsActivity</string>
     <string name="hello_world">Hello world!</string>
+    <string name="title_activity_pictures">PicturesActivity</string>
     <string name="title_activity_configuration_profils">ConfigurationProfilsActivity</string>
     <string name="title_activity_ajouter_profils">AjouterProfilsActivity</string>
     <string name="title_activity_modifier_profile">ModifierProfileActivity</string>

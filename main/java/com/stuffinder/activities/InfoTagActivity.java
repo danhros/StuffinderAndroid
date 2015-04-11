@@ -2,6 +2,7 @@ package com.stuffinder.activities;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -46,6 +47,8 @@ public class InfoTagActivity extends BasicActivity {
         String s = tagModif.getObjectImageName();
         s = s == null ? "" : s;
 
+        s = s==null ? "" : s;
+
         if (s.equals("bag")) {
             imageView.setImageResource(R.drawable.bag);
         } else if (s.equals("carkey")) {
@@ -60,12 +63,19 @@ public class InfoTagActivity extends BasicActivity {
             imageView.setImageResource(R.drawable.tag);
         }else if (s.equals("wallet")) {
             imageView.setImageResource(R.drawable.wallet);
-        }
+        }else {imageView.setImageResource(R.drawable.question);}
 
     }
 
     public void retour7 (View view) {
         finish();
+    }
+
+    public void goToPics (View view) {
+
+        PicturesActivity.getTag(tagModif);
+        Intent intentPics = new Intent (this, PicturesActivity.class);
+        startActivity(intentPics);
     }
 
     public void modifierTag(View view) {
