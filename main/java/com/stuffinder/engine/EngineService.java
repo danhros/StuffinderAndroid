@@ -758,9 +758,9 @@ public class EngineService {
      */
     private void checkForAccountUpdate()
     {
-        if(isAutoSynchronizationEnabled() && autoSynchronizer.isErrorOccurredOnData())
+        if(isAutoSynchronizationEnabled() && (autoSynchronizer.isErrorOccurredOnData() || autoSynchronizer.isAccountDataUpdatedFromServer()))
         {
-            AutoSynchronizer.AccountData accountData = autoSynchronizer.getAccountCopyUpdatedAfterErrorOnData(tags);
+            AutoSynchronizer.AccountData accountData = autoSynchronizer.getAccountCopyUpdated(tags);
 
             currentAccount = accountData.getAccount();
             currentPassword = accountData.getPassword();
@@ -815,8 +815,8 @@ public class EngineService {
         private Semaphore requestNumber;
 
 
-
         private boolean errorOccurredOnData;
+        private boolean accountDataUpdatedFromServer;
 
 
         private Semaphore accountMutex;
@@ -847,6 +847,7 @@ public class EngineService {
             accountMutex = new Semaphore(1, true);
 
             errorOccurredOnData = false;
+            accountDataUpdatedFromServer = false;
             failedOnPassword = false;
         }
 
@@ -893,11 +894,6 @@ public class EngineService {
             }
         }
 
-        boolean hasFailedOnPassword()
-        {
-            return failedOnPassword;
-        }
-
         List<Request> getNotDoneRequests()
         {
             Object array[] = requests.toArray();
@@ -909,8 +905,18 @@ public class EngineService {
             return requestList;
         }
 
+
+        boolean hasFailedOnPassword()
+        {
+            return failedOnPassword;
+        }
+
         boolean isErrorOccurredOnData() {
             return errorOccurredOnData;
+        }
+
+        public boolean isAccountDataUpdatedFromServer() {
+            return accountDataUpdatedFromServer;
         }
 
         synchronized void startAutoSynchronization(Account account, List<Tag> tagList, List<Profile> profileList, String password, int lastTagsUpdate, int lastProfileUpdate)
@@ -927,6 +933,9 @@ public class EngineService {
                 Tag tmp = new Tag(tag.getUid(), tag.getObjectName(), tag.getObjectImageName());
                 tmp.setImageVersion(tag.getImageVersion());
                 tags.add(tmp);
+
+                if(tag.getObjectImageName() != null) // to specify the images to download.
+                    tagToUpdateImageFile.add(tmp);
             }
 
             List<Profile> profiles = this.account.getProfiles();
@@ -959,6 +968,12 @@ public class EngineService {
 
             runningThread = new Thread(this);
             runningThread.start();
+        }
+
+        void stopAutoSynchronization()
+        {
+            continueAutoSynchronization = false;
+            requestNumber.release();
         }
 
         private Account getAccountCopy()
@@ -1007,7 +1022,7 @@ public class EngineService {
             }
         }
 
-        AccountData getAccountCopyUpdatedAfterErrorOnData(List<Tag> currentTagList)
+        AccountData getAccountCopyUpdated(List<Tag> currentTagList)
         {
             requestsMutex.acquireUninterruptibly();
 
@@ -1023,6 +1038,7 @@ public class EngineService {
 
             List<Request> requestList = getNotDoneRequests();
             errorOccurredOnData = false;
+            accountDataUpdatedFromServer = false;
             int index;
 
             for(Request request : requestList)
@@ -1167,12 +1183,6 @@ public class EngineService {
                 }
         }
 
-        void stopAutoSynchronization()
-        {
-            continueAutoSynchronization = false;
-            requestNumber.release();
-        }
-
         private boolean connectedToInternet;
 
         @Override
@@ -1201,10 +1211,74 @@ public class EngineService {
 
             while(continueAutoSynchronization)
             {
+                requestsMutex.acquireUninterruptibly();
+                int size = requests.size();
+                requestsMutex.release();
+                if(requests.size() == 0 && tagToUpdateImageFile.size() > 0) // if there is image to download and no request, launches image download.
+                {
+                    // downloads needed images. This operation is perform with a lower priority than the requests.
+                    Object tags[] = tagToUpdateImageFile.toArray();
+                    for(int index = 0; index < tags.length && size == 0 && continueAutoSynchronization; index++)
+                    {
+                        try {
+                            String downloadImageFilename = NetworkServiceProvider.getNetworkService().downloadObjectImage((Tag) tags[index]);
+                            Logger.getLogger(getClass().getName()).log(Level.INFO, "image file download for the tag " + tags[index] + " succeeds.");
+
+                            accountMutex.acquireUninterruptibly();
+                            FileManager.moveFile(new File(downloadImageFilename), FileManager.getTagImageFileForAutoSynchronization((Tag) tags[index]));
+
+                            if(! isThereRequestAboutTagImage((Tag) tags[index]))
+                                FileManager.copyFileFromAutoSyncFolderToUserFolder((Tag) tags[index]);
+
+                            accountMutex.release();
+                            tagToUpdateImageFile.remove(tags[index]);
+                        } catch (NotAuthenticatedException e) {
+                            Logger.getLogger(getClass().getName()).log(Level.WARNING, "An authentication error has occured (it has failed on password.)");
+                            continueAutoSynchronization = false;
+
+                            failedOnPassword = true;
+                            BasicActivity.getCurrentActivity().askPasswordAfterError();
+                        } catch (NetworkServiceException e) {// maybe the connexion to the server has failed.
+                            Logger.getLogger(getClass().getName()).log(Level.WARNING, "A network service error has occured : " + e.getMessage());
+
+                            if(! isInternetConnectionDone()) // if the internet connection is down, it will wait until it is up again.
+                                checkAndWaitForInternetConnection();
+                            else
+                                BasicActivity.getCurrentActivity().showErrorMessage("A network error has occured.");
+                        } catch (FileNotFoundException e) {
+                            Logger.getLogger(getClass().getName()).log(Level.WARNING, "The downloaded file is not found for tag " + tags[index] + ".");
+                            accountMutex.release();
+                            e.printStackTrace();
+                        }
+
+                        requestsMutex.acquireUninterruptibly();
+                        size = requests.size();
+                        requestsMutex.release();
+                    }
+                }
                 try {
 
                     Logger.getLogger(getClass().getName()).log(Level.INFO, "Will wait for another request to process.");
+
+                    ThreadAlarm alarm = null;
+                    if(size == 0)
+                    {
+                        alarm = new ThreadAlarm(Thread.currentThread(), 15000);
+                        alarm.start();
+                    }
                     requestNumber.acquire();
+                    if(alarm != null)
+                    {
+                        try{
+                            alarm.stopAlarm();
+                            alarm = null;
+
+                            // wait for a little time to be sure the following case will not occur : the alarm has finished to wait the needed time before we stopped it and has not done interruption on the current thread.
+                            Thread.sleep(1);
+                        } catch (InterruptedException e){
+                        }
+                    }
+
                     if(! continueAutoSynchronization) // means the method stopAutoSynchronization() has been called.
                         return;
 
@@ -1219,7 +1293,7 @@ public class EngineService {
                                 ModifyEmailRequest modifyEmailRequest = (ModifyEmailRequest) currentRequest;
                                 NetworkServiceProvider.getNetworkService().modifyEMailAddress(modifyEmailRequest.getNewEmailAddress());
 
-                                accountMutex.acquire();
+                                accountMutex.acquireUninterruptibly();
                                 account.setMailAddress(modifyEmailRequest.getNewEmailAddress());
                                 accountMutex.release();
                             }
@@ -1235,7 +1309,7 @@ public class EngineService {
                                 ModifyPasswordRequest modifyPasswordRequest = (ModifyPasswordRequest) currentRequest;
                                 NetworkServiceProvider.getNetworkService().modifyPassword(modifyPasswordRequest.getNewPassword());
 
-                                accountMutex.acquire();
+                                accountMutex.acquireUninterruptibly();
                                 password = modifyPasswordRequest.getNewPassword();
                                 accountMutex.release();
                             }
@@ -1254,7 +1328,7 @@ public class EngineService {
 
                                 Tag result = NetworkServiceProvider.getNetworkService().addTag(addTagRequest.getNewTag());
 
-                                accountMutex.acquire();
+                                accountMutex.acquireUninterruptibly();
 
                                 if(addTagRequest.getNewTag().getObjectImageName() != null)
                                     FileManager.moveFileFromRequestFolderToAutoSyncFolder(addTagRequest.getRequestNumber(), addTagRequest.getNewTag());
@@ -1302,7 +1376,7 @@ public class EngineService {
                                 ModifyTagObjectNameRequest modifyTagObjectNameRequest = (ModifyTagObjectNameRequest) currentRequest;
                                 NetworkServiceProvider.getNetworkService().modifyObjectName(modifyTagObjectNameRequest.getTag(), modifyTagObjectNameRequest.getNewObjectName());
 
-                                accountMutex.acquire();
+                                accountMutex.acquireUninterruptibly();
                                 account.getTags().get(account.getTags().indexOf(modifyTagObjectNameRequest.getTag())).setObjectName(modifyTagObjectNameRequest.getNewObjectName());
                                 accountMutex.release();
                             }
@@ -1333,7 +1407,7 @@ public class EngineService {
                             {
                                 Tag result = NetworkServiceProvider.getNetworkService().modifyObjectImage(modifyTagObjectImageRequest.getTag(), imageFilename);
 
-                                accountMutex.acquire();
+                                accountMutex.acquireUninterruptibly();
                                 String newImageName = imageFilename == null ? null : FileManager.getTagImageFileForAutoSynchronization(modifyTagObjectImageRequest.getTag()).getAbsolutePath();
                                 Tag tag = account.getTags().get(account.getTags().indexOf(modifyTagObjectImageRequest.getTag()));
 
@@ -1384,7 +1458,7 @@ public class EngineService {
                             {
                                 NetworkServiceProvider.getNetworkService().removeTag(removeTagRequest.getTag());
 
-                                accountMutex.acquire();
+                                accountMutex.acquireUninterruptibly();
                                 int index = account.getTags().indexOf(removeTagRequest.getTag());
                                 Tag tag = account.getTags().get(index);
                                 if(tag.getObjectImageName() != null)
@@ -1443,45 +1517,31 @@ public class EngineService {
                 if(continueAutoSynchronization)
                 {
                     checkForUpdates();
-
-                    // downloads needed images. This operation is perform with a lower priority than the requests.
-                    if(requests.size() == 0)
-                    {
-                        Object tags[] = tagToUpdateImageFile.toArray();
-                        for(int index = 0; index < tags.length && requests.size() == 0; index++)
-                        {
-                            try {
-                                String downloadimageFilename = NetworkServiceProvider.getNetworkService().downloadObjectImage((Tag) tags[index]);
-                                accountMutex.acquireUninterruptibly();
-                                FileManager.moveFile(new File(downloadimageFilename), FileManager.getTagImageFileForAutoSynchronization((Tag) tags[index]));
-                                accountMutex.release();
-                                tagToUpdateImageFile.remove(tags[index]);
-                            } catch (NotAuthenticatedException e) {
-                                Logger.getLogger(getClass().getName()).log(Level.WARNING, "An authentication error has occured (it has failed on password.)");
-                                continueAutoSynchronization = false;
-
-                                failedOnPassword = true;
-                                BasicActivity.getCurrentActivity().askPasswordAfterError();
-                            } catch (NetworkServiceException e) {// maybe the connexion to the server has failed.
-                                Logger.getLogger(getClass().getName()).log(Level.WARNING, "A network service error has occured : " + e.getMessage());
-
-                                if(! isInternetConnectionDone()) // if the internet connection is down, it will wait until it is up again.
-                                    checkAndWaitForInternetConnection();
-                                else
-                                    BasicActivity.getCurrentActivity().showErrorMessage("A network error has occured.");
-                            } catch (FileNotFoundException e) {
-                                Logger.getLogger(getClass().getName()).log(Level.WARNING, "The downloaded file is not found for tag " + tags[index] + ".");
-                                accountMutex.release();
-                                e.printStackTrace();
-                            }
-                        }
-                    }
+                    Logger.getLogger(getClass().getName()).log(Level.INFO, "now up to date for data, without images.");
                 }
-
-                Logger.getLogger(getClass().getName()).log(Level.WARNING, "now up to date.");
             }
 
             Logger.getLogger(getClass().getName()).log(Level.INFO, "Auto synchronization is ending.");
+        }
+
+        /**
+         *
+         * @param tag the tag to check
+         * @return true if there is a request of type "modify object image" or "remove tag" about the specified tag, false otherwise.
+         */
+        private boolean isThereRequestAboutTagImage(Tag tag)
+        {
+            requestsMutex.acquireUninterruptibly();
+            for(Request request : requests)
+                if((request.getRequestType() == RequestType.MODIFY_TAG_OBJECT_IMAGE && ((ModifyTagObjectImageRequest) request).getTag().equals(tag))
+                    || (request.getRequestType() == RequestType.REMOVE_TAG && ((RemoveTagRequest) request).getTag().equals(tag)))
+                {
+                    requestsMutex.release();
+                    return true;
+                }
+
+            requestsMutex.release();
+            return false;
         }
 
         private void checkAndWaitForInternetConnection()
@@ -1602,6 +1662,8 @@ public class EngineService {
                             if(removedTag.getObjectImageName() != null)
                                 FileManager.getTagImageFileForAutoSynchronization(removedTag).delete();
                         }
+
+                    accountDataUpdatedFromServer = true;
                 }
 
                 if(profileList != null)
@@ -1617,6 +1679,8 @@ public class EngineService {
 
                         account.getProfiles().add(tmp);
                     }
+
+                    accountDataUpdatedFromServer = true;
                 }
 
                 accountMutex.release();
