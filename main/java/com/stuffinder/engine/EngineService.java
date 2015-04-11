@@ -22,8 +22,10 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Set;
 import java.util.concurrent.Semaphore;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -1078,7 +1080,6 @@ public class EngineService {
             } catch (InterruptedException e) {
                 return null;
             }
-
         }
 
         void stopAutoSynchronization()
@@ -1093,21 +1094,7 @@ public class EngineService {
         public void run()
         {
             if(! isInternetConnectionDone())
-            {
-                connectedToInternet = false;
-                Logger.getLogger(getClass().getName()).log(Level.WARNING, "A network service error has occured because internet connection is down. trying to resole the problem.");
-                BasicActivity.getCurrentActivity().showErrorMessage("Error : Internet connection is down.");
-                while(continueAutoSynchronization && ! connectedToInternet)
-                {
-                    // to wait 5 seconds before checking again internet connection.
-                    try {
-                        Thread.sleep(5000);
-                    } catch (InterruptedException e1) {
-                        e1.printStackTrace();
-                    }
-                    connectedToInternet = isInternetConnectionDone();
-                }
-            }
+                checkAndWaitForInternetConnection();
             else
                 connectedToInternet = true;
 
@@ -1221,6 +1208,7 @@ public class EngineService {
                                 throw e;
                             } catch (FileNotFoundException e) { // will normally never occur.
                                 e.printStackTrace();
+                                accountMutex.release();
                             }
                             break;
                         case MODIFY_TAG_OBJECT_NAME:
@@ -1276,6 +1264,8 @@ public class EngineService {
                                 tag.setImageVersion(result.getImageVersion());
 
                                 accountMutex.release();
+
+                                tagToUpdateImageFile.remove(tag); // to be sure this tag image will not be updated until a new call of the method checkForUpdate() is not done because it is useless.
                             }
                             catch(IllegalFieldException e)
                             {
@@ -1300,6 +1290,7 @@ public class EngineService {
                                 throw e;
                             } catch (FileNotFoundException e) { // will normally never occur.
                                 e.printStackTrace();
+                                accountMutex.release();
                             }
                             break;
                         case REMOVE_TAG:
@@ -1319,6 +1310,8 @@ public class EngineService {
 
                                 account.getTags().remove(index);
                                 accountMutex.release();
+
+                                tagToUpdateImageFile.remove(tag); // removes this removed tag from this set if it is "waiting" for an image update.
                             }
                             catch(IllegalFieldException e) // the only possible error is about the tag UID.
                             {
@@ -1342,7 +1335,7 @@ public class EngineService {
                     removeFirstRequest();
                     errorOccurredOnData = true;
                     BasicActivity.getCurrentActivity().showErrorMessage(errorMessage);
-                } catch (NotAuthenticatedException e) { // this case can't arrive.
+                } catch (NotAuthenticatedException e) {
                     Logger.getLogger(getClass().getName()).log(Level.WARNING, "An authentication error has occured (it has failed on password.)");
                     continueAutoSynchronization = false;
                     requestNumber.release();
@@ -1353,25 +1346,7 @@ public class EngineService {
                     Logger.getLogger(getClass().getName()).log(Level.WARNING, "A network service error has occured : " + e.getMessage());
 
                     if(! isInternetConnectionDone()) // if the internet connection is down, it will wait until it is up again.
-                    {
-                        connectedToInternet = false;
-                        Logger.getLogger(getClass().getName()).log(Level.WARNING, "A network service error has occured because internet connection is down. trying to resole the problem.");
-                        BasicActivity.getCurrentActivity().showErrorMessage("Error : Internet connection is down.");
-
-                        while(continueAutoSynchronization && ! connectedToInternet)
-                        {
-                            // to wait 5 seconds before checking again internet connection.
-                            try {
-                                Thread.sleep(3000);
-                            } catch (InterruptedException e1) {
-                                e1.printStackTrace();
-                            }
-                            connectedToInternet = isInternetConnectionDone();
-                        }
-
-                        if(connectedToInternet)
-                            BasicActivity.getCurrentActivity().showErrorMessage("Internet connection available again");
-                    }
+                        checkAndWaitForInternetConnection();
                     else
                         BasicActivity.getCurrentActivity().showErrorMessage("A network error has occured.");
 
@@ -1381,13 +1356,74 @@ public class EngineService {
                 }
 
                 if(continueAutoSynchronization)
+                {
                     checkForUpdates();
+
+                    // downloads needed images. This operation is perform with a lower priority than the requests.
+                    if(requests.size() == 0)
+                    {
+                        Object tags[] = tagToUpdateImageFile.toArray();
+                        for(int index = 0; index < tags.length && requests.size() == 0; index++)
+                        {
+                            try {
+                                String downloadimageFilename = NetworkServiceProvider.getNetworkService().downloadObjectImage((Tag) tags[index]);
+                                accountMutex.acquireUninterruptibly();
+                                FileManager.moveFile(new File(downloadimageFilename), FileManager.getTagImageFileForAutoSynchronization((Tag) tags[index]));
+                                accountMutex.release();
+                                tagToUpdateImageFile.remove(tags[index]);
+                            } catch (NotAuthenticatedException e) {
+                                Logger.getLogger(getClass().getName()).log(Level.WARNING, "An authentication error has occured (it has failed on password.)");
+                                continueAutoSynchronization = false;
+
+                                failedOnPassword = true;
+                                BasicActivity.getCurrentActivity().askPasswordAfterError();
+                            } catch (NetworkServiceException e) {// maybe the connexion to the server has failed.
+                                Logger.getLogger(getClass().getName()).log(Level.WARNING, "A network service error has occured : " + e.getMessage());
+
+                                if(! isInternetConnectionDone()) // if the internet connection is down, it will wait until it is up again.
+                                    checkAndWaitForInternetConnection();
+                                else
+                                    BasicActivity.getCurrentActivity().showErrorMessage("A network error has occured.");
+                            } catch (FileNotFoundException e) {
+                                Logger.getLogger(getClass().getName()).log(Level.WARNING, "The downloaded file is not found for tag " + tags[index] + ".");
+                                accountMutex.release();
+                                e.printStackTrace();
+                            }
+                        }
+                    }
+                }
 
                 Logger.getLogger(getClass().getName()).log(Level.WARNING, "now up to date.");
             }
 
             Logger.getLogger(getClass().getName()).log(Level.INFO, "Auto synchronization is ending.");
         }
+
+        private void checkAndWaitForInternetConnection()
+        {
+            if(! isInternetConnectionDone()) // if the internet connection is down, it will wait until it is up again.
+            {
+                connectedToInternet = false;
+                Logger.getLogger(getClass().getName()).log(Level.WARNING, "A network service error has occured because internet connection is down. trying to resole the problem.");
+                BasicActivity.getCurrentActivity().showErrorMessage("Error : Internet connection is down.");
+
+                while(continueAutoSynchronization && ! connectedToInternet)
+                {
+                    // to wait 5 seconds before checking again internet connection.
+                    try {
+                        Thread.sleep(3000);
+                    } catch (InterruptedException e1) {
+                        e1.printStackTrace();
+                    }
+                    connectedToInternet = isInternetConnectionDone();
+                }
+
+                if(connectedToInternet)
+                    BasicActivity.getCurrentActivity().showErrorMessage("Internet connection available again");
+            }
+        }
+
+        private Set<Tag> tagToUpdateImageFile = new HashSet<>();
 
         /**
          * Check if the local data are up to date or not. If it's not this case, it updates the local data.
@@ -1413,7 +1449,6 @@ public class EngineService {
                 accountMutex.acquire();
                 if(tagList != null) // there is an update to apply for tags.
                 {
-                    List<Tag> tagToUpdateImageFile = new LinkedList<>();
                     SortUtility.sortTagListByUID(tagList);
                     SortUtility.sortTagListByUID(account.getTags());
 
@@ -1426,11 +1461,15 @@ public class EngineService {
 
                         if(res == 0) // the tag is in the two lists. the fields of this will be updated.
                         {
-                            if(! tagList.get(i).getObjectImageName().equals(account.getTags().get(j).getObjectImageName())) // update image file if necessary.
+                            if(tagList.get(i).getImageVersion() > account.getTags().get(j).getImageVersion()) // update image file if necessary.
                             {
-                                //TODO add code to delete old image file.
+                                if(tagList.get(i).getObjectImageName() != null) //there is a new image file.
+                                    tagToUpdateImageFile.add(account.getTags().get(j));
+                                else if(account.getTags().get(j).getObjectImageName() != null) // if the image is removed from the server version.
+                                    FileManager.getTagImageFileForAutoSynchronization(account.getTags().get(j)).delete();
+
+                                account.getTags().get(j).setImageVersion(tagList.get(i).getImageVersion());
                                 account.getTags().get(j).setObjectImageName(tagList.get(i).getObjectImageName());
-                                tagToUpdateImageFile.add(account.getTags().get(j));
                             }
 
                             account.getTags().get(j).setObjectName(tagList.get(i).getObjectName()); // update object name.
@@ -1441,15 +1480,20 @@ public class EngineService {
                         else if(res > 0) //there is a new tag.
                         {
                             Tag tag = new Tag(tagList.get(i).getUid(), tagList.get(i).getObjectName(), tagList.get(i).getObjectImageName());
+                            tag.setImageVersion(tagList.get(i).getImageVersion());
                             account.getTags().add(tag);
-                            tagToUpdateImageFile.add(tag);
+
+                            if(tag.getObjectImageName() != null)
+                                tagToUpdateImageFile.add(tag);
 
                             i++;
                         }
                         else // a tag has been removed.
                         {
-                            account.getTags().remove(j);
-                            //TODO add code to delete associated image file.
+                            Tag removedTag = account.getTags().remove(j);
+                            if(removedTag.getObjectImageName() != null)
+                                FileManager.getTagImageFileForAutoSynchronization(removedTag).delete();
+
                             size--;
                         }
                     }
@@ -1459,13 +1503,20 @@ public class EngineService {
                         for(; i < tagList.size(); i++)
                         {
                             Tag tag = new Tag(tagList.get(i).getUid(), tagList.get(i).getObjectName(), tagList.get(i).getObjectImageName());
+                            tag.setImageVersion(tagList.get(i).getImageVersion());
                             account.getTags().add(tag);
-                            tagToUpdateImageFile.add(tag);
+
+                            if(tag.getObjectImageName() != null)
+                                tagToUpdateImageFile.add(tag);
                         }
                     }
                     else if(j < size) // there is tags to remove
                         for(; j<size; size--)
-                            account.getTags().remove(j);
+                        {
+                            Tag removedTag = account.getTags().remove(j);
+                            if(removedTag.getObjectImageName() != null)
+                                FileManager.getTagImageFileForAutoSynchronization(removedTag).delete();
+                        }
                 }
 
                 if(profileList != null)
