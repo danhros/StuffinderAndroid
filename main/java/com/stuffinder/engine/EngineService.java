@@ -149,6 +149,8 @@ public class EngineService {
             Logger.getLogger(getClass().getName()).log(Level.INFO, "Auto-synchronization thread stopped");
         }
 
+        FileManager.cleanImageFolders();
+
         currentAccount = null;
         currentPassword = null;
 
@@ -244,8 +246,8 @@ public class EngineService {
         if(imageFile != null) // if an image is added.
         {
             try {
-                FileManager.copyFileToRequestFolder(imageFile, "img_" + request.getRequestNumber() + ".jpg");
-                FileManager.copyFileToUserFolder(imageFile, tmp.getUid().replaceAll("\\:", "_") + ".jpg");
+                FileManager.copyFileToRequestFolder(imageFile, request.getRequestNumber());
+                FileManager.copyFileToUserFolder(imageFile, tmp);
 
                 tmp.setObjectImageName(FileManager.getTagImageFileForUser(tmp).getAbsolutePath());
             } catch (FileNotFoundException e) {
@@ -326,8 +328,8 @@ public class EngineService {
             if(newImageFile != null) // if the image is added or modified.
             {
                 try {
-                    FileManager.copyFileToRequestFolder(newImageFile, "img_" + request.getRequestNumber() + ".jpg");
-                    FileManager.copyFileToUserFolder(newImageFile, tmp.getUid().replaceAll("\\:", "_") + ".jpg");
+                    FileManager.copyFileToRequestFolder(newImageFile, request.getRequestNumber());
+                    FileManager.copyFileToUserFolder(newImageFile, tmp);
 
                     tmp.setObjectImageName(FileManager.getTagImageFileForUser(tmp).getAbsolutePath());
                 } catch (FileNotFoundException e) {
@@ -935,7 +937,10 @@ public class EngineService {
                 tags.add(tmp);
 
                 if(tag.getObjectImageName() != null) // to specify the images to download.
+                {
                     tagToUpdateImageFile.add(tmp);
+                    tag.setObjectImageName(FileManager.getTagImageFileForUser(tmp).getAbsolutePath());
+                }
             }
 
             List<Profile> profiles = this.account.getProfiles();

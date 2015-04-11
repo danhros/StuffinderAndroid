@@ -13,6 +13,7 @@ import com.stuffinder.engine.EngineServiceProvider;
 import com.stuffinder.engine.FieldVerifier;
 import com.stuffinder.exceptions.NotAuthenticatedException;
 
+import java.io.File;
 import java.util.Stack;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -129,6 +130,13 @@ public class BasicActivity extends Activity
                     });
             builder.show();
         }
+    }
+
+    public File getImageFileByResource(int resourceId)
+    {
+        String resourceEntryName = getResources().getResourceEntryName(resourceId);
+
+        return new File(getFilesDir().getAbsolutePath() + File.separator + "default_images", resourceEntryName + ".png");
     }
 
     /**

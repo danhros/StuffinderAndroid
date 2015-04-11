@@ -43,13 +43,13 @@ public class NetworkServiceEmulator implements NetworkServiceInterface
 		
 		Account testAccount = new Account("jdupon", "Jean", "Dupont", "jean.dupont@gmail.com");
 
-		Tag tag1 = new Tag("a1bef83a374", "Home keys");
-		Tag tag2 = new Tag("bd3496e342c", "Car key");
-		Tag tag3 = new Tag("aefd573fc3e", "Bag");
-		Tag tag4 = new Tag("f53ebc87298", "Wallet");
-		Tag tag5 = new Tag("e68fa3547cb", "Android tablet");
-		Tag tag6 = new Tag("F9:1F:24:D3:1B:D4", "Correct tag");
-		Tag tag7 = new Tag("e92fae67acb", "Android smartphone");
+		Tag tag1 = new Tag("a1bef83a374", "Home keys", "/data/data/com.stuffinder/files/default_images/keys.png");
+		Tag tag2 = new Tag("bd3496e342c", "Car key", "/data/data/com.stuffinder/files/default_images/carkey.png");
+		Tag tag3 = new Tag("aefd573fc3e", "Bag", "/data/data/com.stuffinder/files/default_images/bag.png");
+		Tag tag4 = new Tag("f53ebc87298", "Wallet", "/data/data/com.stuffinder/files/default_images/wallet.png");
+		Tag tag5 = new Tag("e68fa3547cb", "Android tablet", "/data/data/com.stuffinder/files/default_images/tablet.png");
+		Tag tag6 = new Tag("F9:1F:24:D3:1B:D4", "Correct tag", "/data/data/com.stuffinder/files/default_images/tag.png");
+		Tag tag7 = new Tag("e92fae67acb", "Android smartphone", "/data/data/com.stuffinder/files/default_images/smartphone.png");
 		
 		tags.add(tag1);
 		tags.add(tag2);
@@ -217,8 +217,12 @@ public class NetworkServiceEmulator implements NetworkServiceInterface
 	{
 		if(authenticatedAccount == null)
 			throw new NotAuthenticatedException();
-		
-		return authenticatedAccount.getTags();
+
+        List<Tag> tags = new ArrayList<>();
+        for(Tag tag : authenticatedAccount.getTags())
+            tags.add(new Tag(tag.getUid(), tag.getObjectName(), tag.getObjectImageName()));
+
+		return tags;
 	}
 
 	public Tag addTag(Tag tag) throws NotAuthenticatedException, IllegalFieldException, NetworkServiceException

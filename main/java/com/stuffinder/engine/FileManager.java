@@ -86,16 +86,14 @@ public class FileManager {
 
 
 
-    static boolean copyFileToRequestFolder(File file, String filename) throws FileNotFoundException {
-        File newFile = new File(requestImageFolder, filename);
-
-        return copyFile(file, newFile);
+    static boolean copyFileToRequestFolder(File file, int requestNumber) throws FileNotFoundException
+    {
+        return copyFile(file, getTagImageFileForRequest(requestNumber));
     }
 
-    static boolean copyFileToUserFolder(File file, String filename) throws FileNotFoundException {
-        File newFile = new File(userImageFolder, filename);
-
-        return copyFile(file, newFile);
+    static boolean copyFileToUserFolder(File file, Tag tag) throws FileNotFoundException
+    {
+        return copyFile(file, getTagImageFileForUser(tag));
     }
 
     static boolean copyFileToAutoSyncFolder(File file, String filename) throws FileNotFoundException {
@@ -140,6 +138,13 @@ public class FileManager {
         return new File(autoSyncImageFolder, filename).delete();
     }
 
+
+    static void cleanImageFolders()
+    {
+        cleanFolder(requestImageFolder);
+        cleanFolder(userImageFolder);
+        cleanFolder(autoSyncImageFolder);
+    }
 
     static void cleanFolder(File folder)
     {
@@ -200,7 +205,7 @@ public class FileManager {
 
     public static File getTagImageFileForRequest(int requestNumber)
     {
-        return new File(requestImageFolder.getAbsolutePath(), "img_" + requestNumber + ".jpg"); // TODO traiter les differents types de fichiers images.
+        return new File(requestImageFolder.getAbsolutePath(), "img_" + requestNumber + ".png"); // TODO traiter les differents types de fichiers images.
     }
 
     public static File getTagImageFileForUser(Tag tag)
@@ -215,6 +220,6 @@ public class FileManager {
 
     private static String getFilenameFromTag(Tag tag)
     {
-        return tag.getUid().replaceAll("\\:", "_") + ".jpg";
+        return tag.getUid().replaceAll("\\:", "_") + ".png";
     }
 }
