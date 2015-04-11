@@ -3,7 +3,10 @@ package com.stuffinder.activities;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -20,6 +23,8 @@ import com.stuffinder.exceptions.IllegalFieldException;
 import com.stuffinder.exceptions.NetworkServiceException;
 import com.stuffinder.exceptions.NotAuthenticatedException;
 
+import java.io.File;
+
 public class InfoTagActivity extends BasicActivity {
 
     EditText editTextNom;
@@ -27,6 +32,10 @@ public class InfoTagActivity extends BasicActivity {
     ImageView imageView;
 
     private static Tag tagModif;
+
+    private int selectedImageResourceId;
+    private boolean imageSelected;
+    private File currentImage;
 
 
 
@@ -38,32 +47,22 @@ public class InfoTagActivity extends BasicActivity {
         setContentView(R.layout.activity_info_tag);
 
         editTextNom = (EditText)findViewById(R.id.editTextNom) ;
-        //editTextImage = (EditText)findViewById(R.id.editTextImage) ;
+        editTextNom.setText(tagModif.getObjectName(), TextView.BufferType.EDITABLE);
+
         imageView = (ImageView)findViewById(R.id.imageViewTag);
+        if(tagModif.getObjectImageName() != null)
+        {
+            currentImage = new File(tagModif.getObjectImageName());
 
-            editTextNom.setText(tagModif.getObjectName(), TextView.BufferType.EDITABLE);
-            //editTextImage.setText(tagModif.getObjectImageName(), TextView.BufferType.EDITABLE);
-
-        String s = tagModif.getObjectImageName();
-        s = s == null ? "" : s;
-
-        s = s==null ? "" : s;
-
-        if (s.equals("bag")) {
-            imageView.setImageResource(R.drawable.bag);
-        } else if (s.equals("carkey")) {
-            imageView.setImageResource(R.drawable.carkey);
-        } else if (s.equals("keys")) {
-            imageView.setImageResource(R.drawable.keys);
-        }else if (s.equals("smartphone")) {
-            imageView.setImageResource(R.drawable.smartphone);
-        }else if (s.equals("tablet")) {
-            imageView.setImageResource(R.drawable.tablet);
-        }else if (s.equals("tag")) {
-            imageView.setImageResource(R.drawable.tag);
-        }else if (s.equals("wallet")) {
-            imageView.setImageResource(R.drawable.wallet);
-        }else {imageView.setImageResource(R.drawable.question);}
+            Bitmap myBitmap = BitmapFactory.decodeFile(tagModif.getObjectImageName());
+            if(myBitmap != null)
+                imageView.setImageBitmap(myBitmap);
+            else
+            {
+                Log.w(getClass().getName(), "image \"" + tagModif.getObjectImageName() + "\" fails to be loaded or decoded.");
+                imageView.setImageResource(R.drawable.question);
+            }
+        }
 
     }
 
@@ -75,13 +74,13 @@ public class InfoTagActivity extends BasicActivity {
 
         PicturesActivity.getTag(tagModif);
         Intent intentPics = new Intent (this, PicturesActivity.class);
+        PicturesActivity.setCallback(new PicChooserCallback());
         startActivity(intentPics);
     }
 
     public void modifierTag(View view) {
 
         String objectName = editTextNom.getText().toString();
-        //String objectImageFileName = editTextImage.getText().toString();
 
         if(objectName.length() == 0)
             Toast.makeText(this, "Entrer nom", Toast.LENGTH_LONG).show();
@@ -122,10 +121,10 @@ public class InfoTagActivity extends BasicActivity {
                 }
             }
 
-            /*if(hideAtEnd && ! objectImageFileName.equals(tagModif.getObjectImageName())) // the image filename is modified.
+            if(hideAtEnd && ((currentImage == null && tagModif.getObjectImageName() != null) || (currentImage != null && tagModif.getObjectImageName() == null) || (currentImage != null && ! currentImage.getPath().equals(tagModif.getObjectImageName())))) // the image filename is modified.
             {
                 try {
-                    tagModif = NetworkServiceProvider.getNetworkService().modifyObjectImage(tagModif, objectImageFileName);
+                    tagModif = EngineServiceProvider.getEngineService().modifyObjectImage(tagModif, currentImage);
                 } catch (IllegalFieldException e) {
                     switch(e.getFieldId())
                     {
@@ -150,7 +149,7 @@ public class InfoTagActivity extends BasicActivity {
                     Toast.makeText(this, "Une erreur réseau est survenue.", Toast.LENGTH_LONG).show();
                     hideAtEnd = false;
                 }
-            } */
+            }
 
             if(hideAtEnd)
                 finish();
@@ -238,6 +237,25 @@ public class InfoTagActivity extends BasicActivity {
     {
         tagModif = tag ;
 
+    }
+
+    class PicChooserCallback extends PicturesActivity.PictureChooserCallback
+    {
+        @Override
+        public void onPictureSelected(int drawableResourceId) {
+            selectedImageResourceId = drawableResourceId;
+            currentImage = getImageFileByResource(drawableResourceId);
+            imageSelected = true;
+
+            imageView.setImageResource(drawableResourceId);
+        }
+
+        @Override
+        public void onPictureUnselected() {
+            imageSelected = false;
+            currentImage = null;
+            imageView.setImageResource(R.drawable.no_picture);
+        }
     }
 
 }

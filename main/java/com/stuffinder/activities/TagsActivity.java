@@ -50,21 +50,6 @@ public class TagsActivity extends BasicActivity {
         finish();
     }
 
-    public void goToSuppr (View view) {
-
-        try {
-            List<Tag> list = EngineServiceProvider.getEngineService().getTags();
-
-            SupprTagActivity.changeTagsList(list);
-            Intent intentSuppr = new Intent (TagsActivity.this, SupprTagActivity.class);
-            startActivity(intentSuppr);
-        } catch (NotAuthenticatedException e) {// abnormal error.
-            Toast.makeText(this, "Une erreur anormale est survenue. Veuiller redémarrer l'application", Toast.LENGTH_LONG).show();
-        } catch (NetworkServiceException e) {
-            Toast.makeText(this, "Une erreur réseau est survenue.", Toast.LENGTH_LONG).show();
-        }
-    }
-
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {

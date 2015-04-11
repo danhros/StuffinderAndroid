@@ -1,6 +1,5 @@
 package com.stuffinder.activities;
 
-import android.app.Activity;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.view.View;
@@ -12,9 +11,10 @@ import com.stuffinder.R;
 import com.stuffinder.adaptateurs.GridAdapter;
 import com.stuffinder.data.Tag;
 
-public class PicturesActivity extends Activity {
+public class PicturesActivity extends BasicActivity {
 
-    Drawable[] listDrawable = null;
+    Drawable[] listDrawable;
+    int imageResourceIds[];
     GridView grid;
     private static Tag tagModif;
 
@@ -29,10 +29,15 @@ public class PicturesActivity extends Activity {
 
     public void goBack(View view, int position) {
 
-        Drawable pic = listDrawable[position];
+        int selectedResId = imageResourceIds[position];
+
+        if(callback != null)
+            if(selectedResId != R.drawable.no_picture)
+                callback.onPictureSelected(selectedResId);
+            else
+                callback.onPictureUnselected();
 
         finish();
-
     }
 
     @Override
@@ -50,8 +55,20 @@ public class PicturesActivity extends Activity {
                 getResources().getDrawable(R.drawable.smartphone),
                 getResources().getDrawable(R.drawable.tablet),
                 getResources().getDrawable(R.drawable.tag),
-                getResources().getDrawable(R.drawable.wallet)};
+                getResources().getDrawable(R.drawable.wallet),
+                getResources().getDrawable(R.drawable.no_picture)};
 
+        imageResourceIds = new int[]{
+                R.drawable.bag,
+                R.drawable.carkey,
+                R.drawable.glasses,
+                R.drawable.keys,
+                R.drawable.smartphone,
+                R.drawable.tablet,
+                R.drawable.tag,
+                R.drawable.wallet,
+                R.drawable.no_picture
+        };
         grid.setAdapter(new GridAdapter(getApplicationContext(), listDrawable));
 
         grid.setOnItemClickListener(new AdapterView.OnItemClickListener(){
@@ -65,5 +82,17 @@ public class PicturesActivity extends Activity {
 
     }
 
+    static abstract class PictureChooserCallback
+    {
+        public abstract void onPictureSelected(int drawableResourceId);
+        public abstract void onPictureUnselected();
+    }
+
+    private static PictureChooserCallback callback;
+
+    static void setCallback(PictureChooserCallback callback)
+    {
+        PicturesActivity.callback = callback;
+    }
 
 }
