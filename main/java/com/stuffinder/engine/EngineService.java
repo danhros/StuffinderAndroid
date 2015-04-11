@@ -1174,13 +1174,23 @@ public class EngineService {
                             }
                             break;
                         case ADD_TAG:
+                            AddTagRequest addTagRequest = (AddTagRequest) currentRequest;
                             try
                             {
-                                AddTagRequest addTagRequest = (AddTagRequest) currentRequest;
-                                NetworkServiceProvider.getNetworkService().addTag(addTagRequest.getNewTag());
+                                if(addTagRequest.getNewTag().getObjectImageName() != null)
+                                    addTagRequest.getNewTag().setObjectImageName(FileManager.getTagImageFileForRequest(addTagRequest.getRequestNumber()).getAbsolutePath());
+
+                                Tag result = NetworkServiceProvider.getNetworkService().addTag(addTagRequest.getNewTag());
 
                                 accountMutex.acquire();
-                                account.getTags().add(new Tag(addTagRequest.getNewTag().getUid(), addTagRequest.getNewTag().getObjectName(), addTagRequest.getNewTag().getObjectImageName()));
+
+                                if(addTagRequest.getNewTag().getObjectImageName() != null)
+                                    FileManager.moveFileFromRequestFolderToAutoSyncFolder(addTagRequest.getRequestNumber(), addTagRequest.getNewTag());
+
+                                Tag tag = new Tag(addTagRequest.getNewTag().getUid(), addTagRequest.getNewTag().getObjectName(), addTagRequest.getNewTag().getObjectImageName());
+                                tag.setImageVersion(result.getImageVersion());
+                                account.getTags().add(tag);
+
                                 accountMutex.release();
                             }
                             catch(IllegalFieldException e)
@@ -1201,7 +1211,16 @@ public class EngineService {
                                             errorMessage = "Tag addition failed : tag UID \"" + e.getFieldValue() + "\" is incorrect.";
                                         break;
                                 }
+
+                                if(addTagRequest.getNewTag().getObjectImageName() != null) // to be sure the request is properly removed about potential image file.
+                                    if(FileManager.getTagImageFileForRequest(addTagRequest.getRequestNumber()).delete())
+                                        Logger.getLogger(getClass().getName()).log(Level.INFO, "image file for request " + addTagRequest.getRequestNumber() + "deleted");
+                                    else
+                                        Logger.getLogger(getClass().getName()).log(Level.INFO, "image file for request " + addTagRequest.getRequestNumber() + "may not be deleted");
+
                                 throw e;
+                            } catch (FileNotFoundException e) { // will normally never occur.
+                                e.printStackTrace();
                             }
                             break;
                         case MODIFY_TAG_OBJECT_NAME:
@@ -1235,13 +1254,27 @@ public class EngineService {
                             }
                             break;
                         case MODIFY_TAG_OBJECT_IMAGE:
+                            ModifyTagObjectImageRequest modifyTagObjectImageRequest = (ModifyTagObjectImageRequest) currentRequest;
+                            String imageFilename = modifyTagObjectImageRequest.getNewObjectImageFilename() == null ? null : FileManager.getTagImageFileForRequest(modifyTagObjectImageRequest.getRequestNumber()).getAbsolutePath();
                             try
                             {
-                                ModifyTagObjectImageRequest modifyTagObjectImageRequest = (ModifyTagObjectImageRequest) currentRequest;
-                                NetworkServiceProvider.getNetworkService().modifyObjectImage(modifyTagObjectImageRequest.getTag(), modifyTagObjectImageRequest.getNewObjectImageFilename());
+                                Tag result = NetworkServiceProvider.getNetworkService().modifyObjectImage(modifyTagObjectImageRequest.getTag(), imageFilename);
 
                                 accountMutex.acquire();
-                                account.getTags().get(account.getTags().indexOf(modifyTagObjectImageRequest.getTag())).setObjectImageName(modifyTagObjectImageRequest.getNewObjectImageFilename());
+                                String newImageName = imageFilename == null ? null : FileManager.getTagImageFileForAutoSynchronization(modifyTagObjectImageRequest.getTag()).getAbsolutePath();
+                                Tag tag = account.getTags().get(account.getTags().indexOf(modifyTagObjectImageRequest.getTag()));
+
+                                if(imageFilename != null) // if there is a new image file
+                                    FileManager.moveFileFromRequestFolderToAutoSyncFolder(modifyTagObjectImageRequest.getRequestNumber(), modifyTagObjectImageRequest.getTag());
+                                else if(tag.getObjectImageName() != null) // if this tag has an image and the requeest is image remove.
+                                    if(FileManager.getTagImageFileForAutoSynchronization(tag).delete())
+                                        Logger.getLogger(getClass().getName()).log(Level.INFO, "image file deleted from auto sync folder.");
+                                    else
+                                        Logger.getLogger(getClass().getName()).log(Level.INFO, "image file may not be deleted from auto sync folder.");
+
+                                tag.setObjectImageName(newImageName);
+                                tag.setImageVersion(result.getImageVersion());
+
                                 accountMutex.release();
                             }
                             catch(IllegalFieldException e)
@@ -1258,7 +1291,15 @@ public class EngineService {
                                         errorMessage = "Tag addition failed : image filename is incorrect";
                                         break;
                                 }
+                                if(imageFilename != null) // to be sure the request is properly removed about potential image file.
+                                    if(FileManager.getTagImageFileForRequest(modifyTagObjectImageRequest.getRequestNumber()).delete())
+                                        Logger.getLogger(getClass().getName()).log(Level.INFO, "image file for request " + modifyTagObjectImageRequest.getRequestNumber() + "deleted");
+                                    else
+                                        Logger.getLogger(getClass().getName()).log(Level.INFO, "image file for request " + modifyTagObjectImageRequest.getRequestNumber() + "may not be deleted");
+
                                 throw e;
+                            } catch (FileNotFoundException e) { // will normally never occur.
+                                e.printStackTrace();
                             }
                             break;
                         case REMOVE_TAG:
@@ -1268,7 +1309,15 @@ public class EngineService {
                                 NetworkServiceProvider.getNetworkService().removeTag(removeTagRequest.getTag());
 
                                 accountMutex.acquire();
-                                account.getTags().remove(removeTagRequest.getTag());
+                                int index = account.getTags().indexOf(removeTagRequest.getTag());
+                                Tag tag = account.getTags().get(index);
+                                if(tag.getObjectImageName() != null)
+                                    if(FileManager.getTagImageFileForAutoSynchronization(tag).delete())
+                                        Logger.getLogger(getClass().getName()).log(Level.INFO, "image file for request " + removeTagRequest.getRequestNumber() + "deleted");
+                                    else
+                                        Logger.getLogger(getClass().getName()).log(Level.INFO, "image file for request " + removeTagRequest.getRequestNumber() + "may not be deleted");
+
+                                account.getTags().remove(index);
                                 accountMutex.release();
                             }
                             catch(IllegalFieldException e) // the only possible error is about the tag UID.

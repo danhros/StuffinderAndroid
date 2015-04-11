@@ -86,42 +86,48 @@ public class FileManager {
 
 
 
-    public static boolean copyFileToRequestFolder(File file, String filename) throws FileNotFoundException {
+    static boolean copyFileToRequestFolder(File file, String filename) throws FileNotFoundException {
         File newFile = new File(requestImageFolder, filename);
 
         return copyFile(file, newFile);
     }
 
-    public static boolean copyFileToUserFolder(File file, String filename) throws FileNotFoundException {
+    static boolean copyFileToUserFolder(File file, String filename) throws FileNotFoundException {
         File newFile = new File(userImageFolder, filename);
 
         return copyFile(file, newFile);
     }
 
-    public static boolean copyFileToAutoSyncFolder(File file, String filename) throws FileNotFoundException {
+    static boolean copyFileToAutoSyncFolder(File file, String filename) throws FileNotFoundException {
         File newFile = new File(autoSyncImageFolder, filename);
 
         return copyFile(file, newFile);
     }
 
-    public static boolean moveFileToAutoSyncFolder(File file, String newFilename) throws FileNotFoundException {
+    static boolean moveFileFromRequestFolderToAutoSyncFolder(int requestNumber, Tag associatedTag) throws FileNotFoundException {
+        File fileMoved = getTagImageFileForAutoSynchronization(associatedTag);
+        File file = getTagImageFileForRequest(requestNumber);
+
+        return moveFile(file, fileMoved);
+    }
+    static boolean moveFileToAutoSyncFolder(File file, String newFilename) throws FileNotFoundException {
         File fileMoved = new File(autoSyncImageFolder, newFilename);
 
         return moveFile(file, fileMoved);
     }
 
 
-    public static boolean removeFileFromRequestFolder(String filename)
+    static boolean removeFileFromRequestFolder(String filename)
     {
         return new File(requestImageFolder, filename).delete();
     }
 
-    public static boolean removeFileFromUserFolder(String filename)
+    static boolean removeFileFromUserFolder(String filename)
     {
         return new File(userImageFolder, filename).delete();
     }
 
-    public static boolean removeFileFromAutoSyncFolder(String filename)
+    static boolean removeFileFromAutoSyncFolder(String filename)
     {
         return new File(autoSyncImageFolder, filename).delete();
     }
@@ -191,11 +197,16 @@ public class FileManager {
 
     public static File getTagImageFileForUser(Tag tag)
     {
-        return new File(userImageFolder.getAbsolutePath(), tag.getUid().replaceAll("\\:", "_") + ".jpg"); // TODO traiter les differents types de fichiers images.
+        return new File(userImageFolder.getAbsolutePath(), getFilenameFromTag(tag)); // TODO traiter les differents types de fichiers images.
     }
 
     public static File getTagImageFileForAutoSynchronization(Tag tag)
     {
-        return new File(autoSyncImageFolder.getAbsolutePath(), tag.getUid().replaceAll("\\:", "_") + ".jpg"); // TODO traiter les differents types de fichiers images.
+        return new File(autoSyncImageFolder.getAbsolutePath(), getFilenameFromTag(tag)); // TODO traiter les differents types de fichiers images.
+    }
+
+    private static String getFilenameFromTag(Tag tag)
+    {
+        return tag.getUid().replaceAll("\\:", "_") + ".jpg";
     }
 }
