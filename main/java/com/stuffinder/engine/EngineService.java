@@ -239,6 +239,7 @@ public class EngineService {
         AddTagRequest request = new AddTagRequest(new Tag(tag.getUid(), tag.getObjectName(), imageFile == null ? null : imageFile.getPath()));
 
         Tag tmp = new Tag(tag.getUid(), tag.getObjectName(), null);
+        tmp.setImageVersion(-1);
 
         if(imageFile != null) // if an image is added.
         {
@@ -759,7 +760,7 @@ public class EngineService {
     {
         if(isAutoSynchronizationEnabled() && autoSynchronizer.isErrorOccurredOnData())
         {
-            AutoSynchronizer.AccountData accountData = autoSynchronizer.getAccountCopyUpdatedAfterErrorOnData();
+            AutoSynchronizer.AccountData accountData = autoSynchronizer.getAccountCopyUpdatedAfterErrorOnData(tags);
 
             currentAccount = accountData.getAccount();
             currentPassword = accountData.getPassword();
@@ -960,37 +961,30 @@ public class EngineService {
             runningThread.start();
         }
 
-        Account getAccountCopy()
+        private Account getAccountCopy()
         {
-            try {
-                accountMutex.acquire();
+            Account accountCopy = new Account(account.getPseudo(), account.getFirstName(), account.getLastName(), account.getEMailAddress());
 
-                Account accountCopy = new Account(account.getPseudo(), account.getFirstName(), account.getLastName(), account.getEMailAddress());
+            List<Tag> tags = accountCopy.getTags();
 
-                List<Tag> tags = accountCopy.getTags();
+            for(Tag tag : account.getTags())
+                tags.add(new Tag(tag.getUid(), tag.getObjectName(), tag.getObjectImageName()));
 
-                for(Tag tag : account.getTags())
-                    tags.add(new Tag(tag.getUid(), tag.getObjectName(), tag.getObjectImageName()));
+            List<Profile> profiles = accountCopy.getProfiles();
 
-                List<Profile> profiles = accountCopy.getProfiles();
+            for(Profile profile : account.getProfiles())
+            {
+                Profile tmp = new Profile(profile.getName());
 
-                for(Profile profile : account.getProfiles())
-                {
-                    Profile tmp = new Profile(profile.getName());
+                for(Tag tag : profile.getTags())
+                    tmp.addTag(tags.get(tags.indexOf(tag)));
 
-                    for(Tag tag : profile.getTags())
-                        tmp.addTag(tags.get(tags.indexOf(tag)));
-
-                    profiles.add(tmp);
-                }
-
-                accountMutex.release();
-
-                return accountCopy;
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-                return null; // to be modified.
+                profiles.add(tmp);
             }
+
+            accountMutex.release();
+
+            return accountCopy;
         }
 
         class AccountData
@@ -1013,73 +1007,164 @@ public class EngineService {
             }
         }
 
-        AccountData getAccountCopyUpdatedAfterErrorOnData()
+        AccountData getAccountCopyUpdatedAfterErrorOnData(List<Tag> currentTagList)
         {
-            try {
-                requestsMutex.acquire();
-                Account copy = getAccountCopy();
+            requestsMutex.acquireUninterruptibly();
 
-                AccountData accountData = new AccountData(copy, password);
+            accountMutex.acquireUninterruptibly();
+            Account copy = getAccountCopy();
 
-                List<Request> requestList = getNotDoneRequests();
-                errorOccurredOnData = false;
+            // update tag object images by replacing only image files which need to be updated. Removes also old images, i.e. image files which become useless.
+            updateUserTagImagesFromAccountCopy(currentTagList, copy);
 
-                requestsMutex.release();
+            accountMutex.release();
 
-                for(Request request : requestList)
-                {
+            AccountData accountData = new AccountData(copy, password);
 
-                    switch (request.getRequestType()) {
-                        case MODIFY_EMAIL:
-                            ModifyEmailRequest modifyEmailRequest = (ModifyEmailRequest) request;
+            List<Request> requestList = getNotDoneRequests();
+            errorOccurredOnData = false;
+            int index;
 
-                            account.setMailAddress(modifyEmailRequest.getNewEmailAddress());
-                            break;
-                        case MODIFY_PASSWORD:
-                            ModifyPasswordRequest modifyPasswordRequest = (ModifyPasswordRequest) request;
-                            password = modifyPasswordRequest.getNewPassword();
-                            break;
-                        case ADD_TAG:
-                            AddTagRequest addTagRequest = (AddTagRequest) request;
-                            if(! account.getTags().contains(addTagRequest.getNewTag()))
-                            {
-                                boolean applyAddition = true;
-                                for(Tag tag : account.getTags())
-                                    if(tag.getObjectName().equals(addTagRequest.getNewTag().getObjectName()))
-                                        applyAddition = false;
-                                if(applyAddition)
-                                    account.getTags().add(new Tag(addTagRequest.getNewTag().getUid(), addTagRequest.getNewTag().getObjectName(), addTagRequest.getNewTag().getObjectImageName()));
-                            }
-                            break;
-                        case MODIFY_TAG_OBJECT_NAME:
-                            ModifyTagObjectNameRequest modifyTagObjectNameRequest = (ModifyTagObjectNameRequest) request;
-                            int index = account.getTags().indexOf(modifyTagObjectNameRequest.getTag());
-                            if(index >= 0)
-                            {
-                                Tag tmp = account.getTags().get(index);
-                                boolean applyModification = true;
-                                for(Tag tag : account.getTags())
-                                    if(tag != tmp && tag.getObjectName().equals(modifyTagObjectNameRequest.getTag().getObjectName()))
-                                        applyModification = false;
-                                if(applyModification)
-                                    account.getTags().get(index).setObjectName(modifyTagObjectNameRequest.getNewObjectName());
-                            }
-                            break;
-                        case MODIFY_TAG_OBJECT_IMAGE:
-                            ModifyTagObjectImageRequest modifyTagObjectImageRequest = (ModifyTagObjectImageRequest) request;
-                            account.getTags().get(account.getTags().indexOf(modifyTagObjectImageRequest.getTag())).setObjectImageName(modifyTagObjectImageRequest.getNewObjectImageFilename());
-                            break;
-                        case REMOVE_TAG:
-                            RemoveTagRequest removeTagRequest = (RemoveTagRequest) request;
-                            account.getTags().remove(removeTagRequest.getTag());
-                            break;
-                    }
+            for(Request request : requestList)
+            {
+                switch (request.getRequestType()) {
+                    case MODIFY_EMAIL:
+                        ModifyEmailRequest modifyEmailRequest = (ModifyEmailRequest) request;
+
+                        copy.setMailAddress(modifyEmailRequest.getNewEmailAddress());
+                        break;
+                    case MODIFY_PASSWORD:
+//                        ModifyPasswordRequest modifyPasswordRequest = (ModifyPasswordRequest) request;
+//                        password = modifyPasswordRequest.getNewPassword();
+                        break;
+                    case ADD_TAG:
+                        AddTagRequest addTagRequest = (AddTagRequest) request;
+                        if(! copy.getTags().contains(addTagRequest.getNewTag()))
+                        {
+                            boolean applyAddition = true;
+                            for(Tag tag : copy.getTags())
+                                if(tag.getObjectName().equals(addTagRequest.getNewTag().getObjectName()))
+                                    applyAddition = false;
+                            if(applyAddition)
+                                copy.getTags().add(new Tag(addTagRequest.getNewTag().getUid(), addTagRequest.getNewTag().getObjectName(), addTagRequest.getNewTag().getObjectImageName()));
+                        }
+                        break;
+                    case MODIFY_TAG_OBJECT_NAME:
+                        ModifyTagObjectNameRequest modifyTagObjectNameRequest = (ModifyTagObjectNameRequest) request;
+                        index = copy.getTags().indexOf(modifyTagObjectNameRequest.getTag());
+                        if(index >= 0)
+                        {
+                            Tag tmp = copy.getTags().get(index);
+                            boolean applyModification = true;
+                            for(Tag tag : copy.getTags())
+                                if(tag != tmp && tag.getObjectName().equals(modifyTagObjectNameRequest.getTag().getObjectName()))
+                                    applyModification = false;
+                            if(applyModification)
+                                copy.getTags().get(index).setObjectName(modifyTagObjectNameRequest.getNewObjectName());
+                        }
+                        break;
+                    case MODIFY_TAG_OBJECT_IMAGE:
+                        ModifyTagObjectImageRequest modifyTagObjectImageRequest = (ModifyTagObjectImageRequest) request;
+                        index = copy.getTags().indexOf(modifyTagObjectImageRequest.getTag());
+                        if(index >= 0)
+                        {
+                            Tag tmp = copy.getTags().get(index);
+
+                            if(modifyTagObjectImageRequest.getNewObjectImageFilename() != null)
+                                try {
+                                    FileManager.copyFileFromRequestFolderToUserFolder(modifyTagObjectImageRequest.getRequestNumber(), tmp);
+                                    //TODO maybe see if there is a version conflit.
+                                } catch (FileNotFoundException e) { // will never occur.
+                                    e.printStackTrace();
+                                }
+                            else if(tmp.getObjectImageName() != null)
+                                FileManager.getTagImageFileForUser(tmp).delete();
+                        }
+                        break;
+                    case REMOVE_TAG:
+                        RemoveTagRequest removeTagRequest = (RemoveTagRequest) request;
+                        index = copy.getTags().indexOf(removeTagRequest.getTag());
+                        if(index >= 0)
+                        {
+                            Tag tmp = copy.getTags().get(index);
+
+                            if(tmp.getObjectImageName() != null) // delete image file before remove this tag.
+                                FileManager.getTagImageFileForUser(tmp).delete();
+
+                            copy.getTags().remove(index);
+                        }
+                        break;
                 }
-
-                return accountData;
-            } catch (InterruptedException e) {
-                return null;
             }
+
+            requestsMutex.release();
+
+            return accountData;
+        }
+
+        private void updateUserTagImagesFromAccountCopy(List<Tag> currentTagList, Account copy)
+        {
+            SortUtility.sortTagListByUID(copy.getTags());
+            SortUtility.sortTagListByUID(currentTagList);
+            int i=0, j=0;
+
+            while(i < currentTagList.size() && j < copy.getTags().size())
+            {
+                int res = currentTagList.get(i).getUid().compareTo(copy.getTags().get(j).getUid());
+
+                if(res == 0) // the tag is in the two lists. the fields of this will be updated.
+                {
+                    if(currentTagList.get(i).getImageVersion() < copy.getTags().get(j).getImageVersion()) // update image file if necessary.
+                    {
+                        if(copy.getTags().get(j).getObjectImageName() != null) //there is a new image file.
+                            try {
+                                FileManager.copyFileFromAutoSyncFolderToUserFolder(copy.getTags().get(j));
+                            } catch (FileNotFoundException e) { // will normally never occur.
+                                e.printStackTrace();
+                            }
+                        else if(currentTagList.get(i).getObjectImageName() != null) // if the image is removed from the server version.
+                            FileManager.getTagImageFileForUser(copy.getTags().get(j)).delete();
+                    }
+
+                    i++;
+                    j++;
+                }
+                else if(res < 0) //there is a new tag.
+                {
+                    if(copy.getTags().get(j).getObjectImageName() != null)
+                        try {
+                            FileManager.copyFileFromAutoSyncFolderToUserFolder(copy.getTags().get(j));
+                        } catch (FileNotFoundException e) {// will nevzr occur.
+                            e.printStackTrace();
+                        }
+
+                    j++;
+                }
+                else // a tag has been removed.
+                {
+                    if(currentTagList.get(i).getObjectImageName() != null)
+                        FileManager.getTagImageFileForUser(currentTagList.get(i)).delete();
+
+                    i++;
+                }
+            }
+
+            if(j < copy.getTags().size()) // there is new tags to add.
+                for(; j < copy.getTags().size(); j++)
+                {
+                    if(copy.getTags().get(j).getObjectImageName() != null)
+                        try {
+                            FileManager.copyFileFromAutoSyncFolderToUserFolder(copy.getTags().get(j));
+                        } catch (FileNotFoundException e) {// will nevzr occur.
+                            e.printStackTrace();
+                        }
+                }
+            else if(i < currentTagList.size()) // there is tags to remove
+                for(; i < currentTagList.size(); i++)
+                {
+                    if(currentTagList.get(i).getObjectImageName() != null)
+                        FileManager.getTagImageFileForUser(currentTagList.get(i)).delete();
+                }
         }
 
         void stopAutoSynchronization()

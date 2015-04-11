@@ -104,16 +104,24 @@ public class FileManager {
         return copyFile(file, newFile);
     }
 
+    static boolean copyFileFromAutoSyncFolderToUserFolder(Tag tag) throws FileNotFoundException {
+        File original = getTagImageFileForAutoSynchronization(tag);
+        File destination = getTagImageFileForUser(tag);
+
+        return copyFile(original, destination);
+    }
+
     static boolean moveFileFromRequestFolderToAutoSyncFolder(int requestNumber, Tag associatedTag) throws FileNotFoundException {
         File fileMoved = getTagImageFileForAutoSynchronization(associatedTag);
         File file = getTagImageFileForRequest(requestNumber);
 
         return moveFile(file, fileMoved);
     }
-    static boolean moveFileToAutoSyncFolder(File file, String newFilename) throws FileNotFoundException {
-        File fileMoved = new File(autoSyncImageFolder, newFilename);
+    static boolean copyFileFromRequestFolderToUserFolder(int requestNumber, Tag associatedTag) throws FileNotFoundException {
+        File original = getTagImageFileForRequest(requestNumber);
+        File newFile = getTagImageFileForUser(associatedTag);
 
-        return moveFile(file, fileMoved);
+        return copyFile(original, newFile);
     }
 
 
