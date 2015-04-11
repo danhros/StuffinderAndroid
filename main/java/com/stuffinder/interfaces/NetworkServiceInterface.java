@@ -416,7 +416,7 @@ public interface NetworkServiceInterface
     /**
      *
      * @return the last update time about tags.
-     * @throws NetworkServiceException
+     * @hrows NetworkServiceException
      */
     public long getLastTagsUpdateTime() throws NetworkServiceException, NotAuthenticatedException;
 

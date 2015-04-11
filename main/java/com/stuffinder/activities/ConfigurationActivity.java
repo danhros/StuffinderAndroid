@@ -9,6 +9,9 @@ import android.view.View;
 import android.view.Window;
 
 import com.stuffinder.R;
+import com.stuffinder.engine.NetworkServiceProvider;
+import com.stuffinder.exceptions.NetworkServiceException;
+import com.stuffinder.exceptions.NotAuthenticatedException;
 
 
 public class ConfigurationActivity extends Activity {
@@ -30,6 +33,18 @@ public class ConfigurationActivity extends Activity {
         Intent intentPuces = new Intent ( ConfigurationActivity.this, TagsActivity.class);
         startActivity(intentPuces);
     }
+
+    public void goToProfiles (View view) {
+        try {
+            NetworkServiceProvider.getNetworkService().createProfile("test");
+        } catch (NotAuthenticatedException e) {
+            e.printStackTrace();
+        } catch (NetworkServiceException e) {
+            e.printStackTrace();
+        }
+
+    }
+
 
     public void retour1 (View view) {
         finish();
