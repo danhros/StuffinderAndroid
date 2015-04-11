@@ -1,5 +1,7 @@
 package com.stuffinder.tests;
 
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -12,6 +14,7 @@ import com.stuffinder.data.Account;
 import com.stuffinder.data.Profile;
 import com.stuffinder.data.Tag;
 import com.stuffinder.engine.FieldVerifier;
+import com.stuffinder.engine.FileManager;
 import com.stuffinder.exceptions.AccountNotFoundException;
 import com.stuffinder.exceptions.IllegalFieldException;
 import com.stuffinder.exceptions.NetworkServiceException;
@@ -116,7 +119,7 @@ public class NetworkServiceEmulator implements NetworkServiceInterface
 	
 	public void initNetworkService() throws NetworkServiceException
 	{
-		
+        new File("/data/data/com.stuffinder/files/tmp").mkdirs();
 	}
 
 	public void createAccount(Account newAccount, String newPassword) throws IllegalFieldException, NetworkServiceException
@@ -290,7 +293,15 @@ public class NetworkServiceEmulator implements NetworkServiceInterface
         if(filename == null || filename.length() == 0)
             throw new IllegalFieldException(TAG_OBJECT_IMAGE, REASON_VALUE_NOT_FOUND, "");
 
-        return filename;
+        File tmpFile = new File("/data/data/com.stuffinder/files/tmp", tag.getUid().replaceAll("\\:", "_") + ".png");
+
+        try {
+            FileManager.copyFile(new File(filename), tmpFile);
+        } catch (FileNotFoundException e) {
+            throw new NetworkServiceException("Error occured while copying file.");
+        }
+
+        return tmpFile.getAbsolutePath();
     }
 
     public Tag modifyObjectName(Tag tag, String newObjectName) throws NotAuthenticatedException, IllegalFieldException, NetworkServiceException

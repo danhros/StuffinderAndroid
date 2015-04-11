@@ -157,7 +157,7 @@ public class FileManager {
         }
     }
 
-    static boolean copyFile(File file, File newFile) throws FileNotFoundException {
+    public static boolean copyFile(File file, File newFile) throws FileNotFoundException {
 
         InputStream in = null;
         OutputStream out = null;
