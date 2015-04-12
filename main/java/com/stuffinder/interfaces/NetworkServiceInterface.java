@@ -95,9 +95,22 @@ public interface NetworkServiceInterface
 	 * @throws NetworkServiceException If a network service error has occurred.
 	 */
 	public void modifyPassword(String newPassword) throws NotAuthenticatedException, IllegalFieldException, NetworkServiceException;
-	
-	
-	/**
+
+    /**
+     * Modifies the password of the current account.
+     * @param braceletUID The new password
+     * @throws NotAuthenticatedException If the authentication is not done.
+     * @throws IllegalFieldException If the specified bracelet UID is illegal (Field id is {@link com.stuffinder.exceptions.IllegalFieldException#BRACELET_UID BRACELET_UID}). Possible reasons are :
+     * <ul>
+     *     <li>{@link com.stuffinder.exceptions.IllegalFieldException#REASON_VALUE_ALREADY_USED REASON_VALUE_ALREADY_USED} if this bracelet is already used by another account.</li>
+     *     <li>{@link com.stuffinder.exceptions.IllegalFieldException#REASON_VALUE_INCORRECT} if the specified bracelet UID is syntactically incorrect.</li>
+     * </ul>
+     * @throws NetworkServiceException If a network service error has occurred.
+     */
+    public void modifyBraceletUID(String braceletUID) throws NotAuthenticatedException, IllegalFieldException, NetworkServiceException;
+
+
+    /**
 	 * To get the tags list of the current account.
 	 * @return the tags list if the authentication is already done successfully.
 	 * @throws NotAuthenticatedException If the authentication is not done.

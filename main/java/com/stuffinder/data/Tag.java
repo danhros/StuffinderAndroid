@@ -91,8 +91,7 @@ public class Tag
 
 	public boolean equals(Object obj)
 	{
-		return (!(obj instanceof Tag)) ? false : 
-					uid.equals(((Tag) obj).getUid());
+		return (obj instanceof Tag) && uid.equals(((Tag) obj).getUid());
 	}
 
     public String toString()
