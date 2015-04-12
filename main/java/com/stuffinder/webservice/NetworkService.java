@@ -465,6 +465,11 @@ public class NetworkService implements NetworkServiceInterface {
     }
 
     @Override
+    public void modifyBraceletUID(String braceletUID) throws NotAuthenticatedException, IllegalFieldException, NetworkServiceException {
+
+    }
+
+    @Override
     public List<Tag> getTags() throws NotAuthenticatedException,
             NetworkServiceException {
         List<Tag> res = new ArrayList<>();

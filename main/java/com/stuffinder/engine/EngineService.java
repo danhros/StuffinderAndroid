@@ -201,6 +201,22 @@ public class EngineService {
         addRequest(new ModifyPasswordRequest(newPassword));
     }
 
+    public void modifyBraceletUID(String braceletUID) throws NotAuthenticatedException, IllegalFieldException, NetworkServiceException
+    {
+        if(currentAccount == null)
+            throw new NotAuthenticatedException();
+
+        checkForAccountUpdate();
+        checkAutoSynchronizerState();
+
+        if(! FieldVerifier.verifyTagUID(braceletUID))
+            throw new IllegalFieldException(BRACELET_UID, REASON_VALUE_INCORRECT, braceletUID);
+
+        addRequest(new ModifyBraceletUIDRequest(braceletUID));
+        currentAccount.setBraceletUID(braceletUID);
+    }
+
+
     public List<Tag> getTags() throws NotAuthenticatedException, NetworkServiceException
     {
         if(currentAccount == null)
@@ -1284,6 +1300,11 @@ public class EngineService {
 //                        ModifyPasswordRequest modifyPasswordRequest = (ModifyPasswordRequest) request;
 //                        password = modifyPasswordRequest.getNewPassword();
                         break;
+                    case MODIFY_BRACELET_UID:
+                        ModifyBraceletUIDRequest modifyBraceletUIDRequest = (ModifyBraceletUIDRequest) request;
+
+                        copy.setBraceletUID(modifyBraceletUIDRequest.getNewBraceletUID());
+                        break;
                     case ADD_TAG:
                         AddTagRequest addTagRequest = (AddTagRequest) request;
                         if(! copy.getTags().contains(addTagRequest.getNewTag()))
@@ -1671,6 +1692,26 @@ public class EngineService {
                             catch(IllegalFieldException e)
                             {
                                 errorMessage = "password modification failed : specified passxord is incorrect.";
+                                throw e;
+                            }
+                            break;
+                        case MODIFY_BRACELET_UID:
+                            try
+                            {
+                                ModifyBraceletUIDRequest modifyBraceletUIDRequest = (ModifyBraceletUIDRequest) currentRequest;
+                                NetworkServiceProvider.getNetworkService().modifyBraceletUID(modifyBraceletUIDRequest.getNewBraceletUID());
+
+                                accountMutex.acquireUninterruptibly();
+                                account.setBraceletUID(modifyBraceletUIDRequest.getNewBraceletUID());
+                                accountMutex.release();
+                            }
+                            catch(IllegalFieldException e)
+                            {
+                                if(e.getReason() == REASON_VALUE_ALREADY_USED)
+                                    errorMessage = "Bracelet UID modification failed : bracelet UID \"" + e.getFieldValue() + "\" is already associated with another account.";
+                                else
+                                    errorMessage = "Bracelet UID modification failed : \"" + e.getFieldValue() + "\" is incorrect.";
+
                                 throw e;
                             }
                             break;

@@ -7,6 +7,7 @@ public enum RequestType {
 
     MODIFY_EMAIL,
     MODIFY_PASSWORD,
+    MODIFY_BRACELET_UID,
 
     ADD_TAG,
     MODIFY_TAG_OBJECT_NAME,

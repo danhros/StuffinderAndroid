@@ -33,6 +33,69 @@ public class Requests {
         }
     }
 
+    static class ModifyEmailRequest extends Request
+    {
+        private String newEmailAddress;
+
+        ModifyEmailRequest(String newEmailAddress)
+        {
+            super(RequestType.MODIFY_EMAIL);
+            this.newEmailAddress = newEmailAddress;
+        }
+
+        String getNewEmailAddress()
+        {
+            return newEmailAddress;
+        }
+
+        public String toString()
+        {
+            return "Modify email request : new email = " + newEmailAddress;
+        }
+    }
+
+    static class ModifyPasswordRequest extends Request
+    {
+        private String newPassword;
+
+        ModifyPasswordRequest(String newPassword)
+        {
+            super(RequestType.MODIFY_PASSWORD);
+            this.newPassword = newPassword;
+        }
+
+        String getNewPassword()
+        {
+            return newPassword;
+        }
+
+        public String toString()
+        {
+            return "Modify password request : new password = " + newPassword;
+        }
+    }
+
+    static class ModifyBraceletUIDRequest extends Request
+    {
+        private String newBraceletUID;
+
+        ModifyBraceletUIDRequest(String newBraceletUID)
+        {
+            super(RequestType.MODIFY_BRACELET_UID);
+            this.newBraceletUID = newBraceletUID;
+        }
+
+        String getNewBraceletUID()
+        {
+            return newBraceletUID;
+        }
+
+        public String toString()
+        {
+            return "Modify bracelet UID : new bracelet UID = " + newBraceletUID;
+        }
+    }
+
     static class AddTagRequest extends Request
     {
         private Tag tag;
@@ -131,48 +194,6 @@ public class Requests {
     }
 
 
-    static class ModifyEmailRequest extends Request
-    {
-        private String newEmailAddress;
-
-        ModifyEmailRequest(String newEmailAddress)
-        {
-            super(RequestType.MODIFY_EMAIL);
-            this.newEmailAddress = newEmailAddress;
-        }
-
-        String getNewEmailAddress()
-        {
-            return newEmailAddress;
-        }
-
-        public String toString()
-        {
-            return "Modify email request : new email = " + newEmailAddress;
-        }
-    }
-
-    static class ModifyPasswordRequest extends Request
-    {
-        private String newPassword;
-
-        ModifyPasswordRequest(String newPassword)
-        {
-            super(RequestType.MODIFY_PASSWORD);
-            this.newPassword = newPassword;
-        }
-
-        String getNewPassword()
-        {
-            return newPassword;
-        }
-
-        public String toString()
-        {
-            return "Modify password request : new password = " + newPassword;
-        }
-    }
-
     static class CreateProfileWithTagsRequest extends Request
     {
         private Profile profile;
@@ -185,6 +206,11 @@ public class Requests {
 
         public Profile getProfile() {
             return profile;
+        }
+
+        public String toString()
+        {
+            return "Create profile : new profile = (" + profile.getName() + ", " + profile.getTags().size() + " tags)";
         }
     }
 

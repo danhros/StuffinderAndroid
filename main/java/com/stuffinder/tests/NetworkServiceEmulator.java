@@ -220,6 +220,8 @@ public class NetworkServiceEmulator implements NetworkServiceInterface
         if(authenticatedAccount == null)
             throw new NotAuthenticatedException();
 
+        simulateRealBehavior();
+
         if(! FieldVerifier.verifyTagUID(braceletUID))
             throw new IllegalFieldException(BRACELET_UID, REASON_VALUE_INCORRECT, braceletUID);
 
