@@ -68,7 +68,10 @@ public class GridAdapter extends BaseAdapter {
         }
         // affchier les données convenablement dans leurs positions
 
-        holder.pictureView.setImageDrawable(listPics[position].getCurrent());
+        if(position == listPics.length - 1) // la dernière position est utilisée pour le cas "ne pas sélectionner d'image".
+            holder.pictureView.setImageDrawable(null);
+        else
+            holder.pictureView.setImageDrawable(listPics[position].getCurrent());
 
 
         lastPosition = position;

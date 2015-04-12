@@ -1,6 +1,5 @@
 package com.stuffinder.activities;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
@@ -40,8 +39,6 @@ public class AjoutTagActivity extends BasicActivity {
         EditTextNom = (EditText)findViewById(R.id.editTextNom);
         EditTextId = (EditText)findViewById(R.id.editTextId);
         imageView = (ImageView) findViewById(R.id.imageViewTag);
-
-        imageView.setImageResource(R.drawable.no_picture);
     }
 
     public void retour2 (View view) {
@@ -61,8 +58,6 @@ public class AjoutTagActivity extends BasicActivity {
         String identifiant = EditTextId.getText().toString();
 
         File imageFile = imageSelected ? getImageFileByResource(selectedImageResourceId) : null;
-
-        String image = null;
 
         if(nom.length() == 0)
             Toast.makeText(this, "Entrer nom", Toast.LENGTH_LONG).show();
@@ -143,7 +138,7 @@ public class AjoutTagActivity extends BasicActivity {
         @Override
         public void onPictureUnselected() {
             imageSelected = false;
-            imageView.setImageResource(R.drawable.no_picture);
+            imageView.setImageDrawable(null);
         }
     }
 

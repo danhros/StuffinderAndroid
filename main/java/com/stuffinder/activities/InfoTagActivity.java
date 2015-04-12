@@ -28,13 +28,10 @@ import java.io.File;
 public class InfoTagActivity extends BasicActivity {
 
     EditText editTextNom;
-    EditText editTextImage;
     ImageView imageView;
 
     private static Tag tagModif;
 
-    private int selectedImageResourceId;
-    private boolean imageSelected;
     private File currentImage;
 
 
@@ -243,18 +240,15 @@ public class InfoTagActivity extends BasicActivity {
     {
         @Override
         public void onPictureSelected(int drawableResourceId) {
-            selectedImageResourceId = drawableResourceId;
             currentImage = getImageFileByResource(drawableResourceId);
-            imageSelected = true;
 
             imageView.setImageResource(drawableResourceId);
         }
 
         @Override
         public void onPictureUnselected() {
-            imageSelected = false;
             currentImage = null;
-            imageView.setImageResource(R.drawable.no_picture);
+            imageView.setImageDrawable(null);
         }
     }
 

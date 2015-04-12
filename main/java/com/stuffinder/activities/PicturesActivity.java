@@ -56,7 +56,7 @@ public class PicturesActivity extends BasicActivity {
                 getResources().getDrawable(R.drawable.tablet),
                 getResources().getDrawable(R.drawable.tag),
                 getResources().getDrawable(R.drawable.wallet),
-                getResources().getDrawable(R.drawable.no_picture)};
+                null};
 
         imageResourceIds = new int[]{
                 R.drawable.bag,

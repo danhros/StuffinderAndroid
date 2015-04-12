@@ -342,6 +342,7 @@ public class EngineService {
                 tmp.setObjectImageName(null);
             }
 
+            tmp.setImageVersion(tmp.getImageVersion() - 1);
             addRequest(request);
 
             return tmp;
