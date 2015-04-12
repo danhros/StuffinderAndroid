@@ -40,16 +40,16 @@ public class EngineService {
      * Mutex used to be sure auto-synchroniser and the rest of the engine service doesn't acces or modify account data at same time.
      */
 
-    Account currentAccount; // non null if authentication done, null otherwise.
-    String currentPassword; // non null if authentication done, null otherwise.
+    private Account currentAccount; // non null if authentication done, null otherwise.
+    private String currentPassword; // non null if authentication done, null otherwise.
 
-    List<Tag> tags;
-    List<Profile> profiles;
+    private List<Tag> tags;
+    private List<Profile> profiles;
 
     /**
      * The requests to do throw modifications on the server. Used when auto-synchronization is disabled.
      */
-    List<Requests.Request> requests;
+    private List<Requests.Request> requests;
 
     public EngineService()
     {
@@ -378,35 +378,267 @@ public class EngineService {
 
 
     public Profile createProfile(String profileName) throws NotAuthenticatedException, IllegalFieldException, NetworkServiceException {
-        return null;
+        return createProfile(profileName, new ArrayList<Tag>());
     }
 
-    public Profile addTagToProfile(Profile profile, Tag tag) throws NotAuthenticatedException, IllegalFieldException, NetworkServiceException {
-        return null;
+
+    public Profile createProfile(String profileName, List<Tag> tagList) throws NotAuthenticatedException, IllegalFieldException, NetworkServiceException
+    {
+        if(currentAccount == null)
+            throw new NotAuthenticatedException();
+
+        checkForAccountUpdate();
+        checkAutoSynchronizerState();
+
+        if(!FieldVerifier.verifyName(profileName))
+            throw new IllegalFieldException(PROFILE_NAME, REASON_VALUE_INCORRECT, profileName);
+
+        Profile profile = new Profile(profileName);
+
+        if(profiles.contains(profile))
+            throw new IllegalFieldException(PROFILE_NAME, REASON_VALUE_ALREADY_USED, profileName);
+
+
+        for(Tag tag : tagList)
+        {
+            if(! FieldVerifier.verifyTagUID(tag.getUid())) // If this tag UID isn't incorrect.
+                throw new IllegalFieldException(TAG_UID, REASON_VALUE_INCORRECT, tag.getUid());
+
+            int tagIndex = tags.indexOf(tag);
+
+            if(tagIndex < 0) // if no tag of the current account has this UID.
+                throw new IllegalFieldException(TAG_UID, REASON_VALUE_NOT_FOUND, tag.getUid());
+            else if(! profile.getTags().contains(tag)) // to have this tag at most once.
+                profile.getTags().add(tags.get(tagIndex));
+        }
+
+        Profile tmp = new Profile(profileName);
+        tmp.getTags().addAll(profile.getTags());
+
+        addRequest(new CreateProfileWithTagsRequest(tmp));
+
+        return profile;
     }
 
-    public Profile addTagsToProfile(Profile profile, List<Tag> tags) throws NotAuthenticatedException, IllegalFieldException, NetworkServiceException {
-        return null;
+    public Profile addTagToProfile(Profile profile, Tag tag) throws NotAuthenticatedException, IllegalFieldException, NetworkServiceException
+    {
+        List<Tag> tagsToAdd = new ArrayList<>();
+        tagsToAdd.add(tag);
+
+        return addTagsToProfile(profile, tagsToAdd);
     }
 
-    public Profile removeTagFromProfile(Profile profile, Tag tag) throws NotAuthenticatedException, IllegalFieldException, NetworkServiceException {
-        return null;
+    public Profile addTagsToProfile(Profile profile, List<Tag> tagsToAdd) throws NotAuthenticatedException, IllegalFieldException, NetworkServiceException
+    {
+        if(currentAccount == null)
+            throw new NotAuthenticatedException();
+
+        checkForAccountUpdate();
+        checkAutoSynchronizerState();
+
+        if(!FieldVerifier.verifyName(profile.getName()))
+            throw new IllegalFieldException(PROFILE_NAME, REASON_VALUE_INCORRECT, profile.getName());
+
+        int index = profiles.indexOf(profile);
+
+        if(index < 0)
+            throw new IllegalFieldException(PROFILE_NAME, REASON_VALUE_NOT_FOUND, profile.getName());
+
+        Profile profile1 = profiles.get(index);
+
+
+        Set<Tag> tmp = new HashSet<Tag>();
+
+        for(Tag tag : tagsToAdd)
+        {
+            if(! FieldVerifier.verifyTagUID(tag.getUid())) // If this tag UID isn't incorrect.
+                throw new IllegalFieldException(TAG_UID, REASON_VALUE_INCORRECT, tag.getUid());
+
+            int tagIndex = tags.indexOf(tag);
+
+            if(tagIndex < 0) // if no tag of the current account has this UID.
+                throw new IllegalFieldException(TAG_UID, REASON_VALUE_NOT_FOUND, tag.getUid());
+            else if(! profile1.getTags().contains(tag))
+                tmp.add(tags.get(tagIndex));
+        }
+
+        if(tmp.size() > 0)
+        {
+            profile1.getTags().addAll(tmp);
+            addRequest(new AddTagsToProfileRequest(profile.getName(), new ArrayList<>(tmp)));
+
+            return profile1;
+        }
+        else
+            return null; // because this profile is not modified.
     }
 
-    public Profile removeAllFromProfile(Profile profile) throws NotAuthenticatedException, IllegalFieldException, NetworkServiceException {
-        return null;
+    public Profile removeTagFromProfile(Profile profile, Tag tag) throws NotAuthenticatedException, IllegalFieldException, NetworkServiceException
+    {
+        List<Tag> tagToRemove = new ArrayList<>();
+        tagToRemove.add(tag);
+
+        return removeTagsFromProfile(profile, tagToRemove);
     }
 
-    public Profile replaceTagListOfProfile(Profile profile, List<Tag> tagList) throws NotAuthenticatedException, IllegalFieldException, NetworkServiceException {
-        return null;
+    public Profile removeTagsFromProfile(Profile profile, List<Tag> tagsToRemove) throws NotAuthenticatedException, IllegalFieldException, NetworkServiceException
+    {
+        if(currentAccount == null)
+            throw new NotAuthenticatedException();
+
+        checkForAccountUpdate();
+        checkAutoSynchronizerState();
+
+        if(!FieldVerifier.verifyName(profile.getName()))
+            throw new IllegalFieldException(PROFILE_NAME, REASON_VALUE_INCORRECT, profile.getName());
+
+        int index = profiles.indexOf(profile);
+
+        if(index < 0)
+            throw new IllegalFieldException(PROFILE_NAME, REASON_VALUE_NOT_FOUND, profile.getName());
+
+        Profile profile1 = profiles.get(index);
+
+
+        Set<Tag> tmp = new HashSet<>();
+
+        for(Tag tag : tagsToRemove)
+        {
+            if(! FieldVerifier.verifyTagUID(tag.getUid())) // If this tag UID isn't incorrect.
+                throw new IllegalFieldException(TAG_UID, REASON_VALUE_INCORRECT, tag.getUid());
+
+            int tagIndex = tags.indexOf(tag);
+
+            if(tagIndex < 0) // if no tag of the current account has this UID.
+                throw new IllegalFieldException(TAG_UID, REASON_VALUE_NOT_FOUND, tag.getUid());
+            else if(profile1.getTags().contains(tag))
+                tmp.add(tags.get(tagIndex));
+        }
+
+        if(tmp.size() > 0)
+        {
+            profile1.getTags().removeAll(tmp);
+            addRequest(new RemoveTagsFromProfileRequest(profile.getName(), new ArrayList<>(tmp)));
+            return profile1;
+        }
+        else
+            return null; // because this profile is not modified.
     }
 
-    public Profile replaceTagListOfProfile(Profile profile, Tag[] tagList) throws NotAuthenticatedException, IllegalFieldException, NetworkServiceException {
-        return null;
+    public Profile replaceTagListOfProfile(Profile profile, List<Tag> tagList) throws NotAuthenticatedException, IllegalFieldException, NetworkServiceException
+    {
+        if(currentAccount == null)
+            throw new NotAuthenticatedException();
+
+        checkForAccountUpdate();
+        checkAutoSynchronizerState();
+
+        if(!FieldVerifier.verifyName(profile.getName()))
+            throw new IllegalFieldException(PROFILE_NAME, REASON_VALUE_INCORRECT, profile.getName());
+
+        int index = profiles.indexOf(profile);
+
+        if(index < 0)
+            throw new IllegalFieldException(PROFILE_NAME, REASON_VALUE_NOT_FOUND, profile.getName());
+
+        Profile profile1 = profiles.get(index);
+
+
+        Set<Tag> tmp = new HashSet<>();
+
+        for(Tag tag : tagList)
+        {
+            if(! FieldVerifier.verifyTagUID(tag.getUid())) // If this tag UID isn't incorrect.
+                throw new IllegalFieldException(TAG_UID, REASON_VALUE_INCORRECT, tag.getUid());
+
+            int tagIndex = tags.indexOf(tag);
+
+            if(tagIndex < 0) // if no tag of the current account has this UID.
+                throw new IllegalFieldException(TAG_UID, REASON_VALUE_NOT_FOUND, tag.getUid());
+            else
+                tmp.add(tags.get(tagIndex));
+        }
+
+        if(profile1.getTags().size() > 0 || tmp.size() > 0)
+        {
+            profile1.getTags().clear();
+            profile1.getTags().addAll(tmp);
+            addRequest(new ReplaceTagListOfProfileRequest(profile.getName(), new ArrayList<>(tmp)));
+
+            return profile1;
+        }
+        else
+            return null; // to indicate the profile is not modified.
     }
 
-    public Profile getProfile(String profileName) throws NotAuthenticatedException {
-        return null;
+    public Profile modifyProfileName(Profile profile, String newProfileName) throws NotAuthenticatedException, IllegalFieldException, NetworkServiceException
+    {
+        if(currentAccount == null)
+            throw new NotAuthenticatedException();
+
+        checkForAccountUpdate();
+        checkAutoSynchronizerState();
+
+        if(!FieldVerifier.verifyName(newProfileName))
+            throw new IllegalFieldException(PROFILE_NAME, REASON_VALUE_INCORRECT, newProfileName);
+
+        int index = profiles.indexOf(new Profile(profile.getName()));
+
+        if(index < 0)
+            throw new IllegalFieldException(PROFILE_NAME, REASON_VALUE_NOT_FOUND, profile.getName());
+
+        Profile tmp = profiles.get(index);
+
+        for(Profile otherProfile : profiles)
+            if(otherProfile != tmp && otherProfile.getName().equals(newProfileName))
+                throw new IllegalFieldException(PROFILE_NAME, REASON_VALUE_ALREADY_USED, newProfileName);
+
+        addRequest(new ModifyProfileNameRequest(profile.getName(), newProfileName));
+        tmp.setName(newProfileName);
+
+        return tmp;
+    }
+
+
+    public void removeProfile(Profile profile) throws NotAuthenticatedException, IllegalFieldException, NetworkServiceException
+    {
+        if(currentAccount == null)
+            throw new NotAuthenticatedException();
+
+        checkForAccountUpdate();
+        checkAutoSynchronizerState();
+
+        if(!FieldVerifier.verifyName(profile.getName()))
+            throw new IllegalFieldException(PROFILE_NAME, REASON_VALUE_INCORRECT, profile.getName());
+
+        int index = profiles.indexOf(profile);
+
+        if(index < 0)
+            throw new IllegalFieldException(PROFILE_NAME, REASON_VALUE_NOT_FOUND, profile.getName());
+        else
+        {
+            addRequest(new RemoveProfileRequest(profile.getName()));
+            profiles.remove(index);
+        }
+    }
+
+    public Profile getProfile(String profileName) throws NotAuthenticatedException, NetworkServiceException, IllegalFieldException
+    {
+        if(currentAccount == null)
+            throw new NotAuthenticatedException();
+
+        checkForAccountUpdate();
+        checkAutoSynchronizerState();
+
+        if(!FieldVerifier.verifyName(profileName))
+            throw new IllegalFieldException(PROFILE_NAME, REASON_VALUE_INCORRECT, profileName);
+
+        int index = profiles.indexOf(new Profile(profileName));
+
+        if(index < 0)
+            throw new IllegalFieldException(PROFILE_NAME, REASON_VALUE_NOT_FOUND, profileName);
+        else
+            return profiles.get(index);
     }
 
     public List<Profile> getProfiles() throws NotAuthenticatedException, NetworkServiceException
@@ -812,7 +1044,7 @@ public class EngineService {
     {
 //        private BlockingQueue<Request> requestQueue;
 
-        Semaphore requestsMutex;
+        private Semaphore requestsMutex;
         private List<Request> requests;
         private Semaphore requestNumber;
 
@@ -837,7 +1069,7 @@ public class EngineService {
 
         private boolean continueAutoSynchronization;
 
-        Thread runningThread = null;
+        private Thread runningThread;
 
         AutoSynchronizer()
         {
@@ -851,6 +1083,8 @@ public class EngineService {
             errorOccurredOnData = false;
             accountDataUpdatedFromServer = false;
             failedOnPassword = false;
+
+            runningThread = null;
         }
 
         boolean appendRequest(Request request)
@@ -871,29 +1105,20 @@ public class EngineService {
 
         private void removeFirstRequest()
         {
-            try {
-                requestsMutex.acquire();
+            requestsMutex.acquireUninterruptibly();
 
-                requests.remove(0);
-                requestsMutex.release();
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
+            requests.remove(0);
+            requestsMutex.release();
         }
 
         private Request getFirstRequest()
         {
-            try {
-                requestsMutex.acquire();
+            requestsMutex.acquireUninterruptibly();
 
-                Request tmp = requests.get(0);
-                requestsMutex.release();
+            Request tmp = requests.get(0);
+            requestsMutex.release();
 
-                return tmp;
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-                return null;
-            }
+            return tmp;
         }
 
         List<Request> getNotDoneRequests()
@@ -1115,6 +1340,129 @@ public class EngineService {
                             copy.getTags().remove(index);
                         }
                         break;
+                    case CREATE_PROFILE_WITH_TAGS:
+                        CreateProfileWithTagsRequest createProfileWithTagsRequest = (CreateProfileWithTagsRequest) request;
+                        Profile profile = createProfileWithTagsRequest.getProfile();
+
+                        if(! copy.getProfiles().contains(profile))
+                        {
+                            Profile tmp = new Profile(profile.getName());
+                            boolean applyOperation = true;
+
+                            for(int i=0; applyOperation && i < profile.getTags().size(); i++)
+                            {
+                                index = copy.getTags().indexOf(profile.getTags().get(i));
+                                if(index < 0)
+                                    applyOperation = false;
+                                else
+                                    tmp.addTag(copy.getTags().get(index));
+                            }
+
+                            if(applyOperation)
+                                copy.getProfiles().add(tmp);
+                        }
+                    break;
+                    case ADD_TAGS_TO_PROFILE:
+                        AddTagsToProfileRequest addTagsToProfileRequest = (AddTagsToProfileRequest) request;
+                        profile = new Profile(addTagsToProfileRequest.getProfileName());
+                        List<Tag> tagsToAdd = addTagsToProfileRequest.getTagsToAdd();
+
+                        index = copy.getProfiles().indexOf(profile);
+                        if(index >= 0)
+                        {
+                            Profile profile1 = copy.getProfiles().get(index);
+                            boolean applyOperation = true;
+                            List<Tag> tmp = new LinkedList<>();
+
+                            for(int i=0; applyOperation && i < tagsToAdd.size(); i++)
+                            {
+                                index = copy.getTags().indexOf(tagsToAdd.get(i));
+                                if(index < 0)
+                                    applyOperation = false;
+                                else if(! profile1.getTags().contains(tagsToAdd.get(i)))
+                                    tmp.add(copy.getTags().get(index));
+                            }
+
+                            if(applyOperation)
+                                profile1.getTags().addAll(tmp);
+                        }
+                    break;
+                    case REMOVE_TAGS_FROM_PROFILE:
+                        RemoveTagsFromProfileRequest removeTagsFromProfileRequest = (RemoveTagsFromProfileRequest) request;
+                        List<Tag> tagsToRemove = removeTagsFromProfileRequest.getTagsToRemove();
+
+                        index = copy.getProfiles().indexOf(new Profile(removeTagsFromProfileRequest.getProfileName()));
+                        if(index >= 0)
+                        {
+                            Profile profile1 = copy.getProfiles().get(index);
+                            boolean applyOperation = true;
+                            List<Tag> tmp = new LinkedList<>();
+
+                            for(int i=0; applyOperation && i < tagsToRemove.size(); i++)
+                            {
+                                index = copy.getTags().indexOf(tagsToRemove.get(i));
+                                if(index < 0)
+                                    applyOperation = false;
+                                else
+                                    tmp.add(copy.getTags().get(index));
+                            }
+
+                            if(applyOperation)
+                                profile1.getTags().removeAll(tmp);
+                        }
+                    break;
+                    case REPLACE_TAG_LIST_OF_PROFILE:
+                        ReplaceTagListOfProfileRequest replaceTagListOfProfileRequest = (ReplaceTagListOfProfileRequest) request;
+                        List<Tag> newTagList = replaceTagListOfProfileRequest.getNewTagList();
+
+                        index = copy.getProfiles().indexOf(new Profile(replaceTagListOfProfileRequest.getProfileName()));
+                        if(index >= 0)
+                        {
+                            Profile profile1 = copy.getProfiles().get(index);
+                            boolean applyOperation = true;
+                            List<Tag> tmp = new LinkedList<>();
+
+                            for(int i=0; applyOperation && i < newTagList.size(); i++)
+                            {
+                                index = copy.getTags().indexOf(newTagList.get(i));
+                                if(index < 0)
+                                    applyOperation = false;
+                                else
+                                    tmp.add(copy.getTags().get(index));
+                            }
+
+                            if(applyOperation)
+                            {
+                                profile1.getTags().clear();
+                                profile1.getTags().addAll(tmp);
+                            }
+                        }
+                    break;
+                    case MODIFY_PROFILE_NAME:
+                        ModifyProfileNameRequest modifyProfileNameRequest = (ModifyProfileNameRequest) request;
+                        String newProfileName = modifyProfileNameRequest.getNewProfileName();
+
+                        index = copy.getProfiles().indexOf(new Profile(modifyProfileNameRequest.getProfileName()));
+                        if(index >= 0)
+                        {
+                            Profile profile1 = copy.getProfiles().get(index);
+                            boolean applyOperation = true;
+
+                            for(int i=0; applyOperation && i < copy.getProfiles().size(); i++)
+                                if(copy.getProfiles().get(i) != profile1 && copy.getProfiles().get(i).getName().equals(newProfileName))
+                                    applyOperation = false;
+
+                            if(applyOperation)
+                                profile1.setName(newProfileName);
+                        }
+                    break;
+                    case REMOVE_PROFILE:
+                        RemoveProfileRequest removeProfileRequest = (RemoveProfileRequest) request;
+
+                        index = copy.getProfiles().indexOf(new Profile(removeProfileRequest.getProfileName()));
+                        if(index >= 0)
+                            copy.getProfiles().remove(index);
+                    break;
                 }
             }
 
@@ -1261,6 +1609,7 @@ public class EngineService {
                         requestsMutex.release();
                     }
                 }
+
                 try {
 
                     Logger.getLogger(getClass().getName()).log(Level.INFO, "Will wait for another request to process.");
@@ -1490,6 +1839,203 @@ public class EngineService {
                                 throw e;
                             }
                             break;
+                        case CREATE_PROFILE_WITH_TAGS:
+                            try
+                            {
+                                CreateProfileWithTagsRequest createProfileWithTagsRequest = (CreateProfileWithTagsRequest) currentRequest;
+                                NetworkServiceProvider.getNetworkService().createProfile(createProfileWithTagsRequest.getProfile().getName(), createProfileWithTagsRequest.getProfile().getTags());
+
+                                accountMutex.acquireUninterruptibly();
+
+                                Profile profile = new Profile(createProfileWithTagsRequest.getProfile().getName());
+                                for(Tag tag : createProfileWithTagsRequest.getProfile().getTags())
+                                    profile.addTag(account.getTags().get(account.getTags().indexOf(tag)));
+
+                                account.getProfiles().add(profile);
+
+                                accountMutex.release();
+                            }
+                            catch(IllegalFieldException e)
+                            {
+                                switch(e.getFieldId())
+                                {
+                                    case IllegalFieldException.TAG_UID:
+                                        if(e.getReason() == IllegalFieldException.REASON_VALUE_NOT_FOUND)
+                                            errorMessage = "Profile creation failed : tag with UID \"" + e.getFieldValue() + "\" is not found.";
+                                        else
+                                            errorMessage = "Profile creation failed : tag UID \"" + e.getFieldValue() + "\" is incorrect.";
+                                        break;
+                                    case IllegalFieldException.PROFILE_NAME:
+                                        if(e.getReason() == IllegalFieldException.REASON_VALUE_ALREADY_USED)
+                                            errorMessage = "Profile creation failed : the name \"" + e.getFieldValue() + "\" is already used for another profile.";
+                                        else
+                                            errorMessage = "Profile creation failed : the profile name \"" + e.getFieldValue() + "\" is incorrect.";
+                                        break;
+                                }
+                                throw e;
+                            }
+                        break;
+                        case ADD_TAGS_TO_PROFILE:
+                            try
+                            {
+                                AddTagsToProfileRequest addTagsToProfileRequest = (AddTagsToProfileRequest) currentRequest;
+                                Profile tmp = new Profile(addTagsToProfileRequest.getProfileName());
+                                NetworkServiceProvider.getNetworkService().addTagsToProfile(tmp, addTagsToProfileRequest.getTagsToAdd());
+
+                                accountMutex.acquireUninterruptibly();
+
+                                Profile profile = account.getProfiles().get(account.getProfiles().indexOf(tmp));
+                                for(Tag tag : addTagsToProfileRequest.getTagsToAdd())
+                                    profile.addTag(account.getTags().get(account.getTags().indexOf(tag)));
+
+                                accountMutex.release();
+                            }
+                            catch(IllegalFieldException e)
+                            {
+                                switch(e.getFieldId())
+                                {
+                                    case IllegalFieldException.TAG_UID:
+                                        if(e.getReason() == IllegalFieldException.REASON_VALUE_NOT_FOUND)
+                                            errorMessage = "Profile modification failed : tag with UID \"" + e.getFieldValue() + "\" is not found.";
+                                        else
+                                            errorMessage = "Profile modification failed : tag UID \"" + e.getFieldValue() + "\" is incorrect.";
+                                        break;
+                                    case IllegalFieldException.PROFILE_NAME:
+                                        if(e.getReason() == IllegalFieldException.REASON_VALUE_NOT_FOUND)
+                                            errorMessage = "Profile modification failed : the profile \"" + e.getFieldValue() + "\" is not found.";
+                                        else
+                                            errorMessage = "Profile modification failed : the profile name \"" + e.getFieldValue() + "\" is incorrect.";
+                                        break;
+                                }
+                                throw e;
+                            }
+                        break;
+                        case REMOVE_TAGS_FROM_PROFILE:
+                            try
+                            {
+                                RemoveTagsFromProfileRequest removeTagsFromProfileRequest = (RemoveTagsFromProfileRequest) currentRequest;
+                                Profile tmp = new Profile(removeTagsFromProfileRequest.getProfileName());
+                                NetworkServiceProvider.getNetworkService().removeTagsFromProfile(tmp, removeTagsFromProfileRequest.getTagsToRemove());
+
+                                accountMutex.acquireUninterruptibly();
+
+                                Profile profile = account.getProfiles().get(account.getProfiles().indexOf(tmp));
+                                for(Tag tag : removeTagsFromProfileRequest.getTagsToRemove())
+                                    profile.removeTag(tag);
+
+                                accountMutex.release();
+                            }
+                            catch(IllegalFieldException e)
+                            {
+                                switch(e.getFieldId())
+                                {
+                                    case IllegalFieldException.TAG_UID:
+                                        if(e.getReason() == IllegalFieldException.REASON_VALUE_NOT_FOUND)
+                                            errorMessage = "Profile modification failed : tag with UID \"" + e.getFieldValue() + "\" is not found.";
+                                        else
+                                            errorMessage = "Profile modification failed : tag UID \"" + e.getFieldValue() + "\" is incorrect.";
+                                        break;
+                                    case IllegalFieldException.PROFILE_NAME:
+                                        if(e.getReason() == IllegalFieldException.REASON_VALUE_NOT_FOUND)
+                                            errorMessage = "Profile modification failed : the profile \"" + e.getFieldValue() + "\" is not found.";
+                                        else
+                                            errorMessage = "Profile modification failed : the profile name \"" + e.getFieldValue() + "\" is incorrect.";
+                                        break;
+                                }
+                                throw e;
+                            }
+                        break;
+                        case REPLACE_TAG_LIST_OF_PROFILE:
+                            try
+                            {
+                                ReplaceTagListOfProfileRequest replaceTagListOfProfileRequest = (ReplaceTagListOfProfileRequest) currentRequest;
+                                Profile tmp = new Profile(replaceTagListOfProfileRequest.getProfileName());
+                                NetworkServiceProvider.getNetworkService().replaceTagListOfProfile(tmp, replaceTagListOfProfileRequest.getNewTagList());
+
+                                accountMutex.acquireUninterruptibly();
+
+                                Profile profile = account.getProfiles().get(account.getProfiles().indexOf(tmp));
+                                profile.removeAllTags();
+                                for(Tag tag : replaceTagListOfProfileRequest.getNewTagList())
+                                    profile.addTag(account.getTags().get(account.getTags().indexOf(tag)));
+
+                                accountMutex.release();
+                            }
+                            catch(IllegalFieldException e)
+                            {
+                                switch(e.getFieldId())
+                                {
+                                    case IllegalFieldException.TAG_UID:
+                                        if(e.getReason() == IllegalFieldException.REASON_VALUE_NOT_FOUND)
+                                            errorMessage = "Profile modification failed : tag with UID \"" + e.getFieldValue() + "\" is not found.";
+                                        else
+                                            errorMessage = "Profile modification failed : tag UID \"" + e.getFieldValue() + "\" is incorrect.";
+                                        break;
+                                    case IllegalFieldException.PROFILE_NAME:
+                                        if(e.getReason() == IllegalFieldException.REASON_VALUE_NOT_FOUND)
+                                            errorMessage = "Profile modification failed : the profile \"" + e.getFieldValue() + "\" is not found.";
+                                        else
+                                            errorMessage = "Profile modification failed : the profile name \"" + e.getFieldValue() + "\" is incorrect.";
+                                        break;
+                                }
+                                throw e;
+                            }
+                        break;
+                        case MODIFY_PROFILE_NAME:
+                            try
+                            {
+                                ModifyProfileNameRequest modifyProfileNameRequest = (ModifyProfileNameRequest) currentRequest;
+                                Profile tmp = new Profile(modifyProfileNameRequest.getProfileName());
+                                NetworkServiceProvider.getNetworkService().modifyProfileName(tmp, modifyProfileNameRequest.getNewProfileName());
+
+                                accountMutex.acquireUninterruptibly();
+                                account.getProfiles().get(account.getProfiles().indexOf(tmp)).setName(modifyProfileNameRequest.getNewProfileName());
+                                accountMutex.release();
+                            }
+                            catch(IllegalFieldException e)
+                            {
+                                if(e.getFieldId() == PROFILE_NAME)
+                                    switch(e.getReason())
+                                    {
+                                        case REASON_VALUE_NOT_FOUND:
+                                            errorMessage = "Profile name modification failed : the profile \"" + e.getFieldValue() + "\" is not found.";
+                                        break;
+                                        case REASON_VALUE_ALREADY_USED:
+                                            errorMessage = "Profile name modification failed : the name \"" + e.getFieldValue() + "\" is already used for another profile.";
+                                        break;
+                                        default:
+                                            errorMessage = "Profile name modification failed : the profile name \"" + e.getFieldValue() + "\" is incorrect.";
+                                        break;
+                                    }
+                                throw e;
+                            }
+                        break;
+                        case REMOVE_PROFILE:
+                            try
+                            {
+                                RemoveProfileRequest removeProfileRequest = (RemoveProfileRequest) currentRequest;
+                                Profile tmp = new Profile(removeProfileRequest.getProfileName());
+                                NetworkServiceProvider.getNetworkService().removeProfile(tmp);
+
+                                accountMutex.acquireUninterruptibly();
+                                account.getProfiles().remove(tmp);
+                                accountMutex.release();
+                            }
+                            catch(IllegalFieldException e)
+                            {
+                                if(e.getFieldId() == PROFILE_NAME)
+                                    switch(e.getReason())
+                                    {
+                                        case REASON_VALUE_NOT_FOUND:
+                                            errorMessage = "Fails to remove profile : the profile \"" + e.getFieldValue() + "\" is not found.";
+                                        break;
+                                        default:
+                                            errorMessage = "Fails to remove profile : the profile name \"" + e.getFieldValue() + "\" is incorrect.";
+                                        break;
+                                    }
+                                throw e;
+                            }
+                        break;
                     }
                     removeFirstRequest();
 

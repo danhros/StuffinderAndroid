@@ -1,6 +1,9 @@
 package com.stuffinder.engine;
 
+import com.stuffinder.data.Profile;
 import com.stuffinder.data.Tag;
+
+import java.util.List;
 
 /**
  * Created by propriétaire on 14/03/2015.
@@ -169,5 +172,121 @@ public class Requests {
             return "Modify password request : new password = " + newPassword;
         }
     }
+
+    static class CreateProfileWithTagsRequest extends Request
+    {
+        private Profile profile;
+
+        CreateProfileWithTagsRequest(Profile profile) {
+            super(RequestType.CREATE_PROFILE_WITH_TAGS);
+
+            this.profile = profile;
+        }
+
+        public Profile getProfile() {
+            return profile;
+        }
+    }
+
+    static class AddTagsToProfileRequest extends Request
+    {
+        private String profileName;
+        private List<Tag> tagsToAdd;
+
+        AddTagsToProfileRequest(String profileName, List<Tag> tagsToAdd) {
+            super(RequestType.ADD_TAGS_TO_PROFILE);
+
+            this.profileName = profileName;
+            this.tagsToAdd = tagsToAdd;
+        }
+
+        public String getProfileName() {
+            return profileName;
+        }
+
+        public List<Tag> getTagsToAdd() {
+            return tagsToAdd;
+        }
+    }
+
+    static class RemoveTagsFromProfileRequest extends Request
+    {
+        private String profileName;
+        private List<Tag> tagsToRemove;
+
+        RemoveTagsFromProfileRequest(String profileName, List<Tag> tagsToRemove) {
+            super(RequestType.REMOVE_TAGS_FROM_PROFILE);
+
+            this.profileName = profileName;
+            this.tagsToRemove = tagsToRemove;
+        }
+
+        public String getProfileName() {
+            return profileName;
+        }
+
+        public List<Tag> getTagsToRemove() {
+            return tagsToRemove;
+        }
+    }
+
+    static class ReplaceTagListOfProfileRequest extends Request
+    {
+        private String profileName;
+        private List<Tag> newTagList;
+
+        ReplaceTagListOfProfileRequest(String profileName, List<Tag> newTagList) {
+            super(RequestType.REPLACE_TAG_LIST_OF_PROFILE);
+
+            this.profileName = profileName;
+            this.newTagList = newTagList;
+        }
+
+        public String getProfileName() {
+            return profileName;
+        }
+
+        public List<Tag> getNewTagList() {
+            return newTagList;
+        }
+    }
+
+    static class ModifyProfileNameRequest extends Request
+    {
+        private String profileName;
+        private String newProfileName;
+
+        ModifyProfileNameRequest(String profileName, String newProfileName) {
+            super(RequestType.MODIFY_PROFILE_NAME);
+
+            this.profileName = profileName;
+            this.newProfileName = newProfileName;
+        }
+
+        public String getProfileName() {
+            return profileName;
+        }
+
+        public String getNewProfileName() {
+            return newProfileName;
+        }
+    }
+
+    static class RemoveProfileRequest extends Request
+    {
+        private String profileName;
+
+        RemoveProfileRequest(String profileName) {
+            super(RequestType.REMOVE_PROFILE);
+
+            this.profileName = profileName;
+        }
+
+        public String getProfileName() {
+            return profileName;
+        }
+    }
+
+
 
 }
