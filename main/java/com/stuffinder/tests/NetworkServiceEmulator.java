@@ -187,10 +187,24 @@ public class NetworkServiceEmulator implements NetworkServiceInterface
 		
 		passwords.set(authenticatedAccountIndex, newPassword);
 	}
-	
-	
 
-	public List<Tag> getTags() throws NotAuthenticatedException, NetworkServiceException
+    @Override
+    public void modifyBraceletUID(String braceletUID) throws NotAuthenticatedException, IllegalFieldException, NetworkServiceException
+    {
+        if(authenticatedAccount == null)
+            throw new NotAuthenticatedException();
+
+        if(! FieldVerifier.verifyTagUID(braceletUID))
+            throw new IllegalFieldException(BRACELET_UID, REASON_VALUE_INCORRECT, braceletUID);
+
+        for(Account account : accounts)
+            if(account != authenticatedAccount && account.getBraceletUID() != null && braceletUID.equals(account.getBraceletUID()))
+                throw new IllegalFieldException(BRACELET_UID, REASON_VALUE_ALREADY_USED, braceletUID);
+
+        authenticatedAccount.setBraceletUID(braceletUID);
+    }
+
+    public List<Tag> getTags() throws NotAuthenticatedException, NetworkServiceException
 	{
 		if(authenticatedAccount == null)
 			throw new NotAuthenticatedException();
