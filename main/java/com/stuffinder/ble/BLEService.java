@@ -24,6 +24,10 @@ import com.stuffinder.activities.BasicActivity;
 import com.stuffinder.data.Tag;
 import com.stuffinder.exceptions.BLEServiceException;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 /**
@@ -155,6 +159,18 @@ public class BLEService  extends Service{
     private BluetoothGatt locationBluetoothGatt;
     private String tagAddress;
 
+    public final static int ALLUMER_LED = 1;
+    public final static int ETEINDRE_LED = 2;
+    public final static int ALLUMER_SON = 3;
+    public final static int ALLUMER_MOTEUR = 4;
+    public final static int ETEINDRE_MOTEUR = 5;
+
+    public final static int TRES_PROCHE=1;
+    public final static int MOYENNELENT_PROCHE=2;
+    public final static int LOIN=3;
+
+    private static List<BluetoothDevice> mDevices = new ArrayList<BluetoothDevice>();
+
     //methods used for location.
 
     //TODO implement these methods.
@@ -186,6 +202,24 @@ public class BLEService  extends Service{
         return true;
     }
 
+    private boolean remote(int action) throws BLEServiceException{
+
+        BluetoothGattCharacteristic characteristic = map.get(UUID_BLE_SHIELD_TX);
+        if (characteristic != null) {
+
+            byte[] tx = new byte[1];
+            tx[0] = (byte) action;
+            characteristic.setValue(tx);
+            try {
+                writeCharacteristic(locationBluetoothGatt, characteristic);
+                return true;
+            } catch (BLEServiceException e) {
+                e.printStackTrace();
+            }
+        }
+        return false;
+    }
+
     /**
      * To disconnect the location service with the current tag.
      */
@@ -206,30 +240,153 @@ public class BLEService  extends Service{
     {
         verifyIfBLESupported();
 
+        readRssi(locationBluetoothGatt);
+        //les données sont reçus dans le broadcast update
+
+
+
         return 0;
+    }
+
+    public int getDistance(int rssi) throws BLEServiceException{
+
+        if (rssi < 40)
+            return TRES_PROCHE;
+
+        else if (rssi < 70 && rssi >= 40)
+            return MOYENNELENT_PROCHE;
+
+        return LOIN;
     }
 
     public boolean enableTagLED(boolean enable) throws BLEServiceException
     {
         verifyIfBLESupported();
 
-        return false;
+        if(enable) {
+            if (!remote(ALLUMER_LED))
+                return false;
+        }
+        else {
+            if (!remote(ETEINDRE_LED))
+                return false;
+        }
+        return true;
     }
 
-    public boolean enableTagSound(boolean enable) throws BLEServiceException
+    public boolean enableTagSound(boolean enable) throws BLEServiceException //joue une mélodie d'environ 6s avec le piezo
     {
         verifyIfBLESupported();
 
-        return false;
+        if(enable) {
+            if (!remote(ALLUMER_SON))
+                return false;
+        }
+
+        return true;
     }
 
     public boolean enableTagBuzzer(boolean enable) throws BLEServiceException
     {
         verifyIfBLESupported();
-
-        return false;
+        if(enable) {
+            if (!remote(ALLUMER_MOTEUR))
+                return false;
+        }
+        else {
+            if (!remote(ETEINDRE_MOTEUR))
+                return false;
+        }
+        return true;
     }
 
+    public boolean enableSurveillance(final Tag bracelet, final ArrayList<Tag> tagProfil, final boolean enable) {
+
+        new Thread(new Runnable() { //thread annonce au bracelet
+
+            @Override
+            public void run() {
+
+                while (enable) {
+                    try {
+                        connectToTag(bracelet);
+                        disconnectFromTag();
+                    } catch (BLEServiceException e) {
+                        e.printStackTrace();
+                    }
+
+                    try {
+                        Thread.sleep(5000); //delai entre chaque annonce au bracelet
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        }).start();
+
+        new Thread(new Runnable() {
+
+            @Override
+            public void run() {
+
+                while (enable) {
+                    mDevices.clear();
+                    bluetoothAdapter.startLeScan(mLeScanCallback);
+
+                    try {
+                        Thread.sleep(5000); //durée du scan
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+
+                    bluetoothAdapter.stopLeScan(mLeScanCallback);
+
+                    ArrayList<Tag> TagManquants = new ArrayList<Tag>();
+                    int i = 0;
+
+                    for (Tag t : tagProfil) {
+                        i = 0;
+                        for (BluetoothDevice mdevice : mDevices) {
+                            if (mdevice.getAddress().equals(t.getUid())) {
+                                i++;
+                                break;
+                            }
+                            if (i == 0)
+                                TagManquants.add(t);
+
+                        }
+                    }
+
+
+                    final Intent intent = new Intent(MISSING_TAGS);
+                    intent.putExtra(EXTRA_DATA, TagManquants); //envoie la liste des tag manquants
+                    sendBroadcast(intent);
+
+                    try {
+                        Thread.sleep(10000); //délai entre chaque scan
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        }).start();
+        return true;
+    }
+
+    private BluetoothAdapter.LeScanCallback mLeScanCallback = new BluetoothAdapter.LeScanCallback() {
+
+        @Override
+        public void onLeScan(final BluetoothDevice device, final int rssi,byte[] scanRecord) {
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    if (device != null) {
+                        mDevices.add(device);
+                    }
+                }
+            }).start();
+        }
+    };
 
 
 
@@ -239,6 +396,8 @@ public class BLEService  extends Service{
     public final static String ACTION_GATT_SERVICES_DISCOVERED = "ACTION_GATT_SERVICES_DISCOVERED";
     public final static String ACTION_GATT_RSSI = "ACTION_GATT_RSSI";
     public final static String ACTION_DATA_AVAILABLE = "ACTION_DATA_AVAILABLE";
+
+    public final static String MISSING_TAGS =" MISSING_TAGS";
 
     public final static String EXTRA_DATA = "EXTRA_DATA";
 
@@ -322,6 +481,10 @@ public class BLEService  extends Service{
     private void broadcastUpdate(final String action) {
         final Intent intent = new Intent(action);
         sendBroadcast(intent);
+
+        if (ACTION_GATT_SERVICES_DISCOVERED.equals(action)) { //ajout bruno : récupère les services BLE Shield Service
+            getGattService(getSupportedGattService(this.mBluetoothGatt));
+        }
     }
 
     /**
@@ -331,6 +494,7 @@ public class BLEService  extends Service{
      */
     private void broadcastUpdate(final String action, int rssi) {
         final Intent intent = new Intent(action);
+
         intent.putExtra(EXTRA_DATA, String.valueOf(rssi));
         sendBroadcast(intent);
     }
@@ -360,6 +524,7 @@ public class BLEService  extends Service{
      * Gatt connected the bluetooth device.
      */
     private BluetoothGatt mBluetoothGatt;
+    private Map<UUID, BluetoothGattCharacteristic> map = new HashMap<UUID, BluetoothGattCharacteristic>();
 
 
     /**
@@ -502,6 +667,17 @@ public class BLEService  extends Service{
             throw new IllegalArgumentException("bluetooth gatt can't be null");
 
         return bluetoothGatt.getService(UUID_BLE_SHIELD_SERVICE);
+    }
+
+    private void getGattService(BluetoothGattService gattService) { //les notifications de RX ne sont pas activées
+        if (gattService == null)
+            return;
+
+        BluetoothGattCharacteristic characteristic = gattService.getCharacteristic(UUID_BLE_SHIELD_TX);
+
+        map.put(characteristic.getUuid(), characteristic);
+
+        BluetoothGattCharacteristic characteristicRx = gattService.getCharacteristic(UUID_BLE_SHIELD_RX);
     }
 
 
