@@ -1,6 +1,12 @@
 package com.stuffinder.engine;
 
 
+<<<<<<< HEAD
+=======
+import android.graphics.BitmapFactory;
+
+import java.io.File;
+>>>>>>> remotes/master/MutualCodeBranch
 
 /**
  * This class provides methods to verify if fields like passwords or e-mail addresses are syntactically correct.
@@ -35,6 +41,7 @@ public class FieldVerifier
         return name.length() > 0;
     }
 
+<<<<<<< HEAD
     @SuppressWarnings("unused")
     public static boolean verifyImageFileName(String imageFileName)
     {/*
@@ -50,6 +57,19 @@ public class FieldVerifier
             return false;
         }*/
         return true;
+=======
+    public static boolean verifyImageFileName(String imageFileName)
+    {
+        File file = new File(imageFileName);
+
+        if (file == null || !file.exists()) {
+            return false;
+        }
+        BitmapFactory.Options options = new BitmapFactory.Options();
+        options.inJustDecodeBounds = true;
+        BitmapFactory.decodeFile(file.getPath(), options);
+        return options.outWidth != -1 && options.outHeight != -1;
+>>>>>>> remotes/master/MutualCodeBranch
     }
 
 

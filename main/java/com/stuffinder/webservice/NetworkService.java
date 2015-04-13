@@ -720,7 +720,7 @@ public class NetworkService implements NetworkServiceInterface {
             HttpEntity reqEntity = MultipartEntityBuilder.create()
                     .addPart("pseudo", new StringBody(currentAccount.getPseudo(), ContentType.TEXT_PLAIN))
                     .addPart("password", new StringBody(currentPassword, ContentType.TEXT_PLAIN))
-                    .addPart("objectName", new StringBody(tag.getObjectName(), ContentType.TEXT_PLAIN))
+                    .addPart("id", new StringBody(tag.getUid(), ContentType.TEXT_PLAIN))
                     .addPart("file", bin)
                     .build();
             httppost.setEntity(reqEntity);
