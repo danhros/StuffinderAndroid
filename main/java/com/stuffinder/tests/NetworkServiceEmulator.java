@@ -659,7 +659,7 @@ public class NetworkServiceEmulator implements NetworkServiceInterface
      * @throws com.stuffinder.exceptions.NetworkServiceException
      */
     @Override
-    public int getLastTagsUpdateTime() throws NetworkServiceException, NotAuthenticatedException
+    public long getLastTagsUpdateTime() throws NetworkServiceException, NotAuthenticatedException
     {
         if(authenticatedAccount == null)
             throw new NotAuthenticatedException();
@@ -672,7 +672,7 @@ public class NetworkServiceEmulator implements NetworkServiceInterface
      * @throws com.stuffinder.exceptions.NetworkServiceException
      */
     @Override
-    public int getLastProfilesUpdateTime() throws NetworkServiceException, NotAuthenticatedException
+    public long getLastProfilesUpdateTime() throws NetworkServiceException, NotAuthenticatedException
     {
         if(authenticatedAccount == null)
             throw new NotAuthenticatedException();

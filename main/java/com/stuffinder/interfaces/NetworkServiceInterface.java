@@ -438,12 +438,12 @@ public interface NetworkServiceInterface
      * @return the last update time about tags.
      * @throws NetworkServiceException
      */
-    public int getLastTagsUpdateTime() throws NetworkServiceException, NotAuthenticatedException;
+    public long getLastTagsUpdateTime() throws NetworkServiceException, NotAuthenticatedException;
 
     /**
      *
      * @return The last update time about profiles.
      * @throws NetworkServiceException
      */
-    public int getLastProfilesUpdateTime() throws NetworkServiceException, NotAuthenticatedException;
+    public long getLastProfilesUpdateTime() throws NetworkServiceException, NotAuthenticatedException;
 }
