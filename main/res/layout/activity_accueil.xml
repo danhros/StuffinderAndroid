@@ -1,0 +1,55 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
+    android:layout_height="match_parent" android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    tools:context="com.stuffinder.activities.Acceuil"
+    android:id="@+id/Fond"
+    android:background="#ff24088f">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Accueil"
+        android:id="@+id/textView"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:textSize="24dp"
+        android:textStyle="bold"
+        android:textColor="#ffffffff" />
+
+    <Button
+        android:layout_width="200dp"
+        android:layout_height="60dp"
+        android:text="Se Connecter"
+        android:id="@+id/buttonInte"
+        android:layout_below="@+id/textView"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="130dp"
+        android:background="#ff5e6eff"
+        android:clickable="true"
+        android:elegantTextHeight="false"
+        android:textColor="#ffffffff"
+        android:textStyle="normal"
+        android:textSize="18dp"
+        android:layout_alignParentEnd="false"
+        android:ellipsize="end"
+        android:onClick="accueilToSeCo"/>
+
+    <Button
+        android:layout_width="200dp"
+        android:layout_height="60dp"
+        android:text="Créer un Compte"
+        android:id="@+id/buttonCreerCompte"
+        android:background="#ff5e6eff"
+        android:textColor="#ffffffff"
+        android:textSize="18dp"
+        android:layout_below="@+id/buttonInte"
+        android:layout_alignLeft="@+id/buttonInte"
+        android:layout_alignStart="@+id/buttonInte"
+        android:layout_marginTop="54dp"
+        android:ellipsize="end"
+        android:clickable="true"
+        android:onClick="accueilToCreer"/>
+</RelativeLayout>

@@ -10,6 +10,11 @@ public class Tag
 	private String objectName;
 
 	private String objectImageName;
+<<<<<<< HEAD
+=======
+
+    private long imageVersion;
+>>>>>>> remotes/master/MutualCodeBranch
 	
 	private List<Position> lastPositions;
 	
@@ -63,7 +68,19 @@ public class Tag
 		this.objectImageName = objectImageName;
 	}
 
+<<<<<<< HEAD
 	public void addLastPosition(Position p)
+=======
+    public long getImageVersion() {
+        return imageVersion;
+    }
+
+    public void setImageVersion(long imageVersion) {
+        this.imageVersion = imageVersion;
+    }
+
+    public void addLastPosition(Position p)
+>>>>>>> remotes/master/MutualCodeBranch
 	{
 		lastPositions.add(p);
 	}

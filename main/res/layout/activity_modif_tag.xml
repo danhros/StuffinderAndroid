@@ -1,0 +1,44 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:orientation="vertical"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    tools:context="com.stuffinder.activities.ModifTagActivity"
+    android:background="#ff24088f"
+    android:id="@+id/modifTag">
+
+    <Button
+        style="@android:style/MediaButton.Previous"
+        android:layout_width="wrap_content"
+        android:layout_height="33dp"
+        android:text="Retour"
+        android:id="@+id/buttonRetour"
+        android:background="#ff24088f"
+        android:textColor="#ffffffff"
+        android:textSize="10dp"
+        android:onClick="retour3"
+        android:layout_alignParentTop="true"
+        android:layout_toEndOf="@+id/textView"
+        android:layout_alignBottom="@+id/textView" />
+
+    <ListView
+        android:id="@+id/listModif"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:choiceMode="singleChoice" >
+    </ListView>
+
+    <Button
+        android:id="@+id/send"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:text="Modifier"
+        android:onClick="goToFiche"
+        android:background="#ff5e6eff"
+        android:textColor="#ffffffff" />
+
+</LinearLayout>

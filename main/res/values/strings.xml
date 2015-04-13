@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">StufFinder</string>
+    <string name="action_settings">Settings</string>
+    <string name="title_activity_creer_compte">Création d\'un compte</string>
+    <string name="title_activity_se_connecter">Connexion</string>
+    <string name="title_activity_home">Accueil</string>
+    <string name="title_activity_reussite_creation_compte">Compte créé</string>
+    <string name="title_activity_interieur">Mode intérieur</string>
+    <string name="title_activity_exterieur">Mode extérieur</string>
+    <string name="title_activity_configuration">Configuration</string>
+    <string name="title_activity_info_perso">Informations personnelles</string>
+    <string name="title_activity_ajout_tag">Ajout d\'une puce</string>
+    <string name="title_activity_info_tag">InfoTagActivity</string>
+    <string name="title_activity_modif_tag">Modification d\'une puce</string>
+    <string name="title_activity_suppr_tag">Suppression d\'une puce</string>
+    <string name="title_activity_tags">Gestion des puces</string>
+    <string name="title_activity_localisation">Localisation</string>
+
+</resources>

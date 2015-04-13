@@ -1,0 +1,176 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
+    android:layout_height="match_parent" android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    tools:context="com.stuffinder.activities.InfoPersoActivity"
+    android:background="#ff24088f"
+    android:id="@+id/infoPerso">
+
+
+    <Button
+        style="@android:style/ButtonBar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Modifier"
+        android:id="@+id/buttonCreer"
+        android:background="#ff5e6eff"
+        android:textColor="#ffffffff"
+        android:onClick="actionModifier"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentEnd="true" />
+
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Informations"
+        android:id="@+id/textViewInfo"
+        android:textSize="24dp"
+        android:textStyle="bold"
+        android:textColor="#ffffffff"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Nom"
+        android:id="@+id/textViewNom"
+        android:textColor="#ffffffff"
+        android:textSize="18dp"
+        android:layout_below="@+id/textViewInfo"
+        android:layout_alignParentStart="true"
+        android:layout_marginTop="40dp" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/textViewNomVue"
+        android:textSize="18dp"
+        android:textColor="#ffffffff"
+        android:layout_alignTop="@+id/textViewNom"
+        android:layout_toEndOf="@+id/textViewInfo" />
+
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Prenom"
+        android:id="@+id/textViewPrenom"
+        android:textColor="#ffffffff"
+        android:textSize="18dp"
+        android:layout_below="@+id/textViewNom"
+        android:layout_alignParentStart="true"
+        android:layout_marginTop="40dp" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/textViewPrenomVue"
+        android:textSize="18dp"
+        android:textColor="#ffffffff"
+        android:layout_alignTop="@+id/textViewPrenom"
+        android:layout_toEndOf="@+id/textViewInfo" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Pseudo"
+        android:id="@+id/textViewId"
+        android:textColor="#ffffffff"
+        android:textSize="18dp"
+        android:layout_below="@+id/textViewPrenom"
+        android:layout_alignParentStart="true"
+        android:layout_marginTop="40dp" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/textViewIdVue"
+        android:textSize="18dp"
+        android:textColor="#ffffffff"
+        android:layout_alignTop="@+id/textViewId"
+        android:layout_toEndOf="@+id/textViewInfo" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="e-mail"
+        android:id="@+id/textViewMail"
+        android:textColor="#ffffffff"
+        android:textSize="18dp"
+        android:layout_below="@+id/textViewId"
+        android:layout_alignParentStart="true"
+        android:layout_marginTop="40dp" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Mot de passe"
+        android:id="@+id/textViewMdp"
+        android:textColor="#ffffffff"
+        android:textSize="18dp"
+        android:layout_below="@+id/textViewMail"
+        android:layout_alignParentStart="true"
+        android:layout_marginTop="40dp" />
+
+    <EditText
+        android:layout_width="260dp"
+        android:layout_height="wrap_content"
+        android:inputType="textEmailAddress"
+        android:ems="10"
+        android:id="@+id/editTextMail"
+        android:background="#ff5e6eff"
+        android:layout_alignTop="@+id/textViewMail"
+        android:layout_alignEnd="@+id/buttonCreer" />
+
+    <EditText
+        android:layout_width="200dp"
+        android:layout_height="wrap_content"
+        android:inputType="textPassword"
+        android:ems="10"
+        android:id="@+id/editTextModp"
+        android:background="#ff5e6eff"
+        android:layout_alignTop="@+id/textViewMdp"
+        android:layout_alignEnd="@+id/editTextMail" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Confirmer"
+        android:id="@+id/textViewConfirmPassword"
+        android:textColor="#ffffffff"
+        android:textSize="18dp"
+        android:layout_alignTop="@+id/editTextConfirmPassword"
+        android:layout_alignEnd="@+id/textView5" />
+
+    <EditText
+        android:layout_width="200dp"
+        android:layout_height="wrap_content"
+        android:inputType="textPassword"
+        android:ems="10"
+        android:id="@+id/editTextConfirmPassword"
+        android:background="#ff5e6eff"
+        android:layout_below="@+id/editTextModp"
+        android:layout_alignParentEnd="true"
+        android:layout_marginTop="34dp" />
+
+
+    <Button
+        style="@android:style/MediaButton.Previous"
+        android:layout_width="50dp"
+        android:layout_height="wrap_content"
+        android:text="Retour"
+        android:id="@+id/buttonRetour"
+        android:background="#ff24088f"
+        android:textColor="#ffffffff"
+        android:textSize="10dp"
+        android:onClick="retour5"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentStart="true"
+        android:layout_above="@+id/textViewNom" />
+
+
+</RelativeLayout>
