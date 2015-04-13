@@ -1,5 +1,7 @@
 package com.stuffinder.engine;
 
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.util.Log;
 
 import com.stuffinder.data.Tag;
@@ -221,5 +223,37 @@ public class FileManager {
     private static String getFilenameFromTag(Tag tag)
     {
         return tag.getUid().replaceAll("\\:", "_") + ".png";
+    }
+
+    public static final int LOW_IMAGE_WIDTH = 60;
+    public static final int LOW_IMAGE_HEIGHT = 60;
+
+    public static Bitmap loadImageForList(File imageFile) throws FileNotFoundException {
+        if(! imageFile.exists())
+            throw new FileNotFoundException(imageFile.toString());
+
+        BitmapFactory.Options options = new BitmapFactory.Options();
+        options.inJustDecodeBounds = true;
+
+        BitmapFactory.decodeFile(imageFile.getAbsolutePath(), options);
+
+        if(options.outWidth == -1 || options.outHeight == -1) // means the file is not an image file.
+        {
+            Logger.getLogger(FileManager.class.getName()).log(Level.WARNING, "File \"" + imageFile.getAbsolutePath() + "\" can't be decoded as image.");
+            return null;
+        }
+
+        int width = options.outWidth;
+        int height = options.outHeight;
+
+
+        if(width < height && height > LOW_IMAGE_HEIGHT)
+            options.inSampleSize = height / LOW_IMAGE_HEIGHT+ 1;
+        else if(height <= width && width > LOW_IMAGE_WIDTH)
+            options.inSampleSize = width / LOW_IMAGE_WIDTH + 1;
+
+        options.inJustDecodeBounds = false;
+
+        return BitmapFactory.decodeFile(imageFile.getAbsolutePath(), options);
     }
 }

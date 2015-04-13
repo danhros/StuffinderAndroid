@@ -1510,11 +1510,15 @@ public class EngineService {
                         if(copy.getTags().get(j).getObjectImageName() != null) //there is a new image file.
                             try {
                                 FileManager.copyFileFromAutoSyncFolderToUserFolder(copy.getTags().get(j));
+                                ImageLoader.getInstance().reloadImageAtLowSize(FileManager.getTagImageFileForUser(copy.getTags().get(j)));
                             } catch (FileNotFoundException e) { // will normally never occur.
                                 e.printStackTrace();
                             }
                         else if(currentTagList.get(i).getObjectImageName() != null) // if the image is removed from the server version.
+                        {
                             FileManager.getTagImageFileForUser(copy.getTags().get(j)).delete();
+                            ImageLoader.getInstance().removeImageLoadedAtLowSize(new File(currentTagList.get(i).getObjectImageName()));
+                        }
                     }
 
                     i++;
@@ -1603,7 +1607,10 @@ public class EngineService {
                             FileManager.moveFile(new File(downloadImageFilename), FileManager.getTagImageFileForAutoSynchronization((Tag) tags[index]));
 
                             if(! isThereRequestAboutTagImage((Tag) tags[index]))
+                            {
                                 FileManager.copyFileFromAutoSyncFolderToUserFolder((Tag) tags[index]);
+                                ImageLoader.getInstance().reloadImageAtLowSize(FileManager.getTagImageFileForUser((Tag) tags[index]));
+                            }
 
                             accountMutex.release();
                             tagToUpdateImageFile.remove(tags[index]);

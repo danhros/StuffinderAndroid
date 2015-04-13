@@ -13,7 +13,11 @@ import android.widget.TextView;
 
 import com.stuffinder.R;
 import com.stuffinder.data.Tag;
+import com.stuffinder.engine.FileManager;
+import com.stuffinder.engine.ImageLoader;
 
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.util.List;
 
 public class MyArrayAdapter extends ArrayAdapter {
@@ -38,11 +42,18 @@ public class MyArrayAdapter extends ArrayAdapter {
 
         if(listTag.get(position).getObjectImageName() != null)
         {
-            Bitmap myBitmap = BitmapFactory.decodeFile(listTag.get(position).getObjectImageName());
-            if(myBitmap != null)
-                imageView.setImageBitmap(myBitmap);
-            else
-                Log.w(getClass().getName(), "image \"" + listTag.get(position).getObjectImageName() + "\" fails to be loaded or decoded.");
+            Bitmap myBitmap = null;
+            try {
+                myBitmap = ImageLoader.getInstance().getImageAtLowSize(new File(listTag.get(position).getObjectImageName()));
+
+                if(myBitmap != null)
+                    imageView.setImageBitmap(myBitmap);
+                else
+                    Log.w(getClass().getName(), "image \"" + listTag.get(position).getObjectImageName() + "\" fails to be loaded or decoded.");
+            } catch (FileNotFoundException e) {
+                Log.w(getClass().getName(), "image file\"" + listTag.get(position).getObjectImageName() + "\" doesn't exist.");
+            }
+
 
         }
 
