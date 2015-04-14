@@ -985,12 +985,12 @@ public class NetworkService implements NetworkServiceInterface {
     }
 
     @Override
-    public int getLastTagsUpdateTime() throws NetworkServiceException {
+    public long getLastTagsUpdateTime() throws NetworkServiceException {
         return 0;
     }
 
     @Override
-    public int getLastProfilesUpdateTime() throws NetworkServiceException {
+    public long getLastProfilesUpdateTime() throws NetworkServiceException {
         return 0;
     }
 

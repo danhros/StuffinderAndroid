@@ -49,45 +49,11 @@ public class BLEService  extends Service{
         context.startService(gattServiceIntent);
     }
 
-    public static BLEServiceConnection connectToService(Context context)
-    {
-        Intent intent = new Intent(context, BLEService.class);
-        BLEServiceConnection bleServiceConnection = new BLEServiceConnection();
-
-        context.bindService(intent, bleServiceConnection, Context.BIND_AUTO_CREATE);
-
-        return bleServiceConnection;
-    }
-
-    public static void disconnectToService(Context context, BLEServiceConnection bleServiceConnection)
-    {
-        context.unbindService(bleServiceConnection);
-    }
 
     public static void stopBLEService(Context context)
     {
         Intent gattServiceIntent = new Intent(context, BLEService.class);
         context.stopService(gattServiceIntent);
-    }
-
-    static class BLEServiceConnection implements ServiceConnection{
-
-        @Override
-        public void onServiceConnected(ComponentName componentName, IBinder service) {
-
-//            if (! bluetoothAdapter.isEnabled()) {
-//                Log.e(getClass().getName(), "Unable to initialize Bluetooth");
-//                return;
-//            }
-            // Automatically connects to the device upon successful start-up
-            // initialization.
-
-//            connect(mDeviceAddress);
-        }
-
-        @Override
-        public void onServiceDisconnected(ComponentName componentName) {
-        }
     }
 
     private void verifyIfBLESupported() throws BLEServiceException
@@ -175,6 +141,13 @@ public class BLEService  extends Service{
 
     //TODO implement these methods.
 
+
+    private LocationCallback locationCallback;
+
+    public void setLocationCallback(LocationCallback locationCallback) {
+        this.locationCallback = locationCallback;
+    }
+
     /**
      * to perform connection with a tag.
      * @param tag
@@ -182,9 +155,12 @@ public class BLEService  extends Service{
      * @throws BLEServiceException
      * @throws IllegalArgumentException
      */
-    public boolean connectToTag(Tag tag) throws BLEServiceException, IllegalArgumentException
+    public void connectToTag(Tag tag) throws BLEServiceException, IllegalArgumentException
     {
         verifyIfBLESupported();
+
+        if(tag == null)
+            throw new IllegalArgumentException("tag parameter can't be null");
 
         if(locationBluetoothGatt != null)
         {
@@ -192,32 +168,22 @@ public class BLEService  extends Service{
             close(locationBluetoothGatt);
         }
 
+        if(locationCallback != null)
+            locationCallback.onTagConnecting(tag);
+
         locationBluetoothGatt = connect(tag.getUid());
 
 
         if(locationBluetoothGatt == null)
-            return false;
-
-        tagAddress = tag.getUid();
-        return true;
-    }
-
-    private boolean remote(int action) throws BLEServiceException{
-
-        BluetoothGattCharacteristic characteristic = map.get(UUID_BLE_SHIELD_TX);
-        if (characteristic != null) {
-
-            byte[] tx = new byte[1];
-            tx[0] = (byte) action;
-            characteristic.setValue(tx);
-            try {
-                writeCharacteristic(locationBluetoothGatt, characteristic);
-                return true;
-            } catch (BLEServiceException e) {
-                e.printStackTrace();
-            }
+        {
+            if(locationCallback != null)
+                locationCallback.onTagConnected(tag);
+                locationCallback.onTagNotFound();
         }
-        return false;
+        else
+        {
+            tagAddress = tag.getUid();
+        }
     }
 
     /**
@@ -248,7 +214,7 @@ public class BLEService  extends Service{
         return 0;
     }
 
-    public int getDistance(int rssi) throws BLEServiceException{
+    public int getDistance(int rssi){
 
         if (rssi < 40)
             return TRES_PROCHE;
@@ -419,30 +385,41 @@ public class BLEService  extends Service{
     /**
      * Object to perform bluetooth features by callbacks.
      */
-    private final BluetoothGattCallback mGattCallback = new BluetoothGattCallback()
+    private final BluetoothGattCallback mGattCallback = new MyBluetoothGattCallback();
+
+    class MyBluetoothGattCallback extends BluetoothGattCallback
     {
         @Override
         public void onConnectionStateChange(BluetoothGatt gatt, int status, int newState)
         {
             String intentAction;
 
-            if (newState == BluetoothProfile.STATE_CONNECTED) {
+            if (newState == BluetoothProfile.STATE_CONNECTED)
+            {
                 intentAction = ACTION_GATT_CONNECTED;
-                broadcastUpdate(intentAction);
+//                broadcastUpdate(intentAction);
                 Log.i(getClass().getName(), "Connected to GATT server.");
                 // Attempts to discover services after successful connection.
                 Log.i(getClass().getName(), "Attempting to start service discovery:"
                         + mBluetoothGatt.discoverServices());
-            } else if (newState == BluetoothProfile.STATE_DISCONNECTED) {
+            }
+            else if (newState == BluetoothProfile.STATE_DISCONNECTED)
+            {
                 intentAction = ACTION_GATT_DISCONNECTED;
                 Log.i(getClass().getName(), "Disconnected from GATT server.");
                 broadcastUpdate(intentAction);
+
+                if(locationCallback != null)
+                    locationCallback.onTagDisconnected(null);
             }
         }
 
         public void onReadRemoteRssi(BluetoothGatt gatt, int rssi, int status) {
             if (status == BluetoothGatt.GATT_SUCCESS) {
                 broadcastUpdate(ACTION_GATT_RSSI, rssi);
+
+                if(locationCallback != null)
+                    locationCallback.onDistanceMeasured(getDistance(rssi));
             } else {
                 Log.w(getClass().getName(), "onReadRemoteRssi received: " + status);
             }
@@ -452,7 +429,20 @@ public class BLEService  extends Service{
         public void onServicesDiscovered(BluetoothGatt gatt, int status) {
             if (status == BluetoothGatt.GATT_SUCCESS) {
                 broadcastUpdate(ACTION_GATT_SERVICES_DISCOVERED);
-            } else {
+
+                getGattService(getSupportedGattService(mBluetoothGatt));
+
+                if(locationCallback != null && getSupportedGattService(gatt) != null)
+                    locationCallback.onTagConnected(null);
+                else if(locationCallback != null)
+                {
+                    locationCallback.onTagConnected(null);
+                    locationCallback.onTagNotFound();
+                }
+
+            }
+            else
+            {
                 Log.w(getClass().getName(), "onServicesDiscovered received: " + status);
             }
         }
@@ -482,9 +472,9 @@ public class BLEService  extends Service{
         final Intent intent = new Intent(action);
         sendBroadcast(intent);
 
-        if (ACTION_GATT_SERVICES_DISCOVERED.equals(action)) { //ajout bruno : récupère les services BLE Shield Service
-            getGattService(getSupportedGattService(this.mBluetoothGatt));
-        }
+//        if (ACTION_GATT_SERVICES_DISCOVERED.equals(action)) { //ajout bruno : récupère les services BLE Shield Service
+//            getGattService(getSupportedGattService(this.mBluetoothGatt));
+//        }
     }
 
     /**
@@ -589,6 +579,24 @@ public class BLEService  extends Service{
     }
 
 
+    private boolean remote(int action) throws BLEServiceException{
+
+        BluetoothGattCharacteristic characteristic = map.get(UUID_BLE_SHIELD_TX);
+        if (characteristic != null) {
+
+            byte[] tx = new byte[1];
+            tx[0] = (byte) action;
+            characteristic.setValue(tx);
+            try {
+                writeCharacteristic(locationBluetoothGatt, characteristic);
+                return true;
+            } catch (BLEServiceException e) {
+                e.printStackTrace();
+            }
+        }
+        return false;
+    }
+
 
     /**
      * Request a read on a given {@code BluetoothGattCharacteristic}. The read
@@ -683,8 +691,8 @@ public class BLEService  extends Service{
 
 
     public class LocalBinder extends Binder {
-        BLEService getService() {
-            return BLEService.instance;
+        public BLEService getService() {
+            return BLEService.this;
         }
     }
 
@@ -707,10 +715,19 @@ public class BLEService  extends Service{
     }
 
 
-    private static BLEService instance = new BLEService();
-
-    public static BLEService getInstance()
+    public static abstract class LocationCallback
     {
-        return instance;
+        public abstract void onTagConnected(Tag tag);
+        public abstract void onTagConnecting(Tag tag);
+        public abstract void onTagDisconnected(Tag tag);
+        public abstract void onTagDisconnecting(Tag tag);
+
+        public abstract void onTagNotFound();
+
+        public abstract void onDistanceMeasured(int distance);
+
+        public abstract void onLEDEnabled(boolean enabled);
+        public abstract void onBuzzerEnabled(boolean enabled);
+        public abstract void onSoundEnabled(boolean enabled);
     }
 }

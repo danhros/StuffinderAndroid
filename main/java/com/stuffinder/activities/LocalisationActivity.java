@@ -1,46 +1,38 @@
 package com.stuffinder.activities;
 
-import android.bluetooth.BluetoothAdapter;
-import android.bluetooth.BluetoothDevice;
-import android.bluetooth.BluetoothManager;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
+import android.content.ServiceConnection;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
-import android.view.Menu;
-import android.view.MenuItem;
+import android.os.IBinder;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.stuffinder.R;
+import com.stuffinder.ble.BLEService;
 import com.stuffinder.data.Tag;
-import com.stuffinder.exceptions.TagNotDetectedException;
-
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
+import com.stuffinder.exceptions.BLEServiceException;
 
 
 public class LocalisationActivity extends BasicActivity {
-
-    // fields used to BLE tags detection.
-    private String UUID_Tag = "F9:1F:24:D3:1B:D4" ;//adresse du TAG actuel
-
-    private BluetoothAdapter mBluetoothAdapter;
-    public static List<BluetoothDevice> mDevices = new ArrayList<BluetoothDevice>();
-    private static HashMap<BluetoothDevice,Integer> listRssi = new HashMap<BluetoothDevice, Integer>();
-    private static final long SCAN_PERIOD = 5000; //durée d'un scan
-
-
-    private Boolean presence = false;
-    private int puissance;
-
 
     private static Tag tagLoc;
     TextView nomObjTextView ;
     TextView positionTextView ;
 
+    private boolean binded;
+    private LocationServiceConnection serviceConnection = new LocationServiceConnection();
+    private BLEService service;
+
+    private static final int DISCONNECTED = 0;
+    private static final int CONNECTING = 1;
+    private static final int CONNECTED = 2;
+    private static final int DISCONNECTING = 3;
+
+    private int state = 0;
 
     public static void ChangeTag(Tag tag)
     {
@@ -57,210 +49,170 @@ public class LocalisationActivity extends BasicActivity {
 
         nomObjTextView.setText(tagLoc.getObjectName());
 
-
         if (!getPackageManager().hasSystemFeature(PackageManager.FEATURE_BLUETOOTH_LE)) { //alerte support BLE
             Toast.makeText(this, "BLE feature not supported.", Toast.LENGTH_SHORT).show();
             finish();
         }
 
-        BluetoothManager bluetoothManager = (BluetoothManager) getSystemService(Context.BLUETOOTH_SERVICE); //initialisation du bluetooth manager
-        mBluetoothAdapter = bluetoothManager.getAdapter();
 
-        if (mBluetoothAdapter == null || !mBluetoothAdapter.isEnabled()) { //activation du ble sur le terminal
-            Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
-            startActivity(enableBtIntent);
-
-            mBluetoothAdapter = bluetoothManager.getAdapter();
-            if (mBluetoothAdapter == null || !mBluetoothAdapter.isEnabled()) {
-                finish();
-                return;
-            }
-        }
-
-        if(isConnected(tagLoc.getUid())){
-            try {
-                if (distance(tagLoc.getUid())==1)
-                {
-                    positionTextView.setText("est tres proche");
-                }
-                else {
-                    if (distance(tagLoc.getUid())==2)
-                        positionTextView.setText("est moyennement proche");
-
-                    else
-                        positionTextView.setText("est loin");
-                }
-
-            } catch (TagNotDetectedException e) {
-                Toast.makeText(this, "Une erreur anormale est survenue. Veuillez relancer l'application.", Toast.LENGTH_SHORT).show();
-            }
-        }
-        else {
-            positionTextView.setText("n'a pas été localisé.");
-        }
     }
 
     public void retour9 (View view) {
         finish();
     }
 
+    private boolean ledEnabled = false;
     public void onLed (View view) {
-
+        if(state == CONNECTED)
+        {
+            try {
+                service.enableTagLED(!ledEnabled);
+            } catch (BLEServiceException e) {
+                e.printStackTrace();
+            }
+        }
+        else
+            Toast.makeText(this, "impossible d'activer la led.", Toast.LENGTH_LONG).show();
     }
 
+    private boolean buzzerEnabled = false;
     public void onSon (View view) {
-
+        if(state == CONNECTED)
+        {
+            try {
+                service.enableTagBuzzer(!buzzerEnabled);
+            } catch (BLEServiceException e) {
+                e.printStackTrace();
+            }
+        }
+        else
+            Toast.makeText(this, "impossible d'activer le buzzer.", Toast.LENGTH_LONG).show();
     }
 
     public void retenter (View view) {
+    }
 
-        positionTextView = (TextView)findViewById(R.id.textViewPosition);
 
-        BluetoothManager bluetoothManager = (BluetoothManager) getSystemService(Context.BLUETOOTH_SERVICE); //initialisation du bluetooth manager
-        mBluetoothAdapter = bluetoothManager.getAdapter();
+    public void connectToBLEService()
+    {
+        Intent intent = new Intent(this, BLEService.class);
 
-        if (mBluetoothAdapter == null || !mBluetoothAdapter.isEnabled()) { //activation du ble sur le terminal
-            Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
-            startActivity(enableBtIntent);
+        bindService(intent, serviceConnection, Context.BIND_AUTO_CREATE);
+    }
 
-            mBluetoothAdapter = bluetoothManager.getAdapter();
-            if (mBluetoothAdapter == null || !mBluetoothAdapter.isEnabled()) {
-                finish();
-                return;
-            }
-        }
+    public void disconnectFromBLEService()
+    {
+        unbindService(serviceConnection);
+    }
 
-        if(isConnected(tagLoc.getUid())){
+    class LocationServiceConnection implements ServiceConnection
+    {
+        public void onServiceConnected(ComponentName name, IBinder service) {
+            binded = true;
+
+            LocalisationActivity.this.service = ((BLEService.LocalBinder) service).getService();
+            LocalisationActivity.this.service.setLocationCallback(new MyLocationCallback());
+
             try {
-                if (distance(tagLoc.getUid())==1)
-                {
-                    positionTextView.setText("est tres proche");
-                }
-                else {
-                    if (distance(tagLoc.getUid())==2)
-                        positionTextView.setText("est moyennement proche");
-
-                    else
-                        positionTextView.setText("est loin");
-                }
-
-            } catch (TagNotDetectedException e) {
-                Toast.makeText(this, "Une erreur anormale est survenue. Veuillez relancer l'application.", Toast.LENGTH_SHORT).show();
-            }
-        }
-        else {
-            positionTextView.setText("n'a pas été localisé.");
-        }
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_localisation, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
-        }
-
-        return super.onOptionsItemSelected(item);
-    }
-
-
-    // methods to manage BLE tags detection.
-
-    public boolean isConnected(String id_Tag){ //"F9:1F:24:D3:1B:D4"
-
-        presence = false;
-
-        scanLeDevice();
-
-
-        for (int i=0; i < mDevices.size(); i++) {
-            if (mDevices.get(i).getAddress().equals(id_Tag)) {
-                presence = true;
+                LocalisationActivity.this.service.connectToTag(tagLoc);
+            } catch (BLEServiceException e) { // will not occur.
+                e.printStackTrace();
             }
         }
 
-
-
-
-        return presence;
-    }
-
-    public int distance(String id_Tag) //"F9:1F:24:D3:1B:D4"
-            throws TagNotDetectedException {
-
-        int indicePuissance =3;
-
-        if (!presence)
-            throw new TagNotDetectedException();
-
-        else {
-            for (int i = 0; i < mDevices.size(); i++) {
-                if (mDevices.get(i).getAddress().equals(id_Tag)) {
-                    puissance = Math.abs(listRssi.get(mDevices.get(i)).intValue());
-                }
-            }
-
-
-            if (puissance < 40)
-                indicePuissance = 1;
-
-            else if (puissance < 70 && puissance >= 40)
-                indicePuissance = 2;
-        }
-
-        listRssi.clear();
-        mDevices.clear();
-
-        return indicePuissance;
-    }
-
-    private void scanLeDevice() { //timer pour le scan
-
-
-
-
-        mBluetoothAdapter.startLeScan(mLeScanCallback);
-
-        try {
-            Thread.sleep(SCAN_PERIOD);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-
-        mBluetoothAdapter.stopLeScan(mLeScanCallback);
-
-
-    }
-
-    private BluetoothAdapter.LeScanCallback mLeScanCallback = new BluetoothAdapter.LeScanCallback() {
 
         @Override
-        public void onLeScan(final BluetoothDevice device, final int rssi, byte[] scanRecord) {
+        public void onServiceDisconnected(ComponentName name) {
+            binded = false;
+            LocalisationActivity.this.service = null;
+        }
+    }
 
-            if (device != null) {
-                if (mDevices.indexOf(device) == -1)
-                    mDevices.add(device);
-                listRssi.put(device, new Integer(rssi));
+    void notifyTagLocated(boolean located)
+    {
+        if(located)
+            positionTextView.setText("est trouvé");
+        else
+            positionTextView.setText("n'est pas trouvé");
+    }
 
-                /*if (device.getAddress().equals(UUID_Tag)) {
-                    presence = true;
-                    puissance = rssi;
-                } */
-            }
+    void notifyTagDistance(int distance)
+    {
+        switch (distance)
+        {
+            case BLEService.TRES_PROCHE :
+                positionTextView.setText("est proche");
+                break;
+            case BLEService.MOYENNELENT_PROCHE :
+                positionTextView.setText("est moyennement proche.");
+                break;
+            case BLEService.LOIN :
+                positionTextView.setText("est loin");
+                break;
+            default :
+                positionTextView.setText("n'est pas trouvé");
+                break;
+        }
+    }
+
+
+    class MyLocationCallback extends BLEService.LocationCallback
+    {
+        @Override
+        public void onTagConnected(Tag tag) {
+            state = CONNECTED;
+            notifyTagLocated(true);
+        }
+
+        @Override
+        public void onTagConnecting(Tag tag) {
+            state = CONNECTING;
+        }
+
+        @Override
+        public void onTagDisconnected(Tag tag) {
+            state = DISCONNECTED;
+        }
+
+        @Override
+        public void onTagDisconnecting(Tag tag) {
+            state = DISCONNECTING;
+            notifyTagLocated(false);
+        }
+
+        @Override
+        public void onTagNotFound() {
+            notifyTagLocated(false);
+        }
+
+        @Override
+        public void onDistanceMeasured(int distance) {
+            notifyTagDistance(distance);
+        }
+
+        @Override
+        public void onLEDEnabled(boolean enabled) {
+            ledEnabled = enabled;
+
+            if(enabled)
+                Toast.makeText(LocalisationActivity.this, "LED activée.", Toast.LENGTH_SHORT).show();
+            else
+                Toast.makeText(LocalisationActivity.this, "LED désactivée.", Toast.LENGTH_SHORT).show();
+        }
+
+        @Override
+        public void onBuzzerEnabled(boolean enabled) {
+            buzzerEnabled = enabled;
+
+            if(enabled)
+                Toast.makeText(LocalisationActivity.this, "Buzzer activée.", Toast.LENGTH_SHORT).show();
+            else
+                Toast.makeText(LocalisationActivity.this, "Buzzer désactivée.", Toast.LENGTH_SHORT).show();
+        }
+
+        @Override
+        public void onSoundEnabled(boolean enabled) {
 
         }
-    };
-
+    }
 }
