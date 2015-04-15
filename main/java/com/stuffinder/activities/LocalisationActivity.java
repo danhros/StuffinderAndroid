@@ -16,6 +16,9 @@ import com.stuffinder.ble.BLEService;
 import com.stuffinder.data.Tag;
 import com.stuffinder.exceptions.BLEServiceException;
 
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 
 public class LocalisationActivity extends BasicActivity {
 
@@ -54,16 +57,21 @@ public class LocalisationActivity extends BasicActivity {
             finish();
         }
 
+        state = DISCONNECTED;
+        binded = false;
 
+        connectToBLEService();
     }
 
     public void retour9 (View view) {
-        finish();
+        onBackPressed();
     }
 
     private boolean ledEnabled = false;
     public void onLed (View view) {
-        if(state == CONNECTED)
+        if(! binded)
+            Logger.getLogger(getClass().getName()).log(Level.INFO, "can't perform operation on led because the connection is not done with the BLE service.");
+        else if(state == CONNECTED)
         {
             try {
                 service.enableTagLED(!ledEnabled);
@@ -77,7 +85,9 @@ public class LocalisationActivity extends BasicActivity {
 
     private boolean buzzerEnabled = false;
     public void onSon (View view) {
-        if(state == CONNECTED)
+        if(! binded)
+            Logger.getLogger(getClass().getName()).log(Level.INFO, "can't perform operation on sound or buzzer because the connection is not done with the BLE service.");
+        else if(state == CONNECTED)
         {
             try {
                 service.enableTagBuzzer(!buzzerEnabled);
@@ -90,8 +100,30 @@ public class LocalisationActivity extends BasicActivity {
     }
 
     public void retenter (View view) {
+        if(! binded)
+            Logger.getLogger(getClass().getName()).log(Level.INFO, "can't perform operation on sound or buzzer because the connection is not done with the BLE service.");
+        else if(state == CONNECTED || state == DISCONNECTED)
+        {
+            try {
+                service.connectToTag(tagLoc);
+            } catch (BLEServiceException e) {
+                e.printStackTrace();
+            }
+        }
+        else
+            Toast.makeText(this, "nouvelle localisation en cours.", Toast.LENGTH_LONG).show();
     }
 
+    /**
+     * Called when the activity has detected the user's press of the back
+     * key.  The default implementation simply finishes the current activity,
+     * but you can override this to do whatever you want.
+     */
+    @Override
+    public void onBackPressed() {
+        disconnectFromBLEService();
+        super.onBackPressed();
+    }
 
     public void connectToBLEService()
     {
@@ -102,6 +134,12 @@ public class LocalisationActivity extends BasicActivity {
 
     public void disconnectFromBLEService()
     {
+        try {
+            if(state == CONNECTED)
+                service.disconnectFromTag();
+        } catch (BLEServiceException e) {
+            Logger.getLogger(getClass().getName()).log(Level.WARNING, "an error has occured in the ble service.", e);
+        }
         unbindService(serviceConnection);
     }
 
@@ -112,6 +150,7 @@ public class LocalisationActivity extends BasicActivity {
 
             LocalisationActivity.this.service = ((BLEService.LocalBinder) service).getService();
             LocalisationActivity.this.service.setLocationCallback(new MyLocationCallback());
+            Logger.getLogger(getClass().getName()).log(Level.INFO, "Connection established with the BLE service.");
 
             try {
                 LocalisationActivity.this.service.connectToTag(tagLoc);
@@ -124,7 +163,7 @@ public class LocalisationActivity extends BasicActivity {
         @Override
         public void onServiceDisconnected(ComponentName name) {
             binded = false;
-            LocalisationActivity.this.service = null;
+            service = null;
         }
     }
 
@@ -161,7 +200,13 @@ public class LocalisationActivity extends BasicActivity {
         @Override
         public void onTagConnected(Tag tag) {
             state = CONNECTED;
+            Logger.getLogger(getClass().getName()).log(Level.INFO, "Connection established with the tag " + tagLoc);
             notifyTagLocated(true);
+            try {
+                service.getLocatedTagDistance();
+            } catch (BLEServiceException e) { // will normally never occur.
+                e.printStackTrace();
+            }
         }
 
         @Override
@@ -176,8 +221,10 @@ public class LocalisationActivity extends BasicActivity {
 
         @Override
         public void onTagDisconnecting(Tag tag) {
+            if(state == CONNECTING)
+                notifyTagLocated(false);
+
             state = DISCONNECTING;
-            notifyTagLocated(false);
         }
 
         @Override
@@ -211,7 +258,7 @@ public class LocalisationActivity extends BasicActivity {
         }
 
         @Override
-        public void onSoundEnabled(boolean enabled) {
+        public void onSoundEnabled(boolean enabled) { // not implemented at the moment.
 
         }
     }

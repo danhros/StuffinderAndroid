@@ -10,10 +10,8 @@ import android.bluetooth.BluetoothGattDescriptor;
 import android.bluetooth.BluetoothGattService;
 import android.bluetooth.BluetoothManager;
 import android.bluetooth.BluetoothProfile;
-import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
-import android.content.ServiceConnection;
 import android.content.pm.PackageManager;
 import android.os.Binder;
 import android.os.IBinder;
@@ -202,16 +200,12 @@ public class BLEService  extends Service{
         }
     }
 
-    public int getLocatedTagDistance()throws BLEServiceException
+    public void getLocatedTagDistance()throws BLEServiceException
     {
         verifyIfBLESupported();
 
         readRssi(locationBluetoothGatt);
         //les données sont reçus dans le broadcast update
-
-
-
-        return 0;
     }
 
     public int getDistance(int rssi){
@@ -265,6 +259,120 @@ public class BLEService  extends Service{
         }
         return true;
     }
+
+
+
+
+    // constants used for the gatt state.
+    public final static String ACTION_GATT_CONNECTED = "ACTION_GATT_CONNECTED";
+    public final static String ACTION_GATT_DISCONNECTED = "ACTION_GATT_DISCONNECTED";
+    public final static String ACTION_GATT_SERVICES_DISCOVERED = "ACTION_GATT_SERVICES_DISCOVERED";
+    public final static String ACTION_GATT_RSSI = "ACTION_GATT_RSSI";
+    public final static String ACTION_DATA_AVAILABLE = "ACTION_DATA_AVAILABLE";
+
+    public final static String MISSING_TAGS =" MISSING_TAGS";
+
+    public final static String EXTRA_DATA = "EXTRA_DATA";
+
+    /**
+     * UUID used to perform a write operation on the connection.
+     */
+    public final static UUID UUID_BLE_SHIELD_TX = UUID.fromString(RBLGattAttributes.BLE_SHIELD_TX);
+
+    /**
+     * UUID used to perform a read operation on the connection.
+     */
+    public final static UUID UUID_BLE_SHIELD_RX = UUID.fromString(RBLGattAttributes.BLE_SHIELD_RX);
+
+    /**
+     *
+     */
+    public final static UUID UUID_BLE_SHIELD_SERVICE = UUID.fromString(RBLGattAttributes.BLE_SHIELD_SERVICE);
+
+    /**
+     * Object to perform bluetooth features by callbacks.
+     */
+    private final BluetoothGattCallback mGattCallback = new LocationBluetoothGattCallback();
+
+    class LocationBluetoothGattCallback extends BluetoothGattCallback
+    {
+        @Override
+        public void onConnectionStateChange(BluetoothGatt gatt, int status, int newState)
+        {
+            String intentAction;
+
+            if (newState == BluetoothProfile.STATE_CONNECTED)
+            {
+//                intentAction = ACTION_GATT_CONNECTED;
+//                broadcastUpdate(intentAction);
+                Log.i(getClass().getName(), "Connected to GATT server.");
+                // Attempts to discover services after successful connection.
+                Log.i(getClass().getName(), "Attempting to start service discovery:"
+                        + mBluetoothGatt.discoverServices());
+            }
+            else if (newState == BluetoothProfile.STATE_DISCONNECTED)
+            {
+//                intentAction = ACTION_GATT_DISCONNECTED;
+                Log.i(getClass().getName(), "Disconnected from GATT server.");
+//                broadcastUpdate(intentAction);
+
+                if(locationCallback != null)
+                    locationCallback.onTagDisconnected(null);
+            }
+        }
+
+        public void onReadRemoteRssi(BluetoothGatt gatt, int rssi, int status) {
+            if (status == BluetoothGatt.GATT_SUCCESS) {
+//                broadcastUpdate(ACTION_GATT_RSSI, rssi);
+
+                if(locationCallback != null)
+                    locationCallback.onDistanceMeasured(getDistance(rssi));
+            } else {
+                Log.w(getClass().getName(), "onReadRemoteRssi received: " + status);
+            }
+        }
+
+        @Override
+        public void onServicesDiscovered(BluetoothGatt gatt, int status) {
+            if (status == BluetoothGatt.GATT_SUCCESS) {
+                broadcastUpdate(ACTION_GATT_SERVICES_DISCOVERED);
+
+                getGattService(getSupportedGattService(mBluetoothGatt));
+
+                if(locationCallback != null && getSupportedGattService(gatt) != null)
+                    locationCallback.onTagConnected(null);
+                else if(locationCallback != null)
+                {
+                    locationCallback.onTagConnected(null);
+                    locationCallback.onTagNotFound();
+                }
+
+            }
+            else
+            {
+                Log.w(getClass().getName(), "onServicesDiscovered received: " + status);
+            }
+        }
+
+        @Override
+        public void onCharacteristicRead(BluetoothGatt gatt, BluetoothGattCharacteristic characteristic, int status)
+        {
+            if (status == BluetoothGatt.GATT_SUCCESS)
+            {
+                broadcastUpdate(ACTION_DATA_AVAILABLE, characteristic);
+            }
+        }
+
+        @Override
+        public void onCharacteristicChanged(BluetoothGatt gatt, BluetoothGattCharacteristic characteristic)
+        {
+            broadcastUpdate(ACTION_DATA_AVAILABLE, characteristic);
+        }
+    };
+
+
+
+// partie surveillance.
 
     public boolean enableSurveillance(final Tag bracelet, final ArrayList<Tag> tagProfil, final boolean enable) {
 
@@ -356,112 +464,9 @@ public class BLEService  extends Service{
 
 
 
-    // constants used for the gatt state.
-    public final static String ACTION_GATT_CONNECTED = "ACTION_GATT_CONNECTED";
-    public final static String ACTION_GATT_DISCONNECTED = "ACTION_GATT_DISCONNECTED";
-    public final static String ACTION_GATT_SERVICES_DISCOVERED = "ACTION_GATT_SERVICES_DISCOVERED";
-    public final static String ACTION_GATT_RSSI = "ACTION_GATT_RSSI";
-    public final static String ACTION_DATA_AVAILABLE = "ACTION_DATA_AVAILABLE";
 
-    public final static String MISSING_TAGS =" MISSING_TAGS";
 
-    public final static String EXTRA_DATA = "EXTRA_DATA";
-
-    /**
-     * UUID used to perform a write operation on the connection.
-     */
-    public final static UUID UUID_BLE_SHIELD_TX = UUID.fromString(RBLGattAttributes.BLE_SHIELD_TX);
-
-    /**
-     * UUID used to perform a read operation on the connection.
-     */
-    public final static UUID UUID_BLE_SHIELD_RX = UUID.fromString(RBLGattAttributes.BLE_SHIELD_RX);
-
-    /**
-     *
-     */
-    public final static UUID UUID_BLE_SHIELD_SERVICE = UUID.fromString(RBLGattAttributes.BLE_SHIELD_SERVICE);
-
-    /**
-     * Object to perform bluetooth features by callbacks.
-     */
-    private final BluetoothGattCallback mGattCallback = new MyBluetoothGattCallback();
-
-    class MyBluetoothGattCallback extends BluetoothGattCallback
-    {
-        @Override
-        public void onConnectionStateChange(BluetoothGatt gatt, int status, int newState)
-        {
-            String intentAction;
-
-            if (newState == BluetoothProfile.STATE_CONNECTED)
-            {
-                intentAction = ACTION_GATT_CONNECTED;
-//                broadcastUpdate(intentAction);
-                Log.i(getClass().getName(), "Connected to GATT server.");
-                // Attempts to discover services after successful connection.
-                Log.i(getClass().getName(), "Attempting to start service discovery:"
-                        + mBluetoothGatt.discoverServices());
-            }
-            else if (newState == BluetoothProfile.STATE_DISCONNECTED)
-            {
-                intentAction = ACTION_GATT_DISCONNECTED;
-                Log.i(getClass().getName(), "Disconnected from GATT server.");
-                broadcastUpdate(intentAction);
-
-                if(locationCallback != null)
-                    locationCallback.onTagDisconnected(null);
-            }
-        }
-
-        public void onReadRemoteRssi(BluetoothGatt gatt, int rssi, int status) {
-            if (status == BluetoothGatt.GATT_SUCCESS) {
-                broadcastUpdate(ACTION_GATT_RSSI, rssi);
-
-                if(locationCallback != null)
-                    locationCallback.onDistanceMeasured(getDistance(rssi));
-            } else {
-                Log.w(getClass().getName(), "onReadRemoteRssi received: " + status);
-            }
-        }
-
-        @Override
-        public void onServicesDiscovered(BluetoothGatt gatt, int status) {
-            if (status == BluetoothGatt.GATT_SUCCESS) {
-                broadcastUpdate(ACTION_GATT_SERVICES_DISCOVERED);
-
-                getGattService(getSupportedGattService(mBluetoothGatt));
-
-                if(locationCallback != null && getSupportedGattService(gatt) != null)
-                    locationCallback.onTagConnected(null);
-                else if(locationCallback != null)
-                {
-                    locationCallback.onTagConnected(null);
-                    locationCallback.onTagNotFound();
-                }
-
-            }
-            else
-            {
-                Log.w(getClass().getName(), "onServicesDiscovered received: " + status);
-            }
-        }
-
-        @Override
-        public void onCharacteristicRead(BluetoothGatt gatt, BluetoothGattCharacteristic characteristic, int status)
-        {
-            if (status == BluetoothGatt.GATT_SUCCESS)
-            {
-                broadcastUpdate(ACTION_DATA_AVAILABLE, characteristic);
-            }
-        }
-
-        @Override
-        public void onCharacteristicChanged(BluetoothGatt gatt, BluetoothGattCharacteristic characteristic)
-        {
-            broadcastUpdate(ACTION_DATA_AVAILABLE, characteristic);
-        }
-    };
+// code used for surveillance and location.
 
 
     /**
@@ -508,6 +513,8 @@ public class BLEService  extends Service{
 
         sendBroadcast(intent);
     }
+
+
 
 
     /**
