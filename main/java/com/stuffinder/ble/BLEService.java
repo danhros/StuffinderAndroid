@@ -27,6 +27,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * Created by propriétaire on 08/04/2015.
@@ -193,8 +195,10 @@ public class BLEService  extends Service{
 
         if(locationBluetoothGatt != null)
         {
+            locationCallback.onTagDisconnecting(null);
             disconnect(locationBluetoothGatt);
             close(locationBluetoothGatt);
+            locationCallback.onTagDisconnected();
             locationBluetoothGatt = null;
             tagAddress = null;
         }
@@ -361,6 +365,40 @@ public class BLEService  extends Service{
             {
                 broadcastUpdate(ACTION_DATA_AVAILABLE, characteristic);
             }
+        }
+
+        @Override
+        public void onCharacteristicWrite(BluetoothGatt gatt, BluetoothGattCharacteristic characteristic, int status) {
+            if(status == BluetoothGatt.GATT_SUCCESS)
+            {
+                byte data[] = characteristic.getValue();
+
+                if(data != null && data.length > 0)
+                {
+                    switch(data[0])
+                    {
+                        case ALLUMER_LED:
+                            locationCallback.onLEDEnabled(true);
+                        break;
+                        case ETEINDRE_LED:
+                            locationCallback.onLEDEnabled(false);
+                        break;
+                        case ALLUMER_MOTEUR:
+                            locationCallback.onBuzzerEnabled(true);
+                        break;
+                        case ETEINDRE_MOTEUR:
+                            locationCallback.onBuzzerEnabled(false);
+                        break;
+                        case ALLUMER_SON:
+                            locationCallback.onSoundEnabled(true);
+                        break;
+                    }
+                }
+                else
+                    Logger.getLogger(getClass().getName()).log(Level.WARNING, "onCharacteristicWrite : no data found in characterictic object.");
+            }
+            else
+                Logger.getLogger(getClass().getName()).log(Level.WARNING, "onCharacteristicWrite : write operation seems to has failed.");
         }
 
         @Override
@@ -614,7 +652,7 @@ public class BLEService  extends Service{
      * @param characteristic
      *            The characteristic to read from.
      */
-    public void readCharacteristic(BluetoothGatt bluetoothGatt, BluetoothGattCharacteristic characteristic) throws BLEServiceException
+    private void readCharacteristic(BluetoothGatt bluetoothGatt, BluetoothGattCharacteristic characteristic) throws BLEServiceException
     {
         verifyIfBLESupported();
 
@@ -624,7 +662,7 @@ public class BLEService  extends Service{
         bluetoothGatt.readCharacteristic(characteristic);
     }
 
-    public void readRssi(BluetoothGatt bluetoothGatt) throws BLEServiceException
+    private void readRssi(BluetoothGatt bluetoothGatt) throws BLEServiceException
     {
         verifyIfBLESupported();
 
@@ -634,7 +672,7 @@ public class BLEService  extends Service{
         bluetoothGatt.readRemoteRssi();
     }
 
-    public void writeCharacteristic(BluetoothGatt bluetoothGatt, BluetoothGattCharacteristic characteristic) throws BLEServiceException
+    private void writeCharacteristic(BluetoothGatt bluetoothGatt, BluetoothGattCharacteristic characteristic) throws BLEServiceException
     {
         verifyIfBLESupported();
 
@@ -652,7 +690,7 @@ public class BLEService  extends Service{
      * @param enabled
      *            If true, enable notification. False otherwise.
      */
-    public void setCharacteristicNotification(BluetoothGatt bluetoothGatt, BluetoothGattCharacteristic characteristic, boolean enabled) throws BLEServiceException
+    private void setCharacteristicNotification(BluetoothGatt bluetoothGatt, BluetoothGattCharacteristic characteristic, boolean enabled) throws BLEServiceException
     {
         verifyIfBLESupported();
 
@@ -676,7 +714,7 @@ public class BLEService  extends Service{
      *
      * @return A {@code List} of supported services.
      */
-    public BluetoothGattService getSupportedGattService(BluetoothGatt bluetoothGatt)
+    private BluetoothGattService getSupportedGattService(BluetoothGatt bluetoothGatt)
     {
         if (bluetoothGatt == null)
             throw new IllegalArgumentException("bluetooth gatt can't be null");
