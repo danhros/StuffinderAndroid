@@ -96,8 +96,8 @@ public class EngineService {
             currentAccount = NetworkServiceProvider.getNetworkService().authenticate(pseudo, password);
             Logger.getLogger(getClass().getName()).log(Level.INFO, "account is : " + currentAccount);
             tags.addAll(NetworkServiceProvider.getNetworkService().getTags());
-            int lastTagsUpdate = NetworkServiceProvider.getNetworkService().getLastTagsUpdateTime();
-            int lastProfilesUpdate = NetworkServiceProvider.getNetworkService().getLastProfilesUpdateTime();
+            long lastTagsUpdate = NetworkServiceProvider.getNetworkService().getLastTagsUpdateTime();
+            long lastProfilesUpdate = NetworkServiceProvider.getNetworkService().getLastProfilesUpdateTime();
 
             List<Profile> profileList = NetworkServiceProvider.getNetworkService().getProfiles();
 
@@ -1079,8 +1079,8 @@ public class EngineService {
         private String password;
 
 
-        private int lastProfileUpdate;
-        private int lastTagsUpdate;
+        private long lastProfileUpdate;
+        private long lastTagsUpdate;
 
         private boolean failedOnPassword;
 
@@ -1163,7 +1163,7 @@ public class EngineService {
             return accountDataUpdatedFromServer;
         }
 
-        synchronized void startAutoSynchronization(Account account, List<Tag> tagList, List<Profile> profileList, String password, int lastTagsUpdate, int lastProfileUpdate)
+        synchronized void startAutoSynchronization(Account account, List<Tag> tagList, List<Profile> profileList, String password, long lastTagsUpdate, long lastProfileUpdate)
         {
             if(account == null || password == null)
                 throw new NullPointerException("account and password parameters can't be null");
@@ -2177,8 +2177,8 @@ public class EngineService {
         private void checkForUpdates()
         {
             try {
-                int profileUpdate = NetworkServiceProvider.getNetworkService().getLastProfilesUpdateTime();
-                int tagsUpdate = NetworkServiceProvider.getNetworkService().getLastTagsUpdateTime();
+                long profileUpdate = NetworkServiceProvider.getNetworkService().getLastProfilesUpdateTime();
+                long tagsUpdate = NetworkServiceProvider.getNetworkService().getLastTagsUpdateTime();
 
                 List<Tag> tagList = null;
                 List<Profile> profileList = null;
@@ -2190,6 +2190,9 @@ public class EngineService {
 
                 if(profileUpdate > lastProfileUpdate) // the profile list isn't up to date.
                     profileList = NetworkServiceProvider.getNetworkService().getProfiles();
+
+                lastProfileUpdate = profileUpdate;
+                lastTagsUpdate = tagsUpdate;
 
                 accountMutex.acquire();
                 if(tagList != null) // there is an update to apply for tags.
@@ -2284,6 +2287,9 @@ public class EngineService {
                 }
 
                 accountMutex.release();
+
+                lastProfileUpdate = profileUpdate;
+                lastTagsUpdate = tagsUpdate;
             }
             catch (NetworkServiceException e) {
                 Logger.getLogger(getClass().getName()).log(Level.WARNING, "A network service error has occured : " + e.getMessage());

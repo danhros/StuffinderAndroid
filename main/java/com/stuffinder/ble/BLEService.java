@@ -198,7 +198,7 @@ public class BLEService  extends Service{
             locationCallback.onTagDisconnecting(null);
             disconnect(locationBluetoothGatt);
             close(locationBluetoothGatt);
-            locationCallback.onTagDisconnected();
+            locationCallback.onTagDisconnected(null);
             locationBluetoothGatt = null;
             tagAddress = null;
         }
