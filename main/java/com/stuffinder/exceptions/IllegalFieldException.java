@@ -53,6 +53,8 @@ public class IllegalFieldException extends IllegalArgumentException
     public static final int EMAIL_ADDRESS = 3;
     public static final int BIRTH_DATE = 4;
     public static final int PASSWORD = 5;
+    public static final int BRACELET_UID = 6;
+
 
     public static final int TAG_UID = 10;
     public static final int TAG_OBJECT_NAME = 11;
