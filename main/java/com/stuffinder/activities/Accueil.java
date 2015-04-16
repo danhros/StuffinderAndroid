@@ -12,7 +12,7 @@ import android.widget.Toast;
 import com.stuffinder.R;
 import com.stuffinder.engine.NetworkServiceProvider;
 import com.stuffinder.exceptions.NetworkServiceException;
-import com.stuffinder.tests.NetworkService;
+import com.stuffinder.webservice.NetworkService;
 
 
 public class Accueil extends Activity {

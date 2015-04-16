@@ -1439,7 +1439,7 @@ public class NetworkService implements NetworkServiceInterface {
         return profile;
     }
 
-    @Override
+
     public Profile removeAllFromProfile(Profile profile) throws NotAuthenticatedException, IllegalFieldException, NetworkServiceException {
 
         return replaceTagListOfProfile(profile,null);
@@ -1671,7 +1671,7 @@ public class NetworkService implements NetworkServiceInterface {
         return profileList;
     }
 
-    @Override
+
     public long getLastPersonnalInformationUpdateTime() throws NetworkServiceException, NotAuthenticatedException {
         if (currentAccount == null) {
             throw new NotAuthenticatedException();
