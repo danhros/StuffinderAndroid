@@ -51,6 +51,9 @@ public class Profile
 	{
 		return name.hashCode();
 	}
-	
-	
+
+
+    public void setName(String name) {
+        this.name = name;
+    }
 }

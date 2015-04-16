@@ -208,9 +208,11 @@ public interface NetworkServiceInterface
 	 * @throws NetworkServiceException If a network service error has occurred.
 	 */
 	public Profile createProfile(String profileName, List<Tag> tagList) throws NotAuthenticatedException, IllegalFieldException, NetworkServiceException;
-	
 
-	/**
+
+    Profile modifyProfileName(Profile profile, String newProfileName) throws NotAuthenticatedException, IllegalFieldException,NetworkServiceException;
+
+    /**
 	 * Adds a tag in a profile.
 	 * 
 	 * <br/><br />Only the UID of the tag is used to perform this operation.
@@ -386,7 +388,7 @@ public interface NetworkServiceInterface
 	 */
 	public List<Profile> getProfiles() throws NotAuthenticatedException, NetworkServiceException;
 
-    int getLastPersonnalInformationUpdateTime() throws NetworkServiceException, NotAuthenticatedException;
+    long getLastPersonnalInformationUpdateTime() throws NetworkServiceException, NotAuthenticatedException;
 
     long getLastTagsUpdateTime() throws NetworkServiceException, NotAuthenticatedException;
 
