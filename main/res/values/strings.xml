@@ -24,6 +24,8 @@
     <string name="title_activity_ajouter_profils">AjouterProfilsActivity</string>
     <string name="title_activity_modifier_profile">ModifierProfileActivity</string>
     <string name="title_activity_modifier_profile_bis">ModifierProfileBisActivity</string>
+    <string name="title_activity_supprimer_profil">SupprimerProfilActivity</string>
+    <string name="title_activity_creer_profil">CreerProfilActivity</string>
 
     <string name="password_dialog_title">Entrez votre mot de passe</string>
     <string name="password_dialog_field_password">Mot de passe</string>

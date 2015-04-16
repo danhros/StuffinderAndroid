@@ -4,8 +4,9 @@
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
     android:paddingBottom="@dimen/activity_vertical_margin"
-    tools:context="com.stuffinder.activities.ModifierProfileBisActivity"
+    tools:context="com.stuffinder.activities.CreerProfilActivity"
     android:background="#ff24088f">
+
 
 
 
@@ -13,11 +14,11 @@
         style="@android:style/ButtonBar"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Modifier"
-        android:id="@+id/buttonCreer"
+        android:text="Créer"
+        android:id="@+id/buttonCreerProfil"
         android:background="#ff5e6eff"
         android:textColor="#ffffffff"
-        android:onClick="modifierProfil"
+        android:onClick="creerProfil"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true" />
 
@@ -25,7 +26,7 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Modifier Profils"
+        android:text="Créer Profils"
         android:id="@+id/textViewInfo"
         android:textSize="24dp"
         android:textStyle="bold"
@@ -77,7 +78,7 @@
         android:layout_height="wrap_content"
         android:inputType="text"
         android:ems="10"
-        android:id="@+id/editTextModifierNomProf"
+        android:id="@+id/editTextNomProf"
         android:background="#ff5e6eff"
         android:layout_alignTop="@+id/textViewNomVue"
         android:layout_alignStart="@+id/buttonCreer" />
@@ -92,13 +93,13 @@
         android:background="#ff24088f"
         android:textColor="#ffffffff"
         android:textSize="10dp"
-        android:onClick="retour"
+        android:onClick="retour5"
         android:layout_alignParentTop="true"
         android:layout_alignParentStart="true"
         android:layout_above="@+id/textViewNom" />
 
     <ListView
-        android:id="@+id/listModiProf"
+        android:id="@+id/listCreerProf"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:choiceMode="multipleChoice"

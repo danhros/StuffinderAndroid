@@ -1,20 +1,20 @@
 package com.stuffinder.activities;
 
-
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.SparseBooleanArray;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.view.View;
 import android.widget.Toast;
 
 import com.stuffinder.R;
 import com.stuffinder.data.Profile;
-import com.stuffinder.data.Tag;
 import com.stuffinder.engine.NetworkServiceProvider;
+import com.stuffinder.exceptions.IllegalFieldException;
 import com.stuffinder.exceptions.NetworkServiceException;
 import com.stuffinder.exceptions.NotAuthenticatedException;
 
@@ -23,15 +23,18 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
-public class ModifierProfileActivity extends Activity {
-
+public class SupprimerProfilActivity extends Activity {
 
 
     private ListView listView = null ;
     private static List<Profile> listProfiles = new ArrayList<>();
     private List<String> listNames = new ArrayList<>();
+    private static Profile profile = null;
+    private int nombreProfilSup = 0;
 
 
+
+   
 
 
     public static void ChangeListProfiles ( List<Profile> list) {        // Méthode qui agit sur la variable de classe listProfiles, elle met à jour les données de la liste des profils
@@ -45,41 +48,13 @@ public class ModifierProfileActivity extends Activity {
         });
     }
 
-    public void goToModoficiation(View view){
-
-        try {
-
-            int rang = listView.getCheckedItemPosition() ;
-            Profile profile = listProfiles.get(rang);
-            List<Tag> list = NetworkServiceProvider.getNetworkService().getTags();
-
-            ModifierProfileBisActivity.changeProfile(profile);
-            ModifierProfileBisActivity.changeTagsList(list);
-
-            Intent intent = new Intent (this, ModifierProfileBisActivity.class);
-
-            finish();
-            startActivity(intent);
-
-        } catch (NotAuthenticatedException e) {// abnormal error.
-            Toast.makeText(this, "Une erreur anormale est survenue. Veuiller redémarrer l'application", Toast.LENGTH_LONG).show();
-        } catch (NetworkServiceException e) {
-            Toast.makeText(this, "Une erreur réseau est survenue.", Toast.LENGTH_LONG).show();
-        }
-
-
-    }
-
-
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_modifier_profile);
+        setContentView(R.layout.activity_supprimer_profil);
 
 
-        listView = (ListView) findViewById(R.id.listModProf);
-
+        listView = (ListView) findViewById(R.id.listSuppr);
 
         for (int i = 0 ; i < listProfiles.size(); i ++  ) { listNames.add(listProfiles.get(i).getName()); }
 
@@ -90,15 +65,30 @@ public class ModifierProfileActivity extends Activity {
         listView.setItemChecked(0,true); }
 
 
+    public void supprimer(View view) {
 
+        SparseBooleanArray tab = listView.getCheckedItemPositions() ;
 
+        for ( int i =0 ; i<tab.size() ; i++) {
 
+            if ( tab.get(i) ) {
+                nombreProfilSup ++;
+                try { NetworkServiceProvider.getNetworkService().removeProfile(listProfiles.get(i));
+                     }
+                catch (IllegalFieldException e)  {}
+                catch (NetworkServiceException e) { Toast.makeText(this, "Une erreur réseau est survenue.", Toast.LENGTH_LONG).show();}
+                catch (NotAuthenticatedException e) { Toast.makeText(this, "Une erreur anormale est survenue", Toast.LENGTH_LONG).show();}} }
+
+        if ( nombreProfilSup == 0 ) { Toast.makeText(this, "Vous n'avez sélectionné aucun profil", Toast.LENGTH_LONG).show();}
+         else {
+         Intent intentGotoConfiProf = new Intent ( this, ConfigurationProfilsActivity.class );
+         finish(); } }
 
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_modifier_profile, menu);
+        getMenuInflater().inflate(R.menu.menu_supprimer_profil, menu);
         return true;
     }
 

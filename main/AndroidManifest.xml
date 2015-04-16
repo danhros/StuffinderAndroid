@@ -107,6 +107,14 @@
             android:name=".activities.PicturesActivity"
             android:label="@string/title_activity_pictures" >
         </activity>
+        <activity
+            android:name=".activities.SupprimerProfilActivity"
+            android:label="@string/title_activity_supprimer_profil" >
+        </activity>
+        <activity
+            android:name=".activities.CreerProfilActivity"
+            android:label="@string/title_activity_creer_profil" >
+        </activity>
     </application>
 
 </manifest>
