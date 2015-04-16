@@ -3,10 +3,6 @@ package com.stuffinder.data;
 import java.util.ArrayList;
 import java.util.List;
 
-<<<<<<< HEAD
-=======
-
->>>>>>> remotes/master/MutualCodeBranch
 public class Profile
 {
 	private List<Tag> tags;
@@ -23,13 +19,10 @@ public class Profile
 		return name;
 	}
 
-<<<<<<< HEAD
-=======
     public void setName(String name)
     {
         this.name = name;
     }
->>>>>>> remotes/master/MutualCodeBranch
 
 
 	public List<Tag> getTags()
@@ -59,16 +52,10 @@ public class Profile
 					name.equals(((Profile) obj).getName());
 	}
 
-<<<<<<< HEAD
-    public void setName(String name) {
-        this.name = name;
-    }
-=======
 	public int hashCode()
 	{
 		return name.hashCode();
 	}
 	
-	
->>>>>>> remotes/master/MutualCodeBranch
+
 }
