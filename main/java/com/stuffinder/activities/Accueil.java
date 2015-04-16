@@ -10,12 +10,9 @@ import android.view.Window;
 import android.widget.Toast;
 
 import com.stuffinder.R;
-import com.stuffinder.engine.EngineService;
-import com.stuffinder.engine.EngineServiceProvider;
 import com.stuffinder.engine.NetworkServiceProvider;
 import com.stuffinder.exceptions.NetworkServiceException;
-import com.stuffinder.exceptions.NotAuthenticatedException;
-import com.stuffinder.webservice.NetworkService;
+import com.stuffinder.tests.NetworkService;
 
 
 public class Accueil extends Activity {
@@ -41,16 +38,9 @@ public class Accueil extends Activity {
 
         setContentView(R.layout.activity_accueil);
 
-        EngineServiceProvider.setEngineService(EngineService.getInstance());
         NetworkServiceProvider.setNetworkService(NetworkService.getInstance());
-
         try {
             NetworkServiceProvider.getNetworkService().initNetworkService();
-            EngineServiceProvider.getEngineService().initEngineService();
-            try {
-                EngineServiceProvider.getEngineService().setAutoSynchronization(true);
-            } catch (NotAuthenticatedException e) { // this error will never occur.
-            }
         } catch (NetworkServiceException e) {
             Toast.makeText(this, "L'initialisation de l'application a échoué. L'application va être arrêté.", Toast.LENGTH_LONG).show();
             finish();

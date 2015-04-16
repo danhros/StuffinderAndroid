@@ -252,7 +252,10 @@ public class NetworkService implements NetworkServiceInterface {
 
     @Override
     public void updatePassword(String password) throws NotAuthenticatedException, IllegalFieldException {
-
+        if(currentAccount == null) { throw new NotAuthenticatedException(); }
+        if (! FieldVerifier.verifyPassword(password))
+            throw new IllegalFieldException(IllegalFieldException.PASSWORD, IllegalFieldException.REASON_VALUE_INCORRECT, password);
+           currentPassword = password;
     }
 
     // convert inputstream to String
@@ -445,7 +448,62 @@ public class NetworkService implements NetworkServiceInterface {
 
     @Override
     public void modifyBraceletUID(String braceletUID) throws NotAuthenticatedException, IllegalFieldException, NetworkServiceException {
+        if(currentAccount == null) { throw new NotAuthenticatedException(); }
+        // We first check the validity of the arguments to create the parameters
+           if (! FieldVerifier.verifyTagUID(braceletUID))
+            throw new IllegalFieldException(IllegalFieldException.PROFILE_NAME, IllegalFieldException.REASON_VALUE_INCORRECT, braceletUID;
+        InputStream inputStream;
+        String result = "";
+        try {
+            // make GET request to the given URL
+            HttpResponse httpResponse = client.execute(new HttpGet(server_address + "modifybraceletuid?pseudo=" + URLEncoder.encode(currentAccount.getPseudo(), "UTF-8") + "&password=" + URLEncoder.encode(currentPassword, "UTF-8") + "&braceletuid=" + URLEncoder.encode(braceletUID, "UTF-8")));
+            StatusLine statusLine = httpResponse.getStatusLine();
+            int statusCode = statusLine.getStatusCode();
+            if (statusCode == 200) {
+                // receive response as inputStream
+                HttpEntity entity = httpResponse.getEntity();
+                inputStream = entity.getContent();
+                // convert inputstream to string
+                if (inputStream != null) {
+                    try {
+                        result = convertInputStreamToString(inputStream);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                    try {
+                        // creation JSON Object
+                        JSONObject obj = new JSONObject(result);
+                        int returnCode = obj.getInt("returnCode");
+                        if (returnCode == NO_ERROR) {
 
+                        }
+                        // Else display error message
+                        else {
+                            throw new NetworkServiceException("Wrong pseudo/password combination or access to the DB");
+                        }
+                    } catch (JSONException e) {
+                        // "Error Occurred [Server's JSON response might be invalid]!"
+                        throw new NetworkServiceException("Server response might be invalid.");
+                    }
+                } else {
+                    throw new NetworkServiceException("Connection issue with the server, null input stream");
+                }
+            }
+            // When Http response code is '404'
+            else if (statusCode == 404) {
+                throw new NetworkServiceException("Requested resource not found");
+            }
+            // When Http response code is '500'
+            else if (statusCode == 500) {
+                throw new NetworkServiceException("Something went wrong at server end");
+            }
+            // When Http response code other than 404, 500
+            else {
+                throw new NetworkServiceException("Unexpected Error occurred! [Most common Error: Device might not be connected to Internet or remote server is not up and running]");
+            }
+        } catch (IOException | IllegalStateException e) {
+            throw new NetworkServiceException("exception of type IOException or IllegalStateException catched.");
+        }
     }
 
     @Override

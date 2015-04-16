@@ -3,6 +3,7 @@ package com.stuffinder.data;
 import java.util.ArrayList;
 import java.util.List;
 
+
 public class Account
 {
 	private String pseudo;
@@ -90,5 +91,5 @@ public class Account
 	{
 		return pseudo.hashCode();
 	}
-
+	
 }
