@@ -135,7 +135,6 @@ public class BLEService  extends Service{
     public final static int MOYENNELENT_PROCHE=2;
     public final static int LOIN=3;
 
-    private static List<BluetoothDevice> mDevices = new ArrayList<BluetoothDevice>();
 
     //methods used for location.
 
@@ -212,7 +211,7 @@ public class BLEService  extends Service{
         //les données sont reçus dans le broadcast update
     }
 
-    public int getDistance(int rssi){
+    private int getDistance(int rssi){
 
         if (rssi < 40)
             return TRES_PROCHE;
@@ -412,7 +411,15 @@ public class BLEService  extends Service{
 
 // partie surveillance.
 
-    public boolean enableSurveillance(final Tag bracelet, final ArrayList<Tag> tagProfil, final boolean enable) {
+    private List<BluetoothDevice> mDevices = new ArrayList<>();
+    private String braceletUID;
+
+    public void setBracelet(String braceletUID)
+    {
+        BLEService.this.braceletUID = braceletUID;
+    }
+
+    public void enableSurveillance(final Tag bracelet, final List<Tag> tagProfil, final boolean enable) {
 
         new Thread(new Runnable() { //thread annonce au bracelet
 
@@ -482,7 +489,6 @@ public class BLEService  extends Service{
                 }
             }
         }).start();
-        return true;
     }
 
     private BluetoothAdapter.LeScanCallback mLeScanCallback = new BluetoothAdapter.LeScanCallback() {
@@ -500,11 +506,140 @@ public class BLEService  extends Service{
         }
     };
 
+    BraceletBluetoothGattCallback braceletBluetoothGattCallback = new BraceletBluetoothGattCallback();
+
+    //TODO implement callback methods for surveillance with bracelet.
+    class BraceletBluetoothGattCallback extends BluetoothGattCallback
+    {
+        @Override
+        public void onConnectionStateChange(BluetoothGatt gatt, int status, int newState)
+        {
+            String intentAction;
+
+            if (newState == BluetoothProfile.STATE_CONNECTED)
+            {
+//                intentAction = ACTION_GATT_CONNECTED;
+//                broadcastUpdate(intentAction);
+                Log.i(getClass().getName(), "Connected to GATT server.");
+                // Attempts to discover services after successful connection.
+                Log.i(getClass().getName(), "Attempting to start service discovery:"
+                        + mBluetoothGatt.discoverServices());
+            }
+            else if (newState == BluetoothProfile.STATE_DISCONNECTED)
+            {
+//                intentAction = ACTION_GATT_DISCONNECTED;
+                Log.i(getClass().getName(), "Disconnected from GATT server.");
+//                broadcastUpdate(intentAction);
+
+                if(locationCallback != null)
+                    locationCallback.onTagDisconnected(null);
+            }
+        }
+
+        public void onReadRemoteRssi(BluetoothGatt gatt, int rssi, int status) {
+            if (status == BluetoothGatt.GATT_SUCCESS) {
+//                broadcastUpdate(ACTION_GATT_RSSI, rssi);
+
+                if(locationCallback != null)
+                    locationCallback.onDistanceMeasured(getDistance(rssi));
+            } else {
+                Log.w(getClass().getName(), "onReadRemoteRssi received: " + status);
+            }
+        }
+
+        @Override
+        public void onServicesDiscovered(BluetoothGatt gatt, int status) {
+            if (status == BluetoothGatt.GATT_SUCCESS) {
+                broadcastUpdate(ACTION_GATT_SERVICES_DISCOVERED);
+
+                getGattService(getSupportedGattService(mBluetoothGatt));
+
+                if(locationCallback != null && getSupportedGattService(gatt) != null)
+                    locationCallback.onTagConnected(null);
+                else if(locationCallback != null)
+                {
+                    locationCallback.onTagConnected(null);
+                    locationCallback.onTagNotFound();
+                }
+
+            }
+            else
+            {
+                Log.w(getClass().getName(), "onServicesDiscovered received: " + status);
+            }
+        }
+
+        @Override
+        public void onCharacteristicRead(BluetoothGatt gatt, BluetoothGattCharacteristic characteristic, int status)
+        {
+            if (status == BluetoothGatt.GATT_SUCCESS)
+            {
+                broadcastUpdate(ACTION_DATA_AVAILABLE, characteristic);
+            }
+        }
+
+        @Override
+        public void onCharacteristicWrite(BluetoothGatt gatt, BluetoothGattCharacteristic characteristic, int status) {
+            if(status == BluetoothGatt.GATT_SUCCESS)
+            {
+                byte data[] = characteristic.getValue();
+
+                if(data != null && data.length > 0)
+                {
+                    switch(data[0])
+                    {
+                        case ALLUMER_LED:
+                            locationCallback.onLEDEnabled(true);
+                            break;
+                        case ETEINDRE_LED:
+                            locationCallback.onLEDEnabled(false);
+                            break;
+                        case ALLUMER_MOTEUR:
+                            locationCallback.onBuzzerEnabled(true);
+                            break;
+                        case ETEINDRE_MOTEUR:
+                            locationCallback.onBuzzerEnabled(false);
+                            break;
+                        case ALLUMER_SON:
+                            locationCallback.onSoundEnabled(true);
+                            break;
+                    }
+                }
+                else
+                    Logger.getLogger(getClass().getName()).log(Level.WARNING, "onCharacteristicWrite : no data found in characterictic object.");
+            }
+            else
+                Logger.getLogger(getClass().getName()).log(Level.WARNING, "onCharacteristicWrite : write operation seems to has failed.");
+        }
+
+        @Override
+        public void onCharacteristicChanged(BluetoothGatt gatt, BluetoothGattCharacteristic characteristic)
+        {
+            broadcastUpdate(ACTION_DATA_AVAILABLE, characteristic);
+        }
+    };
+
+
+    public static abstract class SurveillanceCallback
+    {
+        public abstract void onSurveillanceEnabled(boolean enabled);
+
+        public abstract void onSurveillanceFailed(String message);
+
+        public abstract void onSurveillanceFailed(List<Tag> tagsNotFound);
+
+        public abstract void onBraceletConnected();
+
+        public abstract void onBraceletDisconnected();
+
+        public abstract void onTagsNotFound(List<Tag> tagList);
+    }
 
 
 
 
-// code used for surveillance and location.
+
+// mutual code, used for surveillance and location.
 
 
     /**
