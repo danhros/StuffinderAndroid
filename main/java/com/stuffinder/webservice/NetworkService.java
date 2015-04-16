@@ -9,7 +9,6 @@ import java.io.InputStream;
 import java.io.FileOutputStream;
 import java.io.InputStreamReader;
 import java.net.URLEncoder;
-import java.util.Date;
 import java.util.Iterator;
 import java.util.ArrayList;
 import java.util.List;
@@ -251,6 +250,11 @@ public class NetworkService implements NetworkServiceInterface {
         return currentAccount;
     }
 
+    @Override
+    public void updatePassword(String password) throws NotAuthenticatedException, IllegalFieldException {
+
+    }
+
     // convert inputstream to String
     private static String convertInputStreamToString(InputStream inputStream) throws IOException, InterruptedException {
         InputStreamConverter inputStreamConverter = new InputStreamConverter(inputStream);
@@ -437,6 +441,11 @@ public class NetworkService implements NetworkServiceInterface {
         } catch (InterruptedException e) {
             throw new NetworkServiceException("error occurred while executing request.");
         }
+    }
+
+    @Override
+    public void modifyBraceletUID(String braceletUID) throws NotAuthenticatedException, IllegalFieldException, NetworkServiceException {
+
     }
 
     @Override
@@ -1001,6 +1010,20 @@ public class NetworkService implements NetworkServiceInterface {
     }
 
     @Override
+    public one field(i.e.one information) {
+        return null;
+    }
+
+    @Override
+    public the reason() {
+        return null;
+    }
+
+    public NetworkService(i.e.no tag) {
+
+    }
+
+    @Override
     public Profile modifyProfileName(Profile profile, String newProfileName) throws NotAuthenticatedException, IllegalFieldException,NetworkServiceException {
         if(currentAccount == null) { throw new NotAuthenticatedException(); }
         String profileName = profile.getName();
@@ -1012,6 +1035,7 @@ public class NetworkService implements NetworkServiceInterface {
         InputStream inputStream;
         String result = "";
         try {
+            profile.setName(newProfileName);
             // make GET request to the given URL
             HttpResponse httpResponse = client.execute(new HttpGet(server_address + "modifyprofilename?pseudo=" + URLEncoder.encode(currentAccount.getPseudo(), "UTF-8") + "&password=" + URLEncoder.encode(currentPassword, "UTF-8") + "&profile_name=" + URLEncoder.encode(profileName, "UTF-8") + "&new_profile_name=" + URLEncoder.encode(newProfileName, "UTF-8")));
             StatusLine statusLine = httpResponse.getStatusLine();
@@ -1032,7 +1056,7 @@ public class NetworkService implements NetworkServiceInterface {
                         JSONObject obj = new JSONObject(result);
                         int returnCode = obj.getInt("returnCode");
                         if (returnCode == NO_ERROR) {
-                            profile.setName(newProfileName);
+
                         }
                         // Else display error message
                         else {
@@ -1373,7 +1397,8 @@ public class NetworkService implements NetworkServiceInterface {
 
     @Override
     public Profile removeAllFromProfile(Profile profile) throws NotAuthenticatedException, IllegalFieldException, NetworkServiceException {
-        return null;
+
+        return replaceTagListOfProfile(profile,null);
     }
 
     @Override
@@ -1600,6 +1625,11 @@ public class NetworkService implements NetworkServiceInterface {
 
 
         return profileList;
+    }
+
+    @Override
+    public int getLastPersonnalInformationUpdateTime() throws NetworkServiceException, NotAuthenticatedException {
+        return 0;
     }
 
     @Override
