@@ -1010,20 +1010,6 @@ public class NetworkService implements NetworkServiceInterface {
     }
 
     @Override
-    public one field(i.e.one information) {
-        return null;
-    }
-
-    @Override
-    public the reason() {
-        return null;
-    }
-
-    public NetworkService(i.e.no tag) {
-
-    }
-
-    @Override
     public Profile modifyProfileName(Profile profile, String newProfileName) throws NotAuthenticatedException, IllegalFieldException,NetworkServiceException {
         if(currentAccount == null) { throw new NotAuthenticatedException(); }
         String profileName = profile.getName();
