@@ -213,6 +213,7 @@ public class NetworkService implements NetworkServiceInterface {
                         int returnCode = obj.getInt("returnCode");
                         if (returnCode == NO_ERROR) {
                             currentAccount = new Account(obj.getString("pseudo"), obj.getString("first_name"), obj.getString("last_name"), obj.getString("email"));
+                            currentAccount.setBraceletUID(obj.getString("braceletUID"));
                             currentPassword = password; // correction
                         }
                         else if (returnCode == INVALID_PSEUDO_PASSWORD_COMBINATION) {
@@ -1697,7 +1698,7 @@ public class NetworkService implements NetworkServiceInterface {
                         JSONObject obj = new JSONObject(result);
                         int returnCode = obj.getInt("returnCode");
                         if (returnCode == NO_ERROR) {
-                            res =  obj.getLong("lastpersonalinformationtime");
+                            res =  obj.getLong("lastpersonalinformationupdatetime");
                         }
                         // Else display error message
 
