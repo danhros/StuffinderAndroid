@@ -13,7 +13,7 @@ import android.widget.Toast;
 
 import com.stuffinder.R;
 import com.stuffinder.data.Tag;
-import com.stuffinder.engine.EngineServiceProvider;
+import com.stuffinder.engine.NetworkServiceProvider;
 import com.stuffinder.exceptions.NetworkServiceException;
 import com.stuffinder.exceptions.NotAuthenticatedException;
 
@@ -35,7 +35,7 @@ public class HomeActivity extends Activity {
     public void goToInterieur(View view){
 
         try {
-            List<Tag> list = EngineServiceProvider.getEngineService().getTags();
+            List<Tag> list = NetworkServiceProvider.getNetworkService().getTags();
 
             InterieurActivity.ChangeTagsList(list);
             Intent intentInt = new Intent (HomeActivity.this, InterieurActivity.class);

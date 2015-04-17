@@ -12,7 +12,7 @@ import android.widget.Toast;
 
 
 import com.stuffinder.data.Tag;
-import com.stuffinder.engine.EngineServiceProvider;
+import com.stuffinder.engine.NetworkServiceProvider;
 import com.stuffinder.exceptions.IllegalFieldException;
 import com.stuffinder.exceptions.NetworkServiceException;
 import com.stuffinder.exceptions.NotAuthenticatedException;
@@ -61,7 +61,7 @@ public class InfoTagActivity extends Activity {
             if(! objectName.equals(tagModif.getObjectName())) // the object name is modified.
             {
                 try {
-                    tagModif = EngineServiceProvider.getEngineService().modifyObjectName(tagModif, objectName);
+                    tagModif = NetworkServiceProvider.getNetworkService().modifyObjectName(tagModif, objectName);
                 } catch (IllegalFieldException e) {
                     switch(e.getFieldId())
                     {
@@ -94,7 +94,7 @@ public class InfoTagActivity extends Activity {
             if(hideAtEnd && ! objectImageFileName.equals(tagModif.getObjectImageName())) // the image filename is modified.
             {
                 try {
-                    tagModif = EngineServiceProvider.getEngineService().modifyObjectImage(tagModif, objectImageFileName);
+                    tagModif = NetworkServiceProvider.getNetworkService().modifyObjectImage(tagModif, objectImageFileName);
                 } catch (IllegalFieldException e) {
                     switch(e.getFieldId())
                     {

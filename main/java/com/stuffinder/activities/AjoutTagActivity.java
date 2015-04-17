@@ -11,7 +11,7 @@ import android.widget.Toast;
 
 import com.stuffinder.R;
 import com.stuffinder.data.Tag;
-import com.stuffinder.engine.EngineServiceProvider;
+import com.stuffinder.engine.NetworkServiceProvider;
 import com.stuffinder.exceptions.IllegalFieldException;
 import com.stuffinder.exceptions.NetworkServiceException;
 import com.stuffinder.exceptions.NotAuthenticatedException;
@@ -53,8 +53,8 @@ public class AjoutTagActivity extends Activity {
         {
             try {
 
-                Tag tag = new Tag(identifiant, nom, image);
-                EngineServiceProvider.getEngineService().addTag(tag);
+                Tag tag = new Tag(identifiant, nom, image != null && image.length()>0 ? image : null);
+                NetworkServiceProvider.getNetworkService().addTag(tag);
 
                 finish();
             }

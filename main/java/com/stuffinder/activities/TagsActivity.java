@@ -11,7 +11,7 @@ import android.widget.Toast;
 
 import com.stuffinder.R;
 import com.stuffinder.data.Tag;
-import com.stuffinder.engine.EngineServiceProvider;
+import com.stuffinder.engine.NetworkServiceProvider;
 import com.stuffinder.exceptions.NetworkServiceException;
 import com.stuffinder.exceptions.NotAuthenticatedException;
 
@@ -34,7 +34,7 @@ public class TagsActivity extends Activity {
 
     public void goToModif (View view) {
         try {
-            List<Tag> list = EngineServiceProvider.getEngineService().getTags();
+            List<Tag> list = NetworkServiceProvider.getNetworkService().getTags();
 
             ModifTagActivity.ChangeTagsList(list);
             Intent intentModif = new Intent (TagsActivity.this, ModifTagActivity.class);
@@ -54,7 +54,7 @@ public class TagsActivity extends Activity {
     public void goToSuppr (View view) {
 
         try {
-            List<Tag> list = EngineServiceProvider.getEngineService().getTags();
+            List<Tag> list = NetworkServiceProvider.getNetworkService().getTags();
 
             SupprTagActivity.changeTagsList(list);
             Intent intentSuppr = new Intent (TagsActivity.this, SupprTagActivity.class);

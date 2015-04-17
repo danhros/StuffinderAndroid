@@ -15,7 +15,7 @@ import android.widget.Toast;
 
 import com.stuffinder.R;
 import com.stuffinder.data.Tag;
-import com.stuffinder.engine.EngineServiceProvider;
+import com.stuffinder.engine.NetworkServiceProvider;
 import com.stuffinder.exceptions.IllegalFieldException;
 import com.stuffinder.exceptions.NetworkServiceException;
 import com.stuffinder.exceptions.NotAuthenticatedException;
@@ -52,7 +52,7 @@ public class SupprTagActivity extends Activity {
 
             for(i=0; i< tagsList.size(); i++) {
                 if (tab.get(i) == true) {
-                    EngineServiceProvider.getEngineService().removeTag(tagsList.get(i));
+                    NetworkServiceProvider.getNetworkService().removeTag(tagsList.get(i));
                     oneTagRemoved = true;
                 }
             }
@@ -74,7 +74,7 @@ public class SupprTagActivity extends Activity {
 
         if(errorOccured && oneTagRemoved) { // to try to reload tags list because one tag or more has been removed.
             try {
-                changeTagsList(EngineServiceProvider.getEngineService().getTags());
+                changeTagsList(NetworkServiceProvider.getNetworkService().getTags());
 
                 tagArrayAdapter.clear();
                 tagArrayAdapter.addAll(tagsList);

@@ -12,9 +12,9 @@ import android.widget.Toast;
 
 import com.stuffinder.R;
 import com.stuffinder.data.Account;
+import com.stuffinder.engine.NetworkServiceProvider;
 import com.stuffinder.exceptions.IllegalFieldException;
 import com.stuffinder.exceptions.NetworkServiceException;
-import com.stuffinder.engine.EngineServiceProvider;
 
 import java.lang.Override;
 
@@ -83,7 +83,7 @@ public class CreerCompteActivity extends Activity {
             try {
 
                 Account account = new Account(identifiant, prenom, nom, email);                            /* Création d'un compte*/
-                EngineServiceProvider.getEngineService().createAccount(account, mdp);                                        /*Demande de création de compte au web service */
+                NetworkServiceProvider.getNetworkService().createAccount(account, mdp);                                        /*Demande de création de compte au web service */
 
                 finish();
                 startActivity(intentToReussite);

@@ -11,7 +11,7 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.stuffinder.R;
-import com.stuffinder.engine.EngineServiceProvider;
+import com.stuffinder.engine.NetworkServiceProvider;
 import com.stuffinder.exceptions.AccountNotFoundException;
 import com.stuffinder.exceptions.IllegalFieldException;
 
@@ -46,7 +46,7 @@ public class SeConnecterActivity extends Activity {
            try {
                if (! FieldVerifier.verifyName(identifiant)) { throw new IllegalFieldException(IllegalFieldException.PSEUDO, IllegalFieldException.REASON_VALUE_INCORRECT, identifiant);}
                if (! FieldVerifier.verifyPassword(mdp) ) { throw new IllegalFieldException(IllegalFieldException.PASSWORD, IllegalFieldException.REASON_VALUE_INCORRECT, mdp);}
-               EngineServiceProvider.getEngineService().authenticate( identifiant, mdp);
+               NetworkServiceProvider.getNetworkService().authenticate( identifiant, mdp);
 
                finish();
                startActivity(intent);

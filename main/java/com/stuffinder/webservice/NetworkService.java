@@ -386,6 +386,7 @@ public class NetworkService implements NetworkServiceInterface {
     @Override
     public void modifyPassword(String newPassword) throws NotAuthenticatedException, IllegalFieldException, NetworkServiceException {
         // We first check the validity of the arguments to create the parameters
+        if(currentAccount == null) { throw new NotAuthenticatedException(); }
         if (! FieldVerifier.verifyPassword(newPassword))
             throw new IllegalFieldException(IllegalFieldException.PASSWORD, IllegalFieldException.REASON_VALUE_INCORRECT, newPassword);
 
@@ -541,7 +542,6 @@ public class NetworkService implements NetworkServiceInterface {
                             throw new NotAuthenticatedException();
                         }
                     } catch (JSONException e) {
-                        Log.e("Content of the catched JSON", result);
                         e.printStackTrace();
                         throw new NetworkServiceException("Server response might be invalid.");
                     }
