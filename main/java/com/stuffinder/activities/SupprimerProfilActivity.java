@@ -65,7 +65,7 @@ public class SupprimerProfilActivity extends Activity {
         listView.setItemChecked(0,true); }
 
 
-    public void supprimer(View view) {
+    public void supprimer(View view) throws InterruptedException {
 
         SparseBooleanArray tab = listView.getCheckedItemPositions() ;
 

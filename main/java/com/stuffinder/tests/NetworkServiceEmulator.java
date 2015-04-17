@@ -723,7 +723,7 @@ public class NetworkServiceEmulator implements NetworkServiceInterface
      * @throws com.stuffinder.exceptions.NetworkServiceException
      */
     @Override
-    public int getLastPersonnalInformationUpdateTime() throws NetworkServiceException, NotAuthenticatedException {
+    public long getLastPersonnalInformationUpdateTime() throws NetworkServiceException, NotAuthenticatedException {
         return 0;
     }
 
