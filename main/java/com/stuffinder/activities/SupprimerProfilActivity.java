@@ -65,6 +65,12 @@ public class SupprimerProfilActivity extends Activity {
         listView.setItemChecked(0,true); }
 
 
+
+    public void retour(View view) {
+        finish();
+    }
+
+
     public void supprimer(View view) {
 
         SparseBooleanArray tab = listView.getCheckedItemPositions() ;

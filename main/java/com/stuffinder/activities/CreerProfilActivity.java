@@ -68,6 +68,12 @@ public class CreerProfilActivity extends Activity {
     }
 
 
+
+    public void retour(View view) {
+        finish();
+    }
+
+
     public void creerProfil (View view) {
 
         SparseBooleanArray tab = listView.getCheckedItemPositions() ;

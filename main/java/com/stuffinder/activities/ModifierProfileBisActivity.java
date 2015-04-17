@@ -109,7 +109,9 @@ public class ModifierProfileBisActivity extends Activity {
 
     }
 
-
+    public void retour(View view) {
+        finish();
+    }
 
 
             public static void changeProfile ( Profile profile) {
