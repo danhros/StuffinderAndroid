@@ -3,6 +3,7 @@ package com.stuffinder.activities;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.EditText;
@@ -30,29 +31,39 @@ public class BasicActivity extends Activity
         return activityStack.peek();
     }
 
+    private static boolean isApplicationOnForeground = false;
 
+    public static boolean isApplicationOnForeground() {
+        return isApplicationOnForeground;
+    }
 
     @Override
-    protected void onStart() {
-        super.onStart();
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
         Logger.getLogger(this.getClass().getName()).log(Level.INFO, "Activity \"" + getClass() + "\" started.");
         activityStack.push(this);
     }
 
 
-//    @Override
-//    protected void onStop() {
-//        super.onStop();
-//        activityStack.pop();
-//    }
-
     @Override
     public void finish() {
         Logger.getLogger(this.getClass().getName()).log(Level.INFO, "Activity \"" + getClass() + "\" finished.");
-        activityStack.pop();
+        if(activityStack.size() > 0)
+            activityStack.pop();
+
         super.finish();
     }
 
+    protected void onResume() {
+        isApplicationOnForeground = false;
+        super.onResume();
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        isApplicationOnForeground = false;
+    }
 
     public synchronized void showErrorMessage(String message)
     {

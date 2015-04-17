@@ -27,7 +27,7 @@ public class LocalisationActivity extends BasicActivity {
     TextView positionTextView ;
 
     private boolean binded;
-    private LocationServiceConnection serviceConnection = new LocationServiceConnection();
+    private LocationServiceConnection serviceConnection;
     private BLEService service;
 
     private static final int DISCONNECTED = 0;
@@ -56,11 +56,13 @@ public class LocalisationActivity extends BasicActivity {
             Toast.makeText(this, "BLE feature not supported.", Toast.LENGTH_SHORT).show();
             finish();
         }
+        else
+        {
+            state = DISCONNECTED;
+            binded = false;
 
-        state = DISCONNECTED;
-        binded = false;
-
-        connectToBLEService();
+            connectToBLEService();
+        }
     }
 
     public void retour9 (View view) {
@@ -128,6 +130,7 @@ public class LocalisationActivity extends BasicActivity {
     public void connectToBLEService()
     {
         Intent intent = new Intent(this, BLEService.class);
+        serviceConnection = new LocationServiceConnection();
 
         bindService(intent, serviceConnection, Context.BIND_AUTO_CREATE);
     }
