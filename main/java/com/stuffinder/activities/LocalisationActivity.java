@@ -170,31 +170,43 @@ public class LocalisationActivity extends BasicActivity {
         }
     }
 
-    void notifyTagLocated(boolean located)
+    void notifyTagLocated(final boolean located)
     {
-        if(located)
-            positionTextView.setText("est trouvé");
-        else
-            positionTextView.setText("n'est pas trouvé");
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run()
+            {
+                if(located)
+                    positionTextView.setText("est trouvé");
+                else
+                    positionTextView.setText("n'est pas trouvé");
+            }
+        });
     }
 
-    void notifyTagDistance(int distance)
+    void notifyTagDistance(final int distance)
     {
-        switch (distance)
-        {
-            case BLEService.TRES_PROCHE :
-                positionTextView.setText("est proche");
-                break;
-            case BLEService.MOYENNELENT_PROCHE :
-                positionTextView.setText("est moyennement proche.");
-                break;
-            case BLEService.LOIN :
-                positionTextView.setText("est loin");
-                break;
-            default :
-                positionTextView.setText("n'est pas trouvé");
-                break;
-        }
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run()
+            {
+                switch (distance)
+                {
+                    case BLEService.TRES_PROCHE :
+                        positionTextView.setText("est proche");
+                        break;
+                    case BLEService.MOYENNELENT_PROCHE :
+                        positionTextView.setText("est moyennement proche.");
+                        break;
+                    case BLEService.LOIN :
+                        positionTextView.setText("est loin");
+                        break;
+                    default :
+                        positionTextView.setText("n'est pas trouvé");
+                        break;
+                }
+            }
+        });
     }
 
 
@@ -245,9 +257,9 @@ public class LocalisationActivity extends BasicActivity {
             ledEnabled = enabled;
 
             if(enabled)
-                Toast.makeText(LocalisationActivity.this, "LED activée.", Toast.LENGTH_SHORT).show();
+                showMessage("LED activée.");
             else
-                Toast.makeText(LocalisationActivity.this, "LED désactivée.", Toast.LENGTH_SHORT).show();
+                showMessage("LED désactivée.");
         }
 
         @Override
@@ -255,9 +267,9 @@ public class LocalisationActivity extends BasicActivity {
             buzzerEnabled = enabled;
 
             if(enabled)
-                Toast.makeText(LocalisationActivity.this, "Buzzer activée.", Toast.LENGTH_SHORT).show();
+                showMessage("Buzzer activé.");
             else
-                Toast.makeText(LocalisationActivity.this, "Buzzer désactivée.", Toast.LENGTH_SHORT).show();
+            showMessage("Buzzer désactivé.");
         }
 
         @Override

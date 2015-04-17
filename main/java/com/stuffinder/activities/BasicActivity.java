@@ -67,12 +67,16 @@ public class BasicActivity extends Activity
 
     public synchronized void showErrorMessage(String message)
     {
-        runOnUiThread(new ErrorMessageProcessor(message));
+        showMessage(message);
+    }
+    public synchronized void showMessage(String message)
+    {
+        runOnUiThread(new MessageProcessor(message));
     }
 
-    class ErrorMessageProcessor implements Runnable{
+    class MessageProcessor implements Runnable{
         private String errorMessage;
-        ErrorMessageProcessor(String errorMessage)
+        MessageProcessor(String errorMessage)
         {
             this.errorMessage = errorMessage;
         }

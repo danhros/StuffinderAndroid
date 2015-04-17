@@ -114,12 +114,13 @@ public class BLEService  extends Service{
 
     private boolean enableBluetooth()
     {
-        if (!bluetoothAdapter.isEnabled()) {
-            Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
-            BasicActivity.getCurrentActivity().startActivityForResult(enableBtIntent, REQUEST_ENABLE_BT);
-        }
-
-        return bluetoothAdapter.isEnabled();
+        return true;
+//        if (!bluetoothAdapter.isEnabled()) {
+//            Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
+//            BasicActivity.getCurrentActivity().startActivityForResult(enableBtIntent, REQUEST_ENABLE_BT);
+//        }
+//
+//        return bluetoothAdapter.isEnabled();
     }
 
 

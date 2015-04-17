@@ -115,6 +115,10 @@
             android:name=".activities.CreerProfilActivity"
             android:label="@string/title_activity_creer_profil" >
         </activity>
+        <service
+            android:name=".ble.BLEService"
+            android:enabled="true"
+        />
     </application>
 
 </manifest>
