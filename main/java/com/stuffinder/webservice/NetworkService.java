@@ -52,6 +52,10 @@ public class NetworkService implements NetworkServiceInterface {
     private Account currentAccount = null;
     private String currentPassword = null;
 
+    private long lastPersonalInformationUpdateDate;
+    private long lastTagsUpdateDate;
+    private long lastProfilesUpdateDate;
+
     private NetworkService() {
 
     }
@@ -98,9 +102,14 @@ public class NetworkService implements NetworkServiceInterface {
         }
     }
 
+
     @Override
     public void initNetworkService() throws NetworkServiceException {
         NetworkService.client = new DefaultHttpClient();
+
+        lastPersonalInformationUpdateDate = -1;
+        lastProfilesUpdateDate = -1;
+        lastTagsUpdateDate = -1;
     }
 
     @Override
@@ -182,6 +191,11 @@ public class NetworkService implements NetworkServiceInterface {
 
     }
 
+    private void extractLastUpdateDatesFromJSONObject(JSONObject jsonObject) throws JSONException {
+        lastPersonalInformationUpdateDate = jsonObject.getLong("lastpersonalinformationsupdatetime");
+        lastTagsUpdateDate = jsonObject.getLong("lasttagsupdatetime");
+        lastProfilesUpdateDate = jsonObject.getLong("lastprofilesupdatetime");
+    }
 
     @Override
     public Account authenticate(String pseudo, String password)throws AccountNotFoundException, NetworkServiceException {
@@ -210,6 +224,7 @@ public class NetworkService implements NetworkServiceInterface {
                         JSONObject obj = new JSONObject(result);
                         int returnCode = obj.getInt("returnCode");
                         if (returnCode == NO_ERROR) {
+                            extractLastUpdateDatesFromJSONObject(obj);
                             currentAccount = new Account(obj.getString("pseudo"), obj.getString("first_name"), obj.getString("last_name"), obj.getString("email"));
                             currentAccount.setBraceletUID(obj.getString("braceletUID"));
                             currentPassword = password; // correction
@@ -346,6 +361,7 @@ public class NetworkService implements NetworkServiceInterface {
                         JSONObject obj = new JSONObject(result);
                         int returnCode = obj.getInt("returnCode");
                         if (returnCode == NO_ERROR) {
+                            extractLastUpdateDatesFromJSONObject(obj);
                             currentAccount.setMailAddress(obj.getString("email"));
                         }else if (returnCode == DATABASE_ACCESS_ISSUE) {
                             throw new NetworkServiceException("Problem of access to the DB");
@@ -407,6 +423,7 @@ public class NetworkService implements NetworkServiceInterface {
                         JSONObject obj = new JSONObject(result);
                         int returnCode = obj.getInt("returnCode");
                         if (returnCode == NO_ERROR) {
+                            extractLastUpdateDatesFromJSONObject(obj);
                             currentPassword = newPassword;
                         }else if (returnCode == INVALID_PSEUDO_PASSWORD_COMBINATION) {
                             throw new NotAuthenticatedException();
@@ -475,7 +492,7 @@ public class NetworkService implements NetworkServiceInterface {
                         JSONObject obj = new JSONObject(result);
                         int returnCode = obj.getInt("returnCode");
                         if (returnCode == NO_ERROR) {
-
+                            extractLastUpdateDatesFromJSONObject(obj);
                         }
                         // Else display error message
                         else {
@@ -529,6 +546,8 @@ public class NetworkService implements NetworkServiceInterface {
                         JSONObject obj = new JSONObject(result);
                         int returnCode = obj.getInt("returnCode");
                         if (returnCode == NO_ERROR) {
+                            extractLastUpdateDatesFromJSONObject(obj);
+
                             org.json.JSONArray arrayOfJsonTag = obj.getJSONArray("listTags");
                             for (int i = 0; i < arrayOfJsonTag.length(); i++) {
                                 JSONObject tagjson = arrayOfJsonTag.getJSONObject(i);
@@ -615,6 +634,7 @@ public class NetworkService implements NetworkServiceInterface {
                         JSONObject obj = new JSONObject(result);
                         int returnCode = obj.getInt("returnCode");
                         if (returnCode == NO_ERROR) {
+                            extractLastUpdateDatesFromJSONObject(obj);
                         }else if (returnCode == INVALID_PSEUDO_PASSWORD_COMBINATION) {
                         throw new NotAuthenticatedException();
                          }else if (returnCode == DATABASE_ACCESS_ISSUE) {
@@ -732,6 +752,7 @@ public class NetworkService implements NetworkServiceInterface {
                         JSONObject obj = new JSONObject(result);
                         int returnCode = obj.getInt("returnCode");
                         if (returnCode == NO_ERROR) {
+                            extractLastUpdateDatesFromJSONObject(obj);
                             tag.setObjectName(obj.getString("newobjectname"));
                          }else if (returnCode == INVALID_PSEUDO_PASSWORD_COMBINATION) {
                                 throw new NotAuthenticatedException();
@@ -807,7 +828,7 @@ public class NetworkService implements NetworkServiceInterface {
                         JSONObject obj = new JSONObject(result);
                         int returnCode = obj.getInt("returnCode");
                         if (returnCode == NO_ERROR) {
-
+                            extractLastUpdateDatesFromJSONObject(obj);
                         }
                         // Else display error message
                         else if (returnCode == DATABASE_ACCESS_ISSUE) {
@@ -863,6 +884,7 @@ public class NetworkService implements NetworkServiceInterface {
                         JSONObject obj = new JSONObject(result);
                         int returnCode = obj.getInt("returnCode");
                         if (returnCode == NO_ERROR) {
+                            extractLastUpdateDatesFromJSONObject(obj);
                         }else if (returnCode == INVALID_PSEUDO_PASSWORD_COMBINATION) {
                             throw new NotAuthenticatedException();
                         }else if (returnCode == DATABASE_ACCESS_ISSUE) {
@@ -927,6 +949,7 @@ public class NetworkService implements NetworkServiceInterface {
                         JSONObject obj = new JSONObject(result);
                         int returnCode = obj.getInt("returnCode");
                         if (returnCode == NO_ERROR) {
+                            extractLastUpdateDatesFromJSONObject(obj);
                             /* Everything went fine */
                         }
                         // Else display error message
@@ -991,6 +1014,7 @@ public class NetworkService implements NetworkServiceInterface {
                 jsonUIDs.put(Integer.toString(i), tagList.get(i).getUid());
             } catch (JSONException e) {
                 e.printStackTrace();
+                throw new NetworkServiceException("abnormal error has occured.");
             }
         }
 
@@ -1023,6 +1047,7 @@ public class NetworkService implements NetworkServiceInterface {
                         JSONObject obj = new JSONObject(result);
                         int returnCode = obj.getInt("returnCode");
                         if (returnCode == NO_ERROR) {
+                            extractLastUpdateDatesFromJSONObject(obj);
                         }
                         // Else display error message
                         else if (returnCode == DATABASE_ACCESS_ISSUE) {
@@ -1089,7 +1114,7 @@ public class NetworkService implements NetworkServiceInterface {
                         JSONObject obj = new JSONObject(result);
                         int returnCode = obj.getInt("returnCode");
                         if (returnCode == NO_ERROR) {
-
+                            extractLastUpdateDatesFromJSONObject(obj);
                         }
                         // Else display error message
                         else {
@@ -1153,6 +1178,7 @@ public class NetworkService implements NetworkServiceInterface {
                         JSONObject obj = new JSONObject(result);
                         int returnCode = obj.getInt("returnCode");
                         if (returnCode == NO_ERROR) {
+                            extractLastUpdateDatesFromJSONObject(obj);
                            profile.addTag(tag);
                         }
                         // Else display error message
@@ -1203,8 +1229,8 @@ public class NetworkService implements NetworkServiceInterface {
             try {
                 jsonUIDs.put(Integer.toString(i), tags.get(i).getUid());
             } catch (JSONException e) {
-                // TODO Auto-generated catch block
                 e.printStackTrace();
+                throw new NetworkServiceException("An abnormal error has occured about JSON building");
             }
         }
 
@@ -1238,6 +1264,8 @@ public class NetworkService implements NetworkServiceInterface {
                         JSONObject obj = new JSONObject(result);
                         int returnCode = obj.getInt("returnCode");
                         if (returnCode == NO_ERROR) {
+                            extractLastUpdateDatesFromJSONObject(obj);
+
                             for (Tag tag : tags) {
                                profile.addTag(tag);
                             }
@@ -1307,7 +1335,8 @@ public class NetworkService implements NetworkServiceInterface {
                         JSONObject obj = new JSONObject(result);
                         int returnCode = obj.getInt("returnCode");
                         if (returnCode == NO_ERROR) {
-                           profile.removeTag(tag);
+                            extractLastUpdateDatesFromJSONObject(obj);
+                            profile.removeTag(tag);
                         }
                         // Else display error message
                         else {
@@ -1357,8 +1386,8 @@ public class NetworkService implements NetworkServiceInterface {
             try {
                 jsonUIDs.put(Integer.toString(i), tagList.get(i).getUid());
             } catch (JSONException e) {
-                // TODO Auto-generated catch block
                 e.printStackTrace();
+                throw new NetworkServiceException("An abnormal error has occured about JSON building");
             }
         }
 
@@ -1390,6 +1419,8 @@ public class NetworkService implements NetworkServiceInterface {
                         JSONObject obj = new JSONObject(result);
                         int returnCode = obj.getInt("returnCode");
                         if (returnCode == NO_ERROR) {
+                            extractLastUpdateDatesFromJSONObject(obj);
+
                             org.json.JSONArray arrayOfJsonTag = obj.getJSONArray("listTags");
                             for (Tag tag :tagList) {
                                profile.removeTag(tag);
@@ -1430,15 +1461,105 @@ public class NetworkService implements NetworkServiceInterface {
 
     public Profile removeAllFromProfile(Profile profile) throws NotAuthenticatedException, IllegalFieldException, NetworkServiceException, InterruptedException {
 
-        return replaceTagListOfProfile(profile,null);
+        return replaceTagListOfProfile(profile,new ArrayList<Tag>());
     }
 
     @Override
     public Profile replaceTagListOfProfile(Profile profile, List<Tag> tagList) throws NotAuthenticatedException, IllegalFieldException, NetworkServiceException, InterruptedException {
-        if(currentAccount == null) { throw new NotAuthenticatedException(); }
-        //flemme.
-        removeProfile(profile);
-        Profile newProfile = createProfile(profile.getName(), tagList);
+        if(currentAccount == null) {
+            throw new NotAuthenticatedException();
+        }
+
+        //flemme : pas de place pour la flemme !!!!
+
+
+        Profile newProfile = new Profile(profile.getName());
+        newProfile.getTags().addAll(tagList);
+
+        if (currentAccount == null) {
+            throw new NotAuthenticatedException();
+        }
+        if (!FieldVerifier.verifyName(profile.getName()))
+            throw new IllegalFieldException(IllegalFieldException.PROFILE_NAME, IllegalFieldException.REASON_VALUE_INCORRECT, profile.getName());
+        for (Tag tag : tagList) {
+            if (!FieldVerifier.verifyTagUID(tag.getUid()))
+                throw new IllegalFieldException(IllegalFieldException.TAG_UID, IllegalFieldException.REASON_VALUE_INCORRECT, tag.getUid());
+        }
+
+        InputStream inputStream;
+        String result = "";
+        JSONObject jsonUIDs = new JSONObject();
+        // on remplit le json avec les couples ("indice", UID)
+        for (int i = 0; i < tagList.size(); i++) {
+            try {
+                jsonUIDs.put(Integer.toString(i), tagList.get(i).getUid());
+            } catch (JSONException e) {
+                e.printStackTrace();
+                throw new NetworkServiceException("An abnormal error has occured about JSON building");
+            }
+        }
+
+        try {
+            // check URL with your test
+            HttpPost httppost = new HttpPost(server_address + "replacetaglistofprofile");
+            MultipartEntityBuilder reqEntity = MultipartEntityBuilder.create();
+            reqEntity.addPart( "pseudo", new StringBody(currentAccount.getPseudo(), ContentType.TEXT_PLAIN));
+            reqEntity.addPart( "password", new StringBody(currentPassword, ContentType.TEXT_PLAIN));
+            reqEntity.addPart("profileName", new StringBody(profile.getName(), ContentType.TEXT_PLAIN));
+            reqEntity.addPart( "jsonUIDs", new StringBody(jsonUIDs.toString(), ContentType.TEXT_PLAIN));
+            httppost.setEntity(reqEntity.build());
+            HttpResponse httpResponse = client.execute(httppost);
+            StatusLine statusLine = httpResponse.getStatusLine();
+            int statusCode = statusLine.getStatusCode();
+            if (statusCode == 200) {
+                // receive response as inputStream
+                HttpEntity entity = httpResponse.getEntity();
+                inputStream = entity.getContent();
+                // convert inputstream to string
+                if (inputStream != null) {
+                    try {
+                        result = convertInputStreamToString(inputStream);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+
+                    try {
+                        // creation JSON Object
+                        JSONObject obj = new JSONObject(result);
+                        int returnCode = obj.getInt("returnCode");
+                        if (returnCode == NO_ERROR) {
+                            extractLastUpdateDatesFromJSONObject(obj);
+                        }
+                        // Else display error message
+                        else if (returnCode == DATABASE_ACCESS_ISSUE) {
+                            throw new NetworkServiceException("Problem of access to the DB");
+                        } else {
+                            throw new NotAuthenticatedException();
+                        }
+                    } catch (JSONException e) {
+                        // "Error Occurred [Server's JSON response might be invalid]!"
+                        throw new NetworkServiceException("Server response might be invalid.");
+                    }
+                } else {
+                    throw new NetworkServiceException("Connection issue with the server, null input stream");
+                }
+            }
+            // When Http response code is '404'
+            else if (statusCode == 404) {
+                throw new NetworkServiceException("Requested resource not found");
+            }
+            // When Http response code is '500'
+            else if (statusCode == 500) {
+                throw new NetworkServiceException("Something went wrong at server end");
+            }
+            // When Http response code other than 404, 500
+            else {
+                throw new NetworkServiceException("Unexpected Error occurred! [Most common Error: Device might not be connected to Internet or remote server is not up and running]");
+            }
+        } catch (IOException | IllegalStateException e) {
+            throw new NetworkServiceException("exception of type IOException or IllegalStateException catched.");
+        }
+
         return newProfile;
     }
 
@@ -1473,6 +1594,7 @@ public class NetworkService implements NetworkServiceInterface {
                         JSONObject obj = new JSONObject(result);
                         int returnCode = obj.getInt("returnCode");
                         if (returnCode == NO_ERROR) {
+                            extractLastUpdateDatesFromJSONObject(obj);
                         }
                         // Else display error message
                         else {
@@ -1535,6 +1657,8 @@ public class NetworkService implements NetworkServiceInterface {
                         JSONObject obj = new JSONObject(result);
                         int returnCode = obj.getInt("returnCode");
                         if (returnCode == NO_ERROR) {
+                            extractLastUpdateDatesFromJSONObject(obj);
+
                             org.json.JSONArray arrayOfJsonTag = obj.getJSONArray("listTags");
                             for (int i = 0; i < arrayOfJsonTag.length(); i++) {
                                 JSONObject tagjson = arrayOfJsonTag.getJSONObject(i);
@@ -1601,6 +1725,8 @@ public class NetworkService implements NetworkServiceInterface {
                         JSONObject obj = new JSONObject(result);
                         int returnCode = obj.getInt("returnCode");
                         if (returnCode == NO_ERROR) {
+                            extractLastUpdateDatesFromJSONObject(obj);
+
                             // { "intError" = ? ; "listProfiles" = { "profile1" = {"0" = tagID1 ; ...} ; ... } }
                             // JSONObject(.. ; "listProfiles" = JSONObject("profile1" = JSONArray( jsonTags) ) ;.. )
                             // pour ne pas se reposer sur currentAccount, on transmet toutes les coordonnÈes des tags.
@@ -1669,63 +1795,14 @@ public class NetworkService implements NetworkServiceInterface {
         if (currentAccount == null) {
             throw new NotAuthenticatedException();
         }
-        InputStream inputStream;
-        String result = "";
-        long res;
-        res = 0;
-        try {
-            // make GET request to the given URL
-            HttpResponse httpResponse = executeRequest(new HttpGet(server_address + "getlastpersonalinformationupdatetime?pseudo=" + URLEncoder.encode(currentAccount.getPseudo(), "UTF-8") + "&password=" + URLEncoder.encode(currentPassword, "UTF-8")));
-            StatusLine statusLine = httpResponse.getStatusLine();
-            int statusCode = statusLine.getStatusCode();
-            if (statusCode == 200) {
-                // receive response as inputStream
-                HttpEntity entity = httpResponse.getEntity();
-                inputStream = entity.getContent();
-                // convert inputstream to string
-                if (inputStream != null) {
-                    result = convertInputStreamToString(inputStream);
-                    try {
-                        // creation JSON Object
-                        JSONObject obj = new JSONObject(result);
-                        int returnCode = obj.getInt("returnCode");
-                        if (returnCode == NO_ERROR) {
-                            res =  obj.getLong("lastpersonalinformationupdatetime");
-                        }
-                        // Else display error message
 
-                        else if (returnCode == ErrorCode.ILLEGAL_USE_OF_SPECIAL_CHARACTER) {
-                            throw new NetworkServiceException("Illegal use of special character");
+        if(lastPersonalInformationUpdateDate == -1)
+            updateLastUpdateTimes();
 
-                        }
-                    } catch (JSONException e) {
-                        throw new NetworkServiceException("Server response might be invalid.");
-                    }
-                } else {
-                    throw new NetworkServiceException("Connection issue with the server, null input stream");
-                }
-            }
+        long tmp = lastPersonalInformationUpdateDate;
+        lastPersonalInformationUpdateDate = -1;
 
-            // When Http response code is '404'
-            else if (statusCode == 404) {
-                throw new NetworkServiceException("Requested resource not found");
-            }
-
-            // When Http response code is '500'
-            else if (statusCode == 500) {
-                throw new NetworkServiceException("Something went wrong at server end");
-            }
-
-            // When Http response code other than 404, 500
-            else {
-                throw new NetworkServiceException("Unexpected Error occurred! [Most common Error: Device might not be connected to Internet or remote server is not up and running]");
-            }
-        } catch (IOException | IllegalStateException e) {
-            throw new NetworkServiceException("exception of type IOException or IllegalStateException catched.");
-        } catch (InterruptedException e) {
-            throw new NetworkServiceException("error occurred while executing request.");
-        }
-        return res;
+        return tmp;
     }
 
     @Override
@@ -1733,62 +1810,14 @@ public class NetworkService implements NetworkServiceInterface {
         if (currentAccount == null) {
             throw new NotAuthenticatedException();
         }
-        InputStream inputStream;
-        String result = "";
-        long res = 0;
-        try {
-            // make GET request to the given URL
-            HttpResponse httpResponse = executeRequest(new HttpGet(server_address + "getlasttagsupdatetime?pseudo=" + URLEncoder.encode(currentAccount.getPseudo(), "UTF-8") + "&password=" + URLEncoder.encode(currentPassword, "UTF-8")));
-            StatusLine statusLine = httpResponse.getStatusLine();
-            int statusCode = statusLine.getStatusCode();
-            if (statusCode == 200) {
-                // receive response as inputStream
-                HttpEntity entity = httpResponse.getEntity();
-                inputStream = entity.getContent();
-                // convert inputstream to string
-                if (inputStream != null) {
-                    result = convertInputStreamToString(inputStream);
-                    try {
-                        // creation JSON Object
-                        JSONObject obj = new JSONObject(result);
-                        int returnCode = obj.getInt("returnCode");
-                        if (returnCode == NO_ERROR) {
-                           res =  obj.getLong("lasttagsupdatetime");
-                        }
-                        // Else display error message
 
-                        else if (returnCode == ErrorCode.ILLEGAL_USE_OF_SPECIAL_CHARACTER) {
-                            throw new NetworkServiceException("Illegal use of special character");
+        if(lastTagsUpdateDate == -1)
+            updateLastUpdateTimes();
 
-                        }
-                    } catch (JSONException e) {
-                        throw new NetworkServiceException("Server response might be invalid.");
-                    }
-                } else {
-                    throw new NetworkServiceException("Connection issue with the server, null input stream");
-                }
-            }
+        long tmp = lastTagsUpdateDate;
+        lastTagsUpdateDate = -1;
 
-            // When Http response code is '404'
-            else if (statusCode == 404) {
-                throw new NetworkServiceException("Requested resource not found");
-            }
-
-            // When Http response code is '500'
-            else if (statusCode == 500) {
-                throw new NetworkServiceException("Something went wrong at server end");
-            }
-
-            // When Http response code other than 404, 500
-            else {
-                throw new NetworkServiceException("Unexpected Error occurred! [Most common Error: Device might not be connected to Internet or remote server is not up and running]");
-            }
-        } catch (IOException | IllegalStateException e) {
-            throw new NetworkServiceException("exception of type IOException or IllegalStateException catched.");
-        } catch (InterruptedException e) {
-            throw new NetworkServiceException("error occurred while executing request.");
-        }
-        return res;
+        return tmp;
     }
 
     @Override
@@ -1796,12 +1825,25 @@ public class NetworkService implements NetworkServiceInterface {
         if (currentAccount == null) {
             throw new NotAuthenticatedException();
         }
+
+        if(lastProfilesUpdateDate == -1)
+            updateLastUpdateTimes();
+
+        long tmp = lastProfilesUpdateDate;
+        lastProfilesUpdateDate = -1;
+
+        return tmp;
+    }
+
+    private void updateLastUpdateTimes() throws NetworkServiceException, NotAuthenticatedException {
+        if (currentAccount == null) {
+            throw new NotAuthenticatedException();
+        }
         InputStream inputStream;
         String result = "";
-        long res = 0;
         try {
             // make GET request to the given URL
-            HttpResponse httpResponse = executeRequest(new HttpGet(server_address + "getlastprofilesupdatetime?pseudo=" + URLEncoder.encode(currentAccount.getPseudo(), "UTF-8") + "&password=" + URLEncoder.encode(currentPassword, "UTF-8")));
+            HttpResponse httpResponse = executeRequest(new HttpGet(server_address + "getlastupdatetimes?pseudo=" + URLEncoder.encode(currentAccount.getPseudo(), "UTF-8") + "&password=" + URLEncoder.encode(currentPassword, "UTF-8")));
             StatusLine statusLine = httpResponse.getStatusLine();
             int statusCode = statusLine.getStatusCode();
             if (statusCode == 200) {
@@ -1816,7 +1858,7 @@ public class NetworkService implements NetworkServiceInterface {
                         JSONObject obj = new JSONObject(result);
                         int returnCode = obj.getInt("returnCode");
                         if (returnCode == NO_ERROR) {
-                            res =  obj.getLong("lastprofilesupdatetime");
+                            extractLastUpdateDatesFromJSONObject(obj);
                         }
                         // Else display error message
 
@@ -1850,7 +1892,6 @@ public class NetworkService implements NetworkServiceInterface {
         } catch (InterruptedException e) {
             throw new NetworkServiceException("error occurred while executing request.");
         }
-        return res;
     }
 
     // to use singleton design pattern.
