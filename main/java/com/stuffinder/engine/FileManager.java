@@ -98,6 +98,68 @@ public class FileManager {
         return copyFile(file, getTagImageFileForUser(tag));
     }
 
+    public static final int MAX_IMAGE_HEIGHT = 400;
+    public static final int MAX_IMAGE_WIDTH = 400;
+
+    static boolean importImageFileToUserFolder(File imageFile, Tag tag) throws FileNotFoundException
+    {
+        if(! imageFile.exists())
+            throw new FileNotFoundException(imageFile.toString());
+
+        BitmapFactory.Options options = new BitmapFactory.Options();
+        options.inJustDecodeBounds = true;
+
+        BitmapFactory.decodeFile(imageFile.getAbsolutePath(), options);
+
+        if(options.outWidth == -1 || options.outHeight == -1) // means the file is not an image file.
+        {
+            Logger.getLogger(FileManager.class.getName()).log(Level.WARNING, "File \"" + imageFile.getAbsolutePath() + "\" can't be decoded as image.");
+            return false;
+        }
+
+        int width = options.outWidth;
+        int height = options.outHeight;
+
+        int newWidth = width, newHeight = height;
+
+        if(width < height && height > MAX_IMAGE_HEIGHT)
+        {
+            newHeight = MAX_IMAGE_HEIGHT;
+            newWidth = width * MAX_IMAGE_HEIGHT / height;
+        }
+        else if(height <= width && width > MAX_IMAGE_WIDTH)
+        {
+            newHeight = height * MAX_IMAGE_WIDTH / width;
+            newWidth = MAX_IMAGE_WIDTH;
+        }
+
+        Bitmap bitmap = BitmapFactory.decodeFile(imageFile.getAbsolutePath());
+
+        if(newWidth != width || newHeight != height)
+        {
+            Logger.getLogger(FileManager.class.getName()).log(Level.INFO, "import image to user folder : image \"" + imageFile.getAbsolutePath() + "\" will be resized from (" + width + "," + height + ") to (" + newWidth + "," + newHeight + ").");
+            bitmap = Bitmap.createScaledBitmap(bitmap, newWidth, newHeight, false);
+        }
+
+        FileOutputStream outputStream = new FileOutputStream(getTagImageFileForUser(tag));
+        bitmap.compress(Bitmap.CompressFormat.PNG, 100, outputStream);
+        try {
+            outputStream.flush();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        finally {
+            try {
+                outputStream.close();
+            } catch (IOException e) {
+                return false;
+            }
+        }
+        Logger.getLogger(FileManager.class.getName()).log(Level.INFO, "import image to user folder : image \"" + imageFile.getAbsolutePath() + "\" converted in PNG format with right size.");
+
+        return true;
+    }
+
     static boolean copyFileToAutoSyncFolder(File file, String filename) throws FileNotFoundException {
         File newFile = new File(autoSyncImageFolder, filename);
 

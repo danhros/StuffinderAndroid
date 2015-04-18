@@ -14,7 +14,7 @@ import android.widget.Toast;
 
 import com.stuffinder.R;
 import com.stuffinder.data.Profile;
-import com.stuffinder.engine.NetworkServiceProvider;
+import com.stuffinder.engine.EngineServiceProvider;
 import com.stuffinder.exceptions.IllegalFieldException;
 import com.stuffinder.exceptions.NetworkServiceException;
 import com.stuffinder.exceptions.NotAuthenticatedException;
@@ -63,6 +63,7 @@ public class SupprimerProfilActivity extends Activity {
 
         listView.setAdapter(profileArrayAdapter);
         listView.setItemChecked(0, true);
+        listView.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
     }
 
 
@@ -80,7 +81,7 @@ public class SupprimerProfilActivity extends Activity {
             if (tab.get(i)) {
                 nombreProfilSup++;
                 try {
-                    NetworkServiceProvider.getNetworkService().removeProfile(listProfiles.get(i));
+                    EngineServiceProvider.getEngineService().removeProfile(listProfiles.get(i));
                 } catch (IllegalFieldException e) {
                     if(e.getReason() == IllegalFieldException.REASON_VALUE_INCORRECT)
                     {

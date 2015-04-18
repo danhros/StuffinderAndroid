@@ -16,7 +16,7 @@ import android.widget.Toast;
 import com.stuffinder.R;
 import com.stuffinder.data.Profile;
 import com.stuffinder.data.Tag;
-import com.stuffinder.engine.NetworkServiceProvider;
+import com.stuffinder.engine.EngineServiceProvider;
 import com.stuffinder.exceptions.IllegalFieldException;
 import com.stuffinder.exceptions.NetworkServiceException;
 import com.stuffinder.exceptions.NotAuthenticatedException;
@@ -98,7 +98,7 @@ public class ModifierProfileBisActivity extends Activity {
             Toast.makeText(this, "Entrez un nom de profils.", Toast.LENGTH_LONG).show();
         } else {
             try {
-                NetworkServiceProvider.getNetworkService().modifyProfileName(profile, nomProfil);
+                EngineServiceProvider.getEngineService().modifyProfileName(profile, nomProfil);
                 fermerActivite = true;
             } catch (NotAuthenticatedException e) {
                 Toast.makeText(this, "Une erreur anormale est survenue.", Toast.LENGTH_LONG).show();
@@ -121,7 +121,7 @@ public class ModifierProfileBisActivity extends Activity {
             Toast.makeText(this, "Aucune puce n'est sélectionnée , votre profil sera vide", Toast.LENGTH_LONG).show();
         } else {
             try {
-                NetworkServiceProvider.getNetworkService().replaceTagListOfProfile(profile, newTagsProfileList);
+                EngineServiceProvider.getEngineService().replaceTagListOfProfile(profile, newTagsProfileList);
 
                 finish();
             } catch (NetworkServiceException e) {

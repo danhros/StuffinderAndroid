@@ -789,11 +789,11 @@ public class NetworkServiceEmulator implements NetworkServiceInterface
             Logger.getLogger(getClass().getName()).log(Level.WARNING, "Sleep operation interrupted.");
         }
 
-        if(random.nextInt(15) == 0)
-        {
-            Logger.getLogger(getClass().getName()).log(Level.INFO, "Network service emulator will simulate a network problem.");
-            throw new NetworkServiceException("A network error has occured.");
-        }
+//        if(random.nextInt(15) == 0)
+//        {
+//            Logger.getLogger(getClass().getName()).log(Level.INFO, "Network service emulator will simulate a network problem.");
+//            throw new NetworkServiceException("A network error has occured.");
+//        }
 
 //        if(random.nextInt(3) == 0)
 //        {
