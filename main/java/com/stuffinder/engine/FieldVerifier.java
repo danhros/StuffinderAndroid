@@ -30,7 +30,7 @@ public class FieldVerifier
 
     public static boolean verifyTagUID(String uid)
     {
-        return uid.length() > 0;
+        return uid.matches("([0-9A-F][0-9A-F]:){5}[0-9A-F][0-9A-F]");
     }
 
     public static boolean verifyTagName(String name)
