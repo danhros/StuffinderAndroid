@@ -72,7 +72,10 @@ public class LocalisationActivity extends BasicActivity {
     private boolean ledEnabled = false;
     public void onLed (View view) {
         if(! binded)
+        {
             Logger.getLogger(getClass().getName()).log(Level.INFO, "can't perform operation on led because the connection is not done with the BLE service.");
+            Toast.makeText(this, "Une erreur est survenue.", Toast.LENGTH_LONG).show();
+        }
         else if(state == CONNECTED)
         {
             try {
@@ -88,7 +91,10 @@ public class LocalisationActivity extends BasicActivity {
     private boolean buzzerEnabled = false;
     public void onSon (View view) {
         if(! binded)
+        {
             Logger.getLogger(getClass().getName()).log(Level.INFO, "can't perform operation on sound or buzzer because the connection is not done with the BLE service.");
+            Toast.makeText(this, "Une erreur est survenue.", Toast.LENGTH_LONG).show();
+        }
         else if(state == CONNECTED)
         {
             try {
@@ -103,7 +109,10 @@ public class LocalisationActivity extends BasicActivity {
 
     public void retenter (View view) {
         if(! binded)
+        {
             Logger.getLogger(getClass().getName()).log(Level.INFO, "can't perform operation on sound or buzzer because the connection is not done with the BLE service.");
+            Toast.makeText(this, "Une erreur est survenue.", Toast.LENGTH_LONG).show();
+        }
         else if(state == CONNECTED || state == DISCONNECTED)
         {
             try {
@@ -231,14 +240,16 @@ public class LocalisationActivity extends BasicActivity {
 
         @Override
         public void onTagDisconnected(Tag tag) {
+            if(state == CONNECTING)
+            {
+                Logger.getLogger(getClass().getName()).log(Level.WARNING, "the wanted tag is not found.");
+                notifyTagLocated(false);
+            }
             state = DISCONNECTED;
         }
 
         @Override
         public void onTagDisconnecting(Tag tag) {
-            if(state == CONNECTING)
-                notifyTagLocated(false);
-
             state = DISCONNECTING;
         }
 

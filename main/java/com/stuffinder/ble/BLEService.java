@@ -334,6 +334,7 @@ public class BLEService  extends Service{
             if (status == BluetoothGatt.GATT_SUCCESS) {
 //                broadcastUpdate(ACTION_GATT_RSSI, rssi);
 
+                Log.d(getClass().getName(), "RSSI read for the located tag is done successfully.");
                 if(locationCallback != null)
                     locationCallback.onDistanceMeasured(getDistance(rssi));
             } else {
