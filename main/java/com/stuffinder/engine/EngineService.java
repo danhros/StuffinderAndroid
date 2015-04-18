@@ -263,9 +263,10 @@ public class EngineService {
         {
             try {
                 FileManager.copyFileToRequestFolder(imageFile, request.getRequestNumber());
-                FileManager.copyFileToUserFolder(imageFile, tmp);
+                FileManager.importImageFileToUserFolder(imageFile, tmp);
 
                 tmp.setObjectImageName(FileManager.getTagImageFileForUser(tmp).getAbsolutePath());
+                ImageLoader.getInstance().reloadImageAtLowSize(new File(tmp.getObjectImageName()));
             } catch (FileNotFoundException e) {
                 throw new IllegalFieldException(TAG_OBJECT_IMAGE, REASON_VALUE_NOT_FOUND, imageFile.getPath());
             }
@@ -345,9 +346,10 @@ public class EngineService {
             {
                 try {
                     FileManager.copyFileToRequestFolder(newImageFile, request.getRequestNumber());
-                    FileManager.copyFileToUserFolder(newImageFile, tmp);
+                    FileManager.importImageFileToUserFolder(newImageFile, tmp);
 
                     tmp.setObjectImageName(FileManager.getTagImageFileForUser(tmp).getAbsolutePath());
+                    ImageLoader.getInstance().reloadImageAtLowSize(new File(tmp.getObjectImageName()));
                 } catch (FileNotFoundException e) {
                     throw new IllegalFieldException(TAG_OBJECT_IMAGE, REASON_VALUE_NOT_FOUND, newImageFile.getPath());
                 }
@@ -2110,7 +2112,14 @@ public class EngineService {
                     if(! isInternetConnectionDone()) // if the internet connection is down, it will wait until it is up again.
                         checkAndWaitForInternetConnection();
                     else
+                    {
                         BasicActivity.getCurrentActivity().showErrorMessage("A network error has occured.");
+                        try{
+                            Thread.sleep(1000);
+                        } catch(InterruptedException e1){
+                            e.printStackTrace();
+                        }
+                    }
 
                     requestNumber.release();
                 } catch (InterruptedException e) {

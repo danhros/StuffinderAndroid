@@ -33,9 +33,8 @@ public class SeConnecterActivity extends BasicActivity {
 
    public void connexion (View view) {
 
-       String mdp = editTextMdp.getText().toString();
-       String identifiant = editTextIdentifiant.getText().toString();
-       Intent intent = new Intent ( SeConnecterActivity.this, HomeActivity.class);
+       String mdp = "123456"; //editTextMdp.getText().toString();
+       String identifiant = "jdupon"; // editTextIdentifiant.getText().toString();
 
        if(identifiant.length() == 0)
            Toast.makeText(SeConnecterActivity.this, "Entrez votre pseudo", Toast.LENGTH_LONG).show();
@@ -48,6 +47,7 @@ public class SeConnecterActivity extends BasicActivity {
                if (! FieldVerifier.verifyPassword(mdp) ) { throw new IllegalFieldException(IllegalFieldException.PASSWORD, IllegalFieldException.REASON_VALUE_INCORRECT, mdp);}
                EngineServiceProvider.getEngineService().authenticate( identifiant, mdp);
 
+               Intent intent = new Intent ( SeConnecterActivity.this, HomeActivity.class);
                finish();
                startActivity(intent);
            }
