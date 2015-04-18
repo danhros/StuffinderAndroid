@@ -27,7 +27,7 @@ public class LocalisationActivity extends BasicActivity {
     TextView positionTextView ;
 
     private boolean binded;
-    private LocationServiceConnection serviceConnection = new LocationServiceConnection();
+    private LocationServiceConnection serviceConnection;
     private BLEService service;
 
     private static final int DISCONNECTED = 0;
@@ -56,11 +56,13 @@ public class LocalisationActivity extends BasicActivity {
             Toast.makeText(this, "BLE feature not supported.", Toast.LENGTH_SHORT).show();
             finish();
         }
+        else
+        {
+            state = DISCONNECTED;
+            binded = false;
 
-        state = DISCONNECTED;
-        binded = false;
-
-        connectToBLEService();
+            connectToBLEService();
+        }
     }
 
     public void retour9 (View view) {
@@ -70,7 +72,10 @@ public class LocalisationActivity extends BasicActivity {
     private boolean ledEnabled = false;
     public void onLed (View view) {
         if(! binded)
+        {
             Logger.getLogger(getClass().getName()).log(Level.INFO, "can't perform operation on led because the connection is not done with the BLE service.");
+            Toast.makeText(this, "Une erreur est survenue.", Toast.LENGTH_LONG).show();
+        }
         else if(state == CONNECTED)
         {
             try {
@@ -86,7 +91,10 @@ public class LocalisationActivity extends BasicActivity {
     private boolean buzzerEnabled = false;
     public void onSon (View view) {
         if(! binded)
+        {
             Logger.getLogger(getClass().getName()).log(Level.INFO, "can't perform operation on sound or buzzer because the connection is not done with the BLE service.");
+            Toast.makeText(this, "Une erreur est survenue.", Toast.LENGTH_LONG).show();
+        }
         else if(state == CONNECTED)
         {
             try {
@@ -101,7 +109,10 @@ public class LocalisationActivity extends BasicActivity {
 
     public void retenter (View view) {
         if(! binded)
+        {
             Logger.getLogger(getClass().getName()).log(Level.INFO, "can't perform operation on sound or buzzer because the connection is not done with the BLE service.");
+            Toast.makeText(this, "Une erreur est survenue.", Toast.LENGTH_LONG).show();
+        }
         else if(state == CONNECTED || state == DISCONNECTED)
         {
             try {
@@ -128,6 +139,7 @@ public class LocalisationActivity extends BasicActivity {
     public void connectToBLEService()
     {
         Intent intent = new Intent(this, BLEService.class);
+        serviceConnection = new LocationServiceConnection();
 
         bindService(intent, serviceConnection, Context.BIND_AUTO_CREATE);
     }
@@ -167,31 +179,43 @@ public class LocalisationActivity extends BasicActivity {
         }
     }
 
-    void notifyTagLocated(boolean located)
+    void notifyTagLocated(final boolean located)
     {
-        if(located)
-            positionTextView.setText("est trouvé");
-        else
-            positionTextView.setText("n'est pas trouvé");
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run()
+            {
+                if(located)
+                    positionTextView.setText("est trouvé");
+                else
+                    positionTextView.setText("n'est pas trouvé");
+            }
+        });
     }
 
-    void notifyTagDistance(int distance)
+    void notifyTagDistance(final int distance)
     {
-        switch (distance)
-        {
-            case BLEService.TRES_PROCHE :
-                positionTextView.setText("est proche");
-                break;
-            case BLEService.MOYENNELENT_PROCHE :
-                positionTextView.setText("est moyennement proche.");
-                break;
-            case BLEService.LOIN :
-                positionTextView.setText("est loin");
-                break;
-            default :
-                positionTextView.setText("n'est pas trouvé");
-                break;
-        }
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run()
+            {
+                switch (distance)
+                {
+                    case BLEService.TRES_PROCHE :
+                        positionTextView.setText("est proche");
+                        break;
+                    case BLEService.MOYENNELENT_PROCHE :
+                        positionTextView.setText("est moyennement proche.");
+                        break;
+                    case BLEService.LOIN :
+                        positionTextView.setText("est loin");
+                        break;
+                    default :
+                        positionTextView.setText("n'est pas trouvé");
+                        break;
+                }
+            }
+        });
     }
 
 
@@ -216,14 +240,16 @@ public class LocalisationActivity extends BasicActivity {
 
         @Override
         public void onTagDisconnected(Tag tag) {
+            if(state == CONNECTING)
+            {
+                Logger.getLogger(getClass().getName()).log(Level.WARNING, "the wanted tag is not found.");
+                notifyTagLocated(false);
+            }
             state = DISCONNECTED;
         }
 
         @Override
         public void onTagDisconnecting(Tag tag) {
-            if(state == CONNECTING)
-                notifyTagLocated(false);
-
             state = DISCONNECTING;
         }
 
@@ -242,9 +268,9 @@ public class LocalisationActivity extends BasicActivity {
             ledEnabled = enabled;
 
             if(enabled)
-                Toast.makeText(LocalisationActivity.this, "LED activée.", Toast.LENGTH_SHORT).show();
+                showMessage("LED activée.");
             else
-                Toast.makeText(LocalisationActivity.this, "LED désactivée.", Toast.LENGTH_SHORT).show();
+                showMessage("LED désactivée.");
         }
 
         @Override
@@ -252,9 +278,9 @@ public class LocalisationActivity extends BasicActivity {
             buzzerEnabled = enabled;
 
             if(enabled)
-                Toast.makeText(LocalisationActivity.this, "Buzzer activée.", Toast.LENGTH_SHORT).show();
+                showMessage("Buzzer activé.");
             else
-                Toast.makeText(LocalisationActivity.this, "Buzzer désactivée.", Toast.LENGTH_SHORT).show();
+            showMessage("Buzzer désactivé.");
         }
 
         @Override

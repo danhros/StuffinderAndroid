@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.util.SparseBooleanArray;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.Window;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.view.View;
@@ -26,18 +27,14 @@ import java.util.List;
 public class SupprimerProfilActivity extends Activity {
 
 
-    private ListView listView = null ;
     private static List<Profile> listProfiles = new ArrayList<>();
-    private List<String> listNames = new ArrayList<>();
     private static Profile profile = null;
+    private ListView listView = null;
+    private List<String> listNames = new ArrayList<>();
     private int nombreProfilSup = 0;
 
 
-
-   
-
-
-    public static void ChangeListProfiles ( List<Profile> list) {        // Méthode qui agit sur la variable de classe listProfiles, elle met à jour les données de la liste des profils
+    public static void ChangeListProfiles(List<Profile> list) {        // Méthode qui agit sur la variable de classe listProfiles, elle met à jour les données de la liste des profils
         listProfiles.clear();                                               // Enelève les anciens profils de la liste
         listProfiles.addAll(list);                                          // Ajoute les profils à jour
         Collections.sort(listProfiles, new Comparator<Profile>() {          // Classe par ordre alphabétique
@@ -51,38 +48,61 @@ public class SupprimerProfilActivity extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.activity_supprimer_profil);
 
 
         listView = (ListView) findViewById(R.id.listSuppr);
 
-        for (int i = 0 ; i < listProfiles.size(); i ++  ) { listNames.add(listProfiles.get(i).getName()); }
+        for (int i = 0; i < listProfiles.size(); i++) {
+            listNames.add(listProfiles.get(i).getName());
+        }
 
-        ArrayAdapter<String> profileArrayAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_single_choice);
+        ArrayAdapter<String> profileArrayAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_single_choice);
         profileArrayAdapter.addAll(listNames);
 
         listView.setAdapter(profileArrayAdapter);
-        listView.setItemChecked(0,true); }
+        listView.setItemChecked(0, true);
+    }
 
 
-    public void supprimer(View view) throws InterruptedException {
+    public void retour(View view) {
+        finish();
+    }
 
-        SparseBooleanArray tab = listView.getCheckedItemPositions() ;
 
-        for ( int i =0 ; i<tab.size() ; i++) {
+    public void supprimer(View view) {
 
-            if ( tab.get(i) ) {
-                nombreProfilSup ++;
-                try { NetworkServiceProvider.getNetworkService().removeProfile(listProfiles.get(i));
-                     }
-                catch (IllegalFieldException e)  {}
-                catch (NetworkServiceException e) { Toast.makeText(this, "Une erreur réseau est survenue.", Toast.LENGTH_LONG).show();}
-                catch (NotAuthenticatedException e) { Toast.makeText(this, "Une erreur anormale est survenue", Toast.LENGTH_LONG).show();}} }
+        SparseBooleanArray tab = listView.getCheckedItemPositions();
 
-        if ( nombreProfilSup == 0 ) { Toast.makeText(this, "Vous n'avez sélectionné aucun profil", Toast.LENGTH_LONG).show();}
-         else {
-         Intent intentGotoConfiProf = new Intent ( this, ConfigurationProfilsActivity.class );
-         finish(); } }
+        for (int i = 0; i < tab.size(); i++) {
+
+            if (tab.get(i)) {
+                nombreProfilSup++;
+                try {
+                    NetworkServiceProvider.getNetworkService().removeProfile(listProfiles.get(i));
+                } catch (IllegalFieldException e) {
+                    if(e.getReason() == IllegalFieldException.REASON_VALUE_INCORRECT)
+                    {
+                        Toast.makeText(this, "Une erreur anormale est survenue.", Toast.LENGTH_LONG).show();
+                        return;
+                    }// sinon, le profil a déja été supprimé du serveur.
+                } catch (NetworkServiceException e) {
+                    Toast.makeText(this, "Une erreur réseau est survenue.", Toast.LENGTH_LONG).show();
+                    return;
+                } catch (NotAuthenticatedException e) {
+                    Toast.makeText(this, "Une erreur anormale est survenue", Toast.LENGTH_LONG).show();
+                    return;
+                }
+            }
+        }
+
+        if (nombreProfilSup == 0) {
+            Toast.makeText(this, "Vous n'avez sélectionné aucun profil", Toast.LENGTH_LONG).show();
+        } else {
+            finish();
+        }
+    }
 
 
     @Override

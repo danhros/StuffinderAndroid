@@ -24,7 +24,8 @@
         android:theme="@style/AppTheme" >
         <activity
             android:name=".activities.Accueil"
-            android:label="@string/app_name" >
+            android:label="@string/app_name"
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -33,88 +34,113 @@
         </activity>
         <activity
             android:name=".activities.CreerCompteActivity"
-            android:label="@string/title_activity_creer_compte" >
+            android:label="@string/title_activity_creer_compte"
+            android:screenOrientation="portrait" >
         </activity>
         <activity
             android:name=".activities.SeConnecterActivity"
-            android:label="@string/title_activity_se_connecter" >
+            android:label="@string/title_activity_se_connecter"
+            android:screenOrientation="portrait" >
         </activity>
         <activity
             android:name=".activities.HomeActivity"
-            android:label="@string/title_activity_home" >
+            android:label="@string/title_activity_home"
+            android:screenOrientation="portrait" >
         </activity>
         <activity
             android:name=".activities.ReussiteCreationCompteActivity"
-            android:label="@string/title_activity_reussite_creation_compte" >
+            android:label="@string/title_activity_reussite_creation_compte"
+            android:screenOrientation="portrait" >
         </activity>
         <activity
             android:name=".activities.InterieurActivity"
-            android:label="@string/title_activity_interieur" >
+            android:label="@string/title_activity_interieur"
+            android:screenOrientation="portrait" >
         </activity>
         <activity
             android:name=".activities.ExterieurActivity"
-            android:label="@string/title_activity_exterieur" >
+            android:label="@string/title_activity_exterieur"
+            android:screenOrientation="portrait" >
         </activity>
         <activity
             android:name=".activities.ConfigurationActivity"
-            android:label="@string/title_activity_configuration" >
+            android:label="@string/title_activity_configuration"
+            android:screenOrientation="portrait" >
         </activity>
         <activity
             android:name=".activities.InfoPersoActivity"
-            android:label="@string/title_activity_info_perso" >
+            android:label="@string/title_activity_info_perso"
+            android:screenOrientation="portrait" >
         </activity>
         <activity
             android:name=".activities.AjoutTagActivity"
-            android:label="@string/title_activity_ajout_tag" >
+            android:label="@string/title_activity_ajout_tag"
+            android:screenOrientation="portrait" >
         </activity>
         <activity
             android:name=".activities.InfoTagActivity"
-            android:label="@string/title_activity_info_tag" >
+            android:label="@string/title_activity_info_tag"
+            android:screenOrientation="portrait" >
         </activity>
         <activity
             android:name=".activities.ModifTagActivity"
-            android:label="@string/title_activity_modif_tag" >
+            android:label="@string/title_activity_modif_tag"
+            android:screenOrientation="portrait" >
         </activity>
         <activity
             android:name=".activities.TagsActivity"
-            android:label="@string/title_activity_tags" >
+            android:label="@string/title_activity_tags"
+            android:screenOrientation="portrait" >
         </activity>
         <activity
             android:name=".activities.LocalisationActivity"
-            android:label="@string/title_activity_localisation" >
+            android:label="@string/title_activity_localisation"
+            android:screenOrientation="portrait" >
         </activity>
         <activity
             android:name=".activities.ConfigurationProfilsActivity"
-            android:label="@string/title_activity_configuration_profils" >
+            android:label="@string/title_activity_configuration_profils"
+            android:screenOrientation="portrait" >
         </activity>
         <activity
             android:name=".activities.AjouterProfilsActivity"
-            android:label="@string/title_activity_ajouter_profils" >
+            android:label="@string/title_activity_ajouter_profils"
+            android:screenOrientation="portrait" >
         </activity>
         <activity
             android:name=".activities.ModifierProfileActivity"
-            android:label="@string/title_activity_modifier_profile" >
+            android:label="@string/title_activity_modifier_profile"
+            android:screenOrientation="portrait" >
         </activity>
         <activity
             android:name=".activities.ModifierProfileBisActivity"
-            android:label="@string/title_activity_modifier_profile_bis" >
+            android:label="@string/title_activity_modifier_profile_bis"
+            android:screenOrientation="portrait" >
         </activity>
         <activity
             android:name=".activities.SynchroActivity"
-            android:label="@string/title_activity_synchro" >
+            android:label="@string/title_activity_synchro"
+            android:screenOrientation="portrait" >
         </activity>
         <activity
             android:name=".activities.PicturesActivity"
-            android:label="@string/title_activity_pictures" >
+            android:label="@string/title_activity_pictures"
+            android:screenOrientation="portrait" >
         </activity>
         <activity
             android:name=".activities.SupprimerProfilActivity"
-            android:label="@string/title_activity_supprimer_profil" >
+            android:label="@string/title_activity_supprimer_profil"
+            android:screenOrientation="portrait" >
         </activity>
         <activity
             android:name=".activities.CreerProfilActivity"
-            android:label="@string/title_activity_creer_profil" >
+            android:label="@string/title_activity_creer_profil"
+            android:screenOrientation="portrait" >
         </activity>
+        <service
+            android:name=".ble.BLEService"
+            android:enabled="true"
+        />
     </application>
 
 </manifest>

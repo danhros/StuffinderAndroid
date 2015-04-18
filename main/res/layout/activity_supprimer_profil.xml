@@ -37,7 +37,7 @@
         android:background="#ff24088f"
         android:textColor="#ffffffff"
         android:textSize="10dp"
-        android:onClick="retour1"
+        android:onClick="retour"
         android:layout_alignParentTop="true"
         android:layout_toEndOf="@+id/textView"
         android:layout_alignBottom="@+id/textView" />

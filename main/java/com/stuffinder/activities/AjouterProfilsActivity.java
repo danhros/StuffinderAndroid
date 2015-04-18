@@ -1,26 +1,22 @@
 package com.stuffinder.activities;
 
+import android.app.Activity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
 import android.view.Window;
 
 import com.stuffinder.R;
 
-public class AjouterProfilsActivity extends BasicActivity {
+public class AjouterProfilsActivity extends Activity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-
-        this.requestWindowFeature(Window.FEATURE_NO_TITLE);
         super.onCreate(savedInstanceState);
+        requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.activity_ajouter_profils);
     }
 
-    public void retour(View view){
-        finish();
-    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {

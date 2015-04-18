@@ -1595,7 +1595,7 @@ public class EngineService {
                 requestsMutex.release();
                 if(requests.size() == 0 && tagToUpdateImageFile.size() > 0) // if there is image to download and no request, launches image download.
                 {
-                    // downloads needed images. This operation is perform with a lower priority than the requests.
+                    // downloads needed images. This operation is performed with a lower priority than the requests.
                     Object tags[] = tagToUpdateImageFile.toArray();
                     for(int index = 0; index < tags.length && size == 0 && continueAutoSynchronization; index++)
                     {
@@ -1631,6 +1631,9 @@ public class EngineService {
                             Logger.getLogger(getClass().getName()).log(Level.WARNING, "The downloaded file is not found for tag " + tags[index] + ".");
                             accountMutex.release();
                             e.printStackTrace();
+                        } catch (IllegalFieldException e){ // this case will normally never occur.
+                            Logger.getLogger(getClass().getName()).log(Level.WARNING, "The tag UID \"" + ((Tag) tags[index]).getUid() + "\" is incorrect but is not so.");
+                            accountMutex.release();
                         }
 
                         requestsMutex.acquireUninterruptibly();

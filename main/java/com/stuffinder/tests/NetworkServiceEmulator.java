@@ -46,13 +46,13 @@ public class NetworkServiceEmulator implements NetworkServiceInterface
 		
 		Account testAccount = new Account("jdupon", "Jean", "Dupont", "jean.dupont@gmail.com");
 
-		Tag tag1 = new Tag("a1bef83a374", "Home keys", "/data/data/com.stuffinder/files/default_images/keys.png");
-		Tag tag2 = new Tag("bd3496e342c", "Car key", "/data/data/com.stuffinder/files/default_images/carkey.png");
-		Tag tag3 = new Tag("aefd573fc3e", "Bag", "/data/data/com.stuffinder/files/default_images/bag.png");
-		Tag tag4 = new Tag("f53ebc87298", "Wallet", "/data/data/com.stuffinder/files/default_images/wallet.png");
-		Tag tag5 = new Tag("e68fa3547cb", "Android tablet", "/data/data/com.stuffinder/files/default_images/tablet.png");
+		Tag tag1 = new Tag("A9:1F:83:D3:1B:D4", "Home keys", "/data/data/com.stuffinder/files/default_images/keys.png");
+		Tag tag2 = new Tag("03:13:24:2F:1B:D4", "Car key", "/data/data/com.stuffinder/files/default_images/carkey.png");
+		Tag tag3 = new Tag("11:1F:24:D3:1B:D4", "Bag", "/data/data/com.stuffinder/files/default_images/bag.png");
+		Tag tag4 = new Tag("CC:DD:24:EE:1B:D4", "Wallet", "/data/data/com.stuffinder/files/default_images/wallet.png");
+		Tag tag5 = new Tag("75:3E:24:99:1B:D2", "Android tablet", "/data/data/com.stuffinder/files/default_images/tablet.png");
 		Tag tag6 = new Tag("F9:1F:24:D3:1B:D4", "Correct tag", "/data/data/com.stuffinder/files/default_images/tag.png");
-		Tag tag7 = new Tag("e92fae67acb", "Android smartphone", "/data/data/com.stuffinder/files/default_images/smartphone.png");
+		Tag tag7 = new Tag("D8:4F:E1:13:1B:D4", "Android smartphone", "/data/data/com.stuffinder/files/default_images/smartphone.png");
 		
 		tags.add(tag1);
 		tags.add(tag2);
@@ -100,8 +100,8 @@ public class NetworkServiceEmulator implements NetworkServiceInterface
 
         Account testAccount2 = new Account("jdupouy", "Joe", "Dupouy", "joe.dupouy@gmail.com");
 
-        tag1 = new Tag("identifiant", "Home keys");
-        tag2 = new Tag("bd3496e342ce674", "Car key");
+        tag1 = new Tag("11:66:24:D3:1B:D4", "Home keys");
+        tag2 = new Tag("F9:55:24:D3:BB:D4", "Car key");
 
 
         testAccount2.getTags().add(tag1);

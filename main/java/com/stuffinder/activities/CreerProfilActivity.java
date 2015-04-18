@@ -1,11 +1,11 @@
 package com.stuffinder.activities;
 
 import android.app.Activity;
-import android.content.Intent;
 import android.os.Bundle;
 import android.util.SparseBooleanArray;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.Window;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
@@ -29,15 +29,14 @@ import java.util.List;
 public class CreerProfilActivity extends Activity {
 
 
+    private static List<Tag> tagsList = new ArrayList<>();
     private ListView listView = null;
     private ArrayAdapter<Tag> tagProfArrayAdapter;
     private Button buttonModifier = null;
-    private static List<Tag> tagsList = new ArrayList<>();
     private EditText editTextNom = null;
 
 
-    public static void changeTagsList(List<Tag> list)
-    {
+    public static void changeTagsList(List<Tag> list) {
         tagsList.clear();
         tagsList.addAll(list);
         Collections.sort(tagsList, new Comparator<Tag>() {
@@ -49,18 +48,18 @@ public class CreerProfilActivity extends Activity {
     }
 
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.activity_creer_profil);
 
 
         listView = (ListView) findViewById(R.id.listCreerProf);
         buttonModifier = (Button) findViewById(R.id.buttonCreerProfil);
-        editTextNom= (EditText)findViewById(R.id.editTextNomProf);
+        editTextNom = (EditText) findViewById(R.id.editTextNomProf);
 
-        tagProfArrayAdapter = new ArrayAdapter<Tag>(this, android.R.layout.simple_list_item_multiple_choice);
+        tagProfArrayAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_multiple_choice);
         tagProfArrayAdapter.addAll(tagsList);
         listView.setAdapter(tagProfArrayAdapter);
         listView.setItemChecked(0, true);
@@ -68,58 +67,58 @@ public class CreerProfilActivity extends Activity {
     }
 
 
-    public void creerProfil (View view) {
+    public void retour(View view) {
+        finish();
+    }
 
-        SparseBooleanArray tab = listView.getCheckedItemPositions() ;
+
+    public void creerProfil(View view) {
+
+        SparseBooleanArray tab = listView.getCheckedItemPositions();
         List<Tag> tagsProfileList = new ArrayList<>();
-        int tagPourProfils = 0 ;
+        int tagPourProfils = 0;
         String nomProfil = editTextNom.getText().toString();
         Profile profile = null;
 
-        for ( int i = 0 ; i<tagsList.size(); i++ )
-        {
-            if (tab.get(i) == true) { tagsProfileList.add(tagsList.get(i));
-                tagPourProfils ++ ; }}
+        for (int i = 0; i < tagsList.size(); i++) {
+            if (tab.get(i) == true) {
+                tagsProfileList.add(tagsList.get(i));
+                tagPourProfils++;
+            }
+        }
 
 
-
-        if (nomProfil.length() == 0) { Toast.makeText(this, "Veuillez entrer un nom de profil. ", Toast.LENGTH_LONG).show();}
+        if (nomProfil.length() == 0) {
+            Toast.makeText(this, "Veuillez entrer un nom de profil. ", Toast.LENGTH_LONG).show();
+        }
         else {
 
 
             try {
-                profile = NetworkServiceProvider.getNetworkService().createProfile(nomProfil);
+                profile = NetworkServiceProvider.getNetworkService().createProfile(nomProfil, tagsProfileList);
+                finish();
             } catch (IllegalFieldException e) {
                 {
-                    switch (e.getFieldId()) {
-                        case IllegalFieldException.REASON_VALUE_ALREADY_USED:
-                            Toast.makeText(this, "Nom de Profil déjà utilisé.", Toast.LENGTH_LONG).show();
-                        case IllegalFieldException.REASON_VALUE_INCORRECT:
-                            Toast.makeText(this, "Nom de Profils Incorrect", Toast.LENGTH_LONG).show();
+                    switch(e.getFieldId())
+                    {
+                        case IllegalFieldException.TAG_UID :
+                            if(e.getReason() == IllegalFieldException.REASON_VALUE_NOT_FOUND)
+                                Toast.makeText(this, "Création impossible : La puce ayant l'identifiant \"" + e.getFieldValue() + "\"semble avoir été supprimé.", Toast.LENGTH_LONG).show();
+                            else
+                                Toast.makeText(this, "Une erreur anormale est survenue.", Toast.LENGTH_LONG).show();
+                        break;
+                        case IllegalFieldException.PROFILE_NAME :
+                            if(e.getReason() == IllegalFieldException.REASON_VALUE_ALREADY_USED)
+                                Toast.makeText(this, "Nom de Profil déjà utilisé.", Toast.LENGTH_LONG).show();
+                            else
+                                Toast.makeText(this, "Nom du Profil incorrect", Toast.LENGTH_LONG).show();
+                        break;
                     }
                 }
             } catch (NetworkServiceException e) {
                 Toast.makeText(this, "Une erreur réseau est survenue.", Toast.LENGTH_LONG).show();
             } catch (NotAuthenticatedException e) {
                 Toast.makeText(this, "Une erreur anormale est survenue.", Toast.LENGTH_LONG).show();
-            }
-
-
-            if (tagPourProfils == 0) {
-                Toast.makeText(this, "Veuillez selectionner une puce. ", Toast.LENGTH_LONG).show();
-            } else {
-
-                try {
-                    NetworkServiceProvider.getNetworkService().addTagsToProfile(profile, tagsProfileList);
-                    Intent intentGotoConfiProf = new Intent(this, ConfigurationProfilsActivity.class);
-                    finish();
-                } catch (NetworkServiceException e) {
-                    Toast.makeText(this, "Une erreur réseau est survenue.", Toast.LENGTH_LONG).show();
-                } catch (IllegalFieldException e) {
-                    Toast.makeText(this, "Une erreur anormale est survenue.", Toast.LENGTH_LONG).show();
-                } catch (NotAuthenticatedException e) {
-                    Toast.makeText(this, "Une erreur anormale est survenue.", Toast.LENGTH_LONG).show();
-                }
             }
         }
 

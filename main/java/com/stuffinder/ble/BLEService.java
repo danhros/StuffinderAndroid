@@ -1,5 +1,7 @@
 package com.stuffinder.ble;
 
+import android.app.Notification;
+import android.app.NotificationManager;
 import android.app.Service;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
@@ -18,12 +20,15 @@ import android.os.IBinder;
 import android.util.Log;
 
 
+import com.stuffinder.R;
 import com.stuffinder.activities.BasicActivity;
+import com.stuffinder.data.Profile;
 import com.stuffinder.data.Tag;
 import com.stuffinder.exceptions.BLEServiceException;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -37,7 +42,7 @@ public class BLEService  extends Service{
 
     private static final int REQUEST_ENABLE_BT = 1;
 
-    private boolean isBLESuported;
+    private boolean isBLESupported;
 
     private BluetoothManager mBluetoothManager;
     private BluetoothAdapter bluetoothAdapter;
@@ -58,7 +63,7 @@ public class BLEService  extends Service{
 
     private void verifyIfBLESupported() throws BLEServiceException
     {
-        if(! isBLESuported)
+        if(!isBLESupported)
         {
             Log.e(getClass().getName(), "BLE feature not supported.");
             throw new BLEServiceException("BLE not supported.");
@@ -68,9 +73,9 @@ public class BLEService  extends Service{
     @Override
     public void onCreate()
     {
-        isBLESuported = getPackageManager().hasSystemFeature(PackageManager.FEATURE_BLUETOOTH_LE);
+        isBLESupported = getPackageManager().hasSystemFeature(PackageManager.FEATURE_BLUETOOTH_LE);
 
-        if(! isBLESuported)
+        if(!isBLESupported)
             return;
 
         mBluetoothManager = (BluetoothManager) getSystemService(Context.BLUETOOTH_SERVICE);
@@ -78,7 +83,7 @@ public class BLEService  extends Service{
 
         if(bluetoothAdapter == null)
         {
-            isBLESuported = false;
+            isBLESupported = false;
             return;
         }
 
@@ -109,12 +114,13 @@ public class BLEService  extends Service{
 
     private boolean enableBluetooth()
     {
-        if (!bluetoothAdapter.isEnabled()) {
-            Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
-            BasicActivity.getCurrentActivity().startActivityForResult(enableBtIntent, REQUEST_ENABLE_BT);
-        }
-
-        return bluetoothAdapter.isEnabled();
+        return true;
+//        if (!bluetoothAdapter.isEnabled()) {
+//            Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
+//            BasicActivity.getCurrentActivity().startActivityForResult(enableBtIntent, REQUEST_ENABLE_BT);
+//        }
+//
+//        return bluetoothAdapter.isEnabled();
     }
 
 
@@ -170,7 +176,7 @@ public class BLEService  extends Service{
         if(locationCallback != null)
             locationCallback.onTagConnecting(tag);
 
-        locationBluetoothGatt = connect(tag.getUid());
+        locationBluetoothGatt = connect(tag.getUid(), LocationGattCallback);
 
 
         if(locationBluetoothGatt == null)
@@ -295,7 +301,7 @@ public class BLEService  extends Service{
     /**
      * Object to perform bluetooth features by callbacks.
      */
-    private final BluetoothGattCallback mGattCallback = new LocationBluetoothGattCallback();
+    private final BluetoothGattCallback LocationGattCallback = new LocationBluetoothGattCallback();
 
     class LocationBluetoothGattCallback extends BluetoothGattCallback
     {
@@ -328,6 +334,7 @@ public class BLEService  extends Service{
             if (status == BluetoothGatt.GATT_SUCCESS) {
 //                broadcastUpdate(ACTION_GATT_RSSI, rssi);
 
+                Log.d(getClass().getName(), "RSSI read for the located tag is done successfully.");
                 if(locationCallback != null)
                     locationCallback.onDistanceMeasured(getDistance(rssi));
             } else {
@@ -413,73 +420,224 @@ public class BLEService  extends Service{
 
     private List<BluetoothDevice> mDevices = new ArrayList<>();
     private String braceletUID;
+    private BluetoothGatt braceletBluetoothGatt;
 
-    public void setBracelet(String braceletUID)
+    public void connectToBracelet(String braceletUID) throws BLEServiceException, IllegalArgumentException
     {
-        BLEService.this.braceletUID = braceletUID;
+        verifyIfBLESupported();
+
+        if(braceletUID == null)
+            throw new IllegalArgumentException("tag parameter can't be null");
+
+        if(braceletBluetoothGatt != null)
+        {
+            disconnect(braceletBluetoothGatt);
+            close(braceletBluetoothGatt);
+        }
+
+        if(surveillanceCallback != null)
+            surveillanceCallback.onSurveilllanceStarting();
+
+
+        braceletBluetoothGatt = connect(braceletUID, braceletBluetoothGattCallback);
+
+
+        if(braceletBluetoothGatt == null && surveillanceCallback != null)
+        {
+            surveillanceCallback.onBraceletNotFound(braceletUID);
+            surveillanceCallback.onSurveilllanceStopped();
+        }
     }
 
-    public void enableSurveillance(final Tag bracelet, final List<Tag> tagProfil, final boolean enable) {
+    /**
+     * To disconnect the location service with the current tag.
+     */
+    public void disconnectFromBracelet() throws BLEServiceException
+    {
+        verifyIfBLESupported();
 
-        new Thread(new Runnable() { //thread annonce au bracelet
+        if(braceletBluetoothGatt != null)
+        {
+            disconnect(braceletBluetoothGatt);
+            close(braceletBluetoothGatt);
+            braceletBluetoothGatt = null;
+        }
+    }
 
-            @Override
-            public void run() {
 
-                while (enable) {
-                    try {
-                        connectToTag(bracelet);
-                        disconnectFromTag();
-                    } catch (BLEServiceException e) {
-                        e.printStackTrace();
-                    }
+    private BraceletCommunicationThread braceletCommunicationThread;
+    private TagsSurveillanceThread tagsSurveillanceThread;
 
-                    try {
-                        Thread.sleep(5000); //delai entre chaque annonce au bracelet
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
+    public void enableSurveillance(final String braceletUID, final Profile profile)
+    {
+        if(profile.getTags().size() == 0)
+            throw new IllegalArgumentException("the profile to be activated must have one tag at least.");
+
+        braceletCommunicationThread = new BraceletCommunicationThread(braceletUID);
+        tagsSurveillanceThread = new TagsSurveillanceThread(profile.getTags());
+
+        braceletCommunicationThread.start();
+        tagsSurveillanceThread.start();
+
+        if(surveillanceCallback != null)
+            surveillanceCallback.onSurveilllanceStarting();
+    }
+
+
+    private class BraceletCommunicationThread extends Thread
+    {
+        private boolean continueRunning;
+        private String braceletUID;
+
+        private BraceletCommunicationThread(String braceletUID) {
+            super();
+
+            if(braceletUID == null || braceletUID.length() == 0)
+                throw new IllegalArgumentException("bracelet UID parameter can't be null.");
+
+            this.braceletUID = braceletUID;
+        }
+
+        public boolean isContinueRunning() {
+            return continueRunning;
+        }
+
+        public void stopRunning() {
+            this.continueRunning = true;
+        }
+
+        @Override
+        public void run()
+        {
+
+            continueRunning = true;
+            while (continueRunning) {
+                try {
+                    connectToBracelet(braceletUID);
+                    disconnectFromBracelet();
+                } catch (BLEServiceException e) {
+                    e.printStackTrace();
+                }
+
+                try {
+                    Thread.sleep(5000); //delai entre chaque annonce au bracelet
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
                 }
             }
-        }).start();
+        }
+    }
 
-        new Thread(new Runnable() {
+    private int notificationId = 0;
 
-            @Override
-            public void run() {
+    private void notifyMissingTag(Tag tag)
+    {
+        Notification.Builder mBuilder =
+                new Notification.Builder(this)
+                        .setSmallIcon(R.drawable.ic_launcher)
+                        .setContentTitle("A tag is missing")
+                        .setContentText("Your " + tag.getObjectName() + " seems to be lost.");
+//
+//// Creates an explicit intent for an Activity in your app
+//        Intent resultIntent = new Intent(this);
+//
+//// The stack builder object will contain an artificial back stack for the
+//// started Activity.
+//// This ensures that navigating backward from the Activity leads out of
+//// your application to the Home screen.
+//        TaskStackBuilder stackBuilder = TaskStackBuilder.create(this);
+//// Adds the back stack for the Intent (but not the Intent itself)
+//        stackBuilder.addParentStack(ResultActivity.class);
+//// Adds the Intent that starts the Activity to the top of the stack
+//        stackBuilder.addNextIntent(resultIntent);
+//        PendingIntent resultPendingIntent =
+//                stackBuilder.getPendingIntent(
+//                        0,
+//                        PendingIntent.FLAG_UPDATE_CURRENT
+//                );
+//        mBuilder.setContentIntent(resultPendingIntent);
+        NotificationManager mNotificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+// mId allows you to update the notification later on.
+        mNotificationManager.notify(notificationId++, mBuilder.build());
+    }
 
-                while (enable) {
-                    mDevices.clear();
-                    bluetoothAdapter.startLeScan(mLeScanCallback);
 
-                    try {
-                        Thread.sleep(5000); //durée du scan
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
 
-                    bluetoothAdapter.stopLeScan(mLeScanCallback);
+    private class TagsSurveillanceThread extends Thread
+    {
+        private boolean continueTagsSurveillance;
+        private List<Tag> tagsToSurveil;
 
-                    ArrayList<Tag> TagManquants = new ArrayList<Tag>();
+        /**
+         * Constructs a new {@code Thread} with no {@code Runnable} object and a
+         * newly generated name. The new {@code Thread} will belong to the same
+         * {@code ThreadGroup} as the {@code Thread} calling this constructor.
+         *
+         * @see ThreadGroup
+         * @see Runnable
+         */
+        private TagsSurveillanceThread(List<Tag> tagsToSurveil) {
+            continueTagsSurveillance = false;
+            this.tagsToSurveil = new LinkedList<>(tagsToSurveil);
+        }
+
+        public boolean isContinueTagsSurveillance() {
+            return continueTagsSurveillance;
+        }
+
+        public void setContinueTagsSurveillance(boolean continueTagsSurveillance) {
+            this.continueTagsSurveillance = continueTagsSurveillance;
+        }
+
+        @Override
+        public void run()
+        {
+            boolean firstLoop = true;
+
+            while (continueTagsSurveillance) {
+                mDevices.clear();
+                bluetoothAdapter.startLeScan(mLeScanCallback);
+
+                try {
+                    Thread.sleep(5000); //durée du scan
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+
+                bluetoothAdapter.stopLeScan(mLeScanCallback);
+
+                if(continueTagsSurveillance)
+                {
+                    ArrayList<Tag> missingTags = new ArrayList<>();
                     int i = 0;
 
-                    for (Tag t : tagProfil) {
+                    for (Tag t : tagsToSurveil) {
                         i = 0;
-                        for (BluetoothDevice mdevice : mDevices) {
+                        for (BluetoothDevice mdevice : mDevices)
                             if (mdevice.getAddress().equals(t.getUid())) {
                                 i++;
                                 break;
                             }
-                            if (i == 0)
-                                TagManquants.add(t);
 
-                        }
+                        if (i == 0)
+                            missingTags.add(t);
                     }
 
-
-                    final Intent intent = new Intent(MISSING_TAGS);
-                    intent.putExtra(EXTRA_DATA, TagManquants); //envoie la liste des tag manquants
-                    sendBroadcast(intent);
+                    if(firstLoop)
+                    {
+                        firstLoop = false;
+                        if(surveillanceCallback != null && missingTags.size() > 0)
+                            surveillanceCallback.onSurveillanceFailed(missingTags);
+                    }
+                    else
+                    {
+                        for(Tag tag : missingTags)
+                            notifyMissingTag(tag);
+                    }
+//
+//                final Intent intent = new Intent(MISSING_TAGS);
+//                intent.putExtra(EXTRA_DATA, missingTags); //envoie la liste des tag manquants
+//                sendBroadcast(intent);
 
                     try {
                         Thread.sleep(10000); //délai entre chaque scan
@@ -488,21 +646,18 @@ public class BLEService  extends Service{
                     }
                 }
             }
-        }).start();
+        }
     }
+
 
     private BluetoothAdapter.LeScanCallback mLeScanCallback = new BluetoothAdapter.LeScanCallback() {
 
         @Override
-        public void onLeScan(final BluetoothDevice device, final int rssi,byte[] scanRecord) {
-            new Thread(new Runnable() {
-                @Override
-                public void run() {
-                    if (device != null) {
-                        mDevices.add(device);
-                    }
-                }
-            }).start();
+        public void onLeScan(final BluetoothDevice device, final int rssi, byte[] scanRecord) {
+            if (device != null) {
+                mDevices.add(device);
+            }
+
         }
     };
 
@@ -619,14 +774,22 @@ public class BLEService  extends Service{
         }
     };
 
+    private SurveillanceCallback surveillanceCallback;
 
     public static abstract class SurveillanceCallback
     {
-        public abstract void onSurveillanceEnabled(boolean enabled);
+        public abstract void onSurveilllanceStarting();
+        public abstract void onSurveilllanceStarted();
+
+        public abstract void onSurveilllanceStopping();
+        public abstract void onSurveilllanceStopped();
+
 
         public abstract void onSurveillanceFailed(String message);
 
         public abstract void onSurveillanceFailed(List<Tag> tagsNotFound);
+
+        public abstract void onBraceletNotFound(String braceletUID);
 
         public abstract void onBraceletConnected();
 
@@ -635,11 +798,12 @@ public class BLEService  extends Service{
         public abstract void onTagsNotFound(List<Tag> tagList);
     }
 
+    public void setSurveillanceCallback(SurveillanceCallback surveillanceCallback)
+    {
+        this.surveillanceCallback = surveillanceCallback;
+    }
 
-
-
-
-// mutual code, used for surveillance and location.
+    // mutual code, used for surveillance and location.
 
 
     /**
@@ -702,7 +866,7 @@ public class BLEService  extends Service{
      * @param address the address of the bluetooth device.
      * @return the gatt on success, null if the device is not found.
      */
-    private BluetoothGatt connect(String address) throws BLEServiceException
+    private BluetoothGatt connect(String address, BluetoothGattCallback bluetoothGattCallback) throws BLEServiceException
     {
         verifyIfBLESupported();
 
@@ -716,7 +880,7 @@ public class BLEService  extends Service{
 
         // We want to directly connect to the device, so we are setting the autoConnect parameter to false.
         Log.d(getClass().getName(), "Trying to create a new connection with the device which has address \"" + address + "\".");
-        BluetoothGatt bluetoothGatt = device.connectGatt(this, false, mGattCallback);
+        BluetoothGatt bluetoothGatt = device.connectGatt(this, false, bluetoothGattCallback);
 
         return bluetoothGatt;
     }
