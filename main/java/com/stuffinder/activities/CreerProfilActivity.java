@@ -16,7 +16,7 @@ import android.widget.Toast;
 import com.stuffinder.R;
 import com.stuffinder.data.Profile;
 import com.stuffinder.data.Tag;
-import com.stuffinder.engine.NetworkServiceProvider;
+import com.stuffinder.engine.EngineServiceProvider;
 import com.stuffinder.exceptions.IllegalFieldException;
 import com.stuffinder.exceptions.NetworkServiceException;
 import com.stuffinder.exceptions.NotAuthenticatedException;
@@ -88,7 +88,7 @@ public class CreerProfilActivity extends Activity {
 
 
             try {
-                profile = NetworkServiceProvider.getNetworkService().createProfile(nomProfil);
+                profile = EngineServiceProvider.getEngineService().createProfile(nomProfil);
             } catch (IllegalFieldException e) {
                 {
                     switch (e.getFieldId()) {
@@ -110,7 +110,7 @@ public class CreerProfilActivity extends Activity {
             } else {
 
                 try {
-                    NetworkServiceProvider.getNetworkService().addTagsToProfile(profile, tagsProfileList);
+                    EngineServiceProvider.getEngineService().addTagsToProfile(profile, tagsProfileList);
                     Intent intentGotoConfiProf = new Intent(this, ConfigurationProfilsActivity.class);
                     finish();
                 } catch (NetworkServiceException e) {

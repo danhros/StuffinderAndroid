@@ -14,7 +14,7 @@ import android.widget.Toast;
 import com.stuffinder.R;
 import com.stuffinder.data.Profile;
 import com.stuffinder.data.Tag;
-import com.stuffinder.engine.NetworkServiceProvider;
+import com.stuffinder.engine.EngineServiceProvider;
 import com.stuffinder.exceptions.NetworkServiceException;
 import com.stuffinder.exceptions.NotAuthenticatedException;
 
@@ -51,7 +51,7 @@ public class ModifierProfileActivity extends Activity {
 
             int rang = listView.getCheckedItemPosition() ;
             Profile profile = listProfiles.get(rang);
-            List<Tag> list = NetworkServiceProvider.getNetworkService().getTags();
+            List<Tag> list = EngineServiceProvider.getEngineService().getTags();
 
             ModifierProfileBisActivity.changeProfile(profile);
             ModifierProfileBisActivity.changeTagsList(list);

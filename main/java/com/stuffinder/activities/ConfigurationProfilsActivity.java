@@ -11,7 +11,7 @@ import android.view.View;
 import com.stuffinder.R;
 import com.stuffinder.data.Profile;
 import com.stuffinder.data.Tag;
-import com.stuffinder.engine.NetworkServiceProvider;
+import com.stuffinder.engine.EngineServiceProvider;
 import com.stuffinder.exceptions.IllegalFieldException;
 import com.stuffinder.exceptions.NetworkServiceException;
 import com.stuffinder.exceptions.NotAuthenticatedException;
@@ -31,7 +31,7 @@ public class ConfigurationProfilsActivity extends Activity {
     public void goToSup ( View view ) {
 
         try {
-            List<Profile> list = NetworkServiceProvider.getNetworkService().getProfiles();
+            List<Profile> list = EngineServiceProvider.getEngineService().getProfiles();
             SupprimerProfilActivity.ChangeListProfiles(list);
             Intent intentGoToSup = new Intent(ConfigurationProfilsActivity.this, SupprimerProfilActivity.class);
             finish();}
@@ -47,7 +47,7 @@ public class ConfigurationProfilsActivity extends Activity {
 
         try {
 
-            List<Profile> list = NetworkServiceProvider.getNetworkService().getProfiles();
+            List<Profile> list = EngineServiceProvider.getEngineService().getProfiles();
             ModifierProfileActivity.ChangeListProfiles(list);
             Intent intentModProf = new Intent (ConfigurationProfilsActivity.this, ModifierProfileActivity.class);
             startActivity(intentModProf);
@@ -64,7 +64,7 @@ public class ConfigurationProfilsActivity extends Activity {
     public void goToCreer (View view ) {
 
         try {
-            List<Tag> list = NetworkServiceProvider.getNetworkService().getTags();
+            List<Tag> list = EngineServiceProvider.getEngineService().getTags();
             CreerProfilActivity.changeTagsList(list);
             Intent intentModProf = new Intent (ConfigurationProfilsActivity.this, CreerProfilActivity.class);
             startActivity(intentModProf);}

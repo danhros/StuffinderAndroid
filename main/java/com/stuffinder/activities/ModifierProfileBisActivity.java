@@ -20,7 +20,7 @@ import com.stuffinder.R;
 import com.stuffinder.data.Account;
 import com.stuffinder.data.Profile;
 import com.stuffinder.data.Tag;
-import com.stuffinder.engine.NetworkServiceProvider;
+import com.stuffinder.engine.EngineServiceProvider;
 import com.stuffinder.exceptions.IllegalFieldException;
 import com.stuffinder.exceptions.NetworkServiceException;
 import com.stuffinder.exceptions.NotAuthenticatedException;
@@ -86,7 +86,7 @@ public class ModifierProfileBisActivity extends BasicActivity {
 
         if ( nomProfil.length() == 0 ) { Toast.makeText(this, "Entrez un nom de profils.", Toast.LENGTH_LONG).show(); }
         else {
-         try { NetworkServiceProvider.getNetworkService().modifyProfileName(profile, nomProfil); }
+         try { EngineServiceProvider.getEngineService().modifyProfileName(profile, nomProfil); }
 
         catch ( NotAuthenticatedException e ) { Toast.makeText(this, "Une erreur anormale est survenue.", Toast.LENGTH_LONG).show(); }
         catch ( NetworkServiceException e ) { Toast.makeText(this, "Une erreur réseau est survenue.", Toast.LENGTH_LONG).show(); }
@@ -101,7 +101,7 @@ public class ModifierProfileBisActivity extends BasicActivity {
 
         if ( tagPourProfils == 0  ) { Toast.makeText(this, "Aucune puce n'est sélectionnée , votre profil sera vide", Toast.LENGTH_LONG).show();}
         else {
-            try {  NetworkServiceProvider.getNetworkService().replaceTagListOfProfile(profile, newTagsProfileList) ;
+            try {  EngineServiceProvider.getEngineService().replaceTagListOfProfile(profile, newTagsProfileList) ;
                    Intent intentGotoConfiProf = new Intent ( this, ConfigurationProfilsActivity.class );
                    finish(); }
         catch ( NetworkServiceException e ) {
