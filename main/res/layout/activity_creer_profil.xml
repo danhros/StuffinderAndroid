@@ -93,7 +93,7 @@
         android:background="#ff24088f"
         android:textColor="#ffffffff"
         android:textSize="10dp"
-        android:onClick="retour5"
+        android:onClick="retour"
         android:layout_alignParentTop="true"
         android:layout_alignParentStart="true"
         android:layout_above="@+id/textViewNom" />

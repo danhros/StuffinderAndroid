@@ -28,28 +28,34 @@ public class ConfigurationProfilsActivity extends Activity {
 
     }
 
-    public void goToSup ( View view ) {
+    public void goToSup(View view) {
 
         try {
             List<Profile> list = EngineServiceProvider.getEngineService().getProfiles();
             SupprimerProfilActivity.ChangeListProfiles(list);
             Intent intentGoToSup = new Intent(ConfigurationProfilsActivity.this, SupprimerProfilActivity.class);
-            finish();}
+            startActivity(intentGoToSup);
+        } catch (NotAuthenticatedException e) {
+            Toast.makeText(this, "Une erreur anormale est survenue. Veuiller redémarrer l'application", Toast.LENGTH_LONG).show();
+        } catch (NetworkServiceException e) {
+            Toast.makeText(this, "Une erreur réseau est survenue.", Toast.LENGTH_LONG).show();
+        } catch (IllegalFieldException e) {
+            Toast.makeText(this, "Une erreur anormale est survenue. Veuiller redémarrer l'application", Toast.LENGTH_LONG).show();
+        }
+    }
 
-        catch (NotAuthenticatedException e)  { Toast.makeText(this, "Une erreur anormale est survenue. Veuiller redémarrer l'application", Toast.LENGTH_LONG).show();}
-        catch (NetworkServiceException e)  { Toast.makeText(this, "Une erreur réseau est survenue.", Toast.LENGTH_LONG).show(); }
-        catch (IllegalFieldException e ) {Toast.makeText(this, "Une erreur anormale est survenue. Veuiller redémarrer l'application", Toast.LENGTH_LONG).show();} }
+    public void retour(View view) {
+        finish();
+    }
 
-
-
-    public void goToModif (View view ) {
+    public void goToModif(View view) {
 
 
         try {
 
             List<Profile> list = EngineServiceProvider.getEngineService().getProfiles();
             ModifierProfileActivity.ChangeListProfiles(list);
-            Intent intentModProf = new Intent (ConfigurationProfilsActivity.this, ModifierProfileActivity.class);
+            Intent intentModProf = new Intent(ConfigurationProfilsActivity.this, ModifierProfileActivity.class);
             startActivity(intentModProf);
 
 
@@ -61,22 +67,20 @@ public class ConfigurationProfilsActivity extends Activity {
     }
 
 
-    public void goToCreer (View view ) {
+    public void goToCreer(View view) {
 
         try {
             List<Tag> list = EngineServiceProvider.getEngineService().getTags();
             CreerProfilActivity.changeTagsList(list);
-            Intent intentModProf = new Intent (ConfigurationProfilsActivity.this, CreerProfilActivity.class);
-            startActivity(intentModProf);}
-        catch (NotAuthenticatedException e) {  // anormal error.
-            Toast.makeText(this, "Une erreur anormale est survenue. Veuiller redémarrer l'application", Toast.LENGTH_LONG).show();}
-        catch (NetworkServiceException e) {
-            Toast.makeText(this, "Une erreur réseau est survenue.", Toast.LENGTH_LONG).show();}
+            Intent intentModProf = new Intent(ConfigurationProfilsActivity.this, CreerProfilActivity.class);
+            startActivity(intentModProf);
+        } catch (NotAuthenticatedException e) {  // anormal error.
+            Toast.makeText(this, "Une erreur anormale est survenue. Veuiller redémarrer l'application", Toast.LENGTH_LONG).show();
+        } catch (NetworkServiceException e) {
+            Toast.makeText(this, "Une erreur réseau est survenue.", Toast.LENGTH_LONG).show();
+        }
 
     }
-
-
-
 
 
     @Override

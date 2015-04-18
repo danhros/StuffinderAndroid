@@ -45,6 +45,12 @@ public class ModifierProfileActivity extends Activity {
         });
     }
 
+
+    public void retour(View view) {
+        finish();
+    }
+
+
     public void goToModoficiation(View view){
 
         try {

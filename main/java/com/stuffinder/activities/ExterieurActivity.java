@@ -7,6 +7,7 @@ import android.view.MenuItem;
 import android.view.Window;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.view.View;
 
 import com.stuffinder.R;
 import com.stuffinder.data.Profile;
@@ -37,6 +38,9 @@ public class ExterieurActivity extends Activity {
         });
     }
 
+    public void retour(View view) {
+        finish();
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
