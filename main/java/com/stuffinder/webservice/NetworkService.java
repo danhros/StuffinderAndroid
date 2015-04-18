@@ -1230,7 +1230,7 @@ public class NetworkService implements NetworkServiceInterface {
                 jsonUIDs.put(Integer.toString(i), tags.get(i).getUid());
             } catch (JSONException e) {
                 e.printStackTrace();
-                throw new NetworkServiceException("An abnormal error has occured about JSON building");
+                throw new NetworkServiceException("An abnormal error has occurred about JSON building");
             }
         }
 
