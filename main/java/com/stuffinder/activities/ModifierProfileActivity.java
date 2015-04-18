@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.Window;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
@@ -14,7 +15,7 @@ import android.widget.Toast;
 import com.stuffinder.R;
 import com.stuffinder.data.Profile;
 import com.stuffinder.data.Tag;
-import com.stuffinder.engine.EngineServiceProvider;
+import com.stuffinder.engine.NetworkServiceProvider;
 import com.stuffinder.exceptions.NetworkServiceException;
 import com.stuffinder.exceptions.NotAuthenticatedException;
 
@@ -26,15 +27,12 @@ import java.util.List;
 public class ModifierProfileActivity extends Activity {
 
 
-
-    private ListView listView = null ;
     private static List<Profile> listProfiles = new ArrayList<>();
+    private ListView listView = null;
     private List<String> listNames = new ArrayList<>();
 
 
-
-
-    public static void ChangeListProfiles ( List<Profile> list) {        // Méthode qui agit sur la variable de classe listProfiles, elle met à jour les données de la liste des profils
+    public static void ChangeListProfiles(List<Profile> list) {        // Méthode qui agit sur la variable de classe listProfiles, elle met à jour les données de la liste des profils
         listProfiles.clear();                                               // Enelève les anciens profils de la liste
         listProfiles.addAll(list);                                          // Ajoute les profils à jour
         Collections.sort(listProfiles, new Comparator<Profile>() {          // Classe par ordre alphabétique
@@ -51,18 +49,18 @@ public class ModifierProfileActivity extends Activity {
     }
 
 
-    public void goToModoficiation(View view){
+    public void goToModoficiation(View view) {
 
         try {
 
-            int rang = listView.getCheckedItemPosition() ;
+            int rang = listView.getCheckedItemPosition();
             Profile profile = listProfiles.get(rang);
-            List<Tag> list = EngineServiceProvider.getEngineService().getTags();
+            List<Tag> list = NetworkServiceProvider.getNetworkService().getTags();
 
             ModifierProfileBisActivity.changeProfile(profile);
             ModifierProfileBisActivity.changeTagsList(list);
 
-            Intent intent = new Intent (this, ModifierProfileBisActivity.class);
+            Intent intent = new Intent(this, ModifierProfileBisActivity.class);
 
             finish();
             startActivity(intent);
@@ -72,33 +70,29 @@ public class ModifierProfileActivity extends Activity {
         } catch (NetworkServiceException e) {
             Toast.makeText(this, "Une erreur réseau est survenue.", Toast.LENGTH_LONG).show();
         }
-
-
     }
-
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.activity_modifier_profile);
 
 
         listView = (ListView) findViewById(R.id.listModProf);
 
 
-        for (int i = 0 ; i < listProfiles.size(); i ++  ) { listNames.add(listProfiles.get(i).getName()); }
+        for (int i = 0; i < listProfiles.size(); i++) {
+            listNames.add(listProfiles.get(i).getName());
+        }
 
-        ArrayAdapter<String> profileArrayAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_single_choice);
+        ArrayAdapter<String> profileArrayAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_single_choice);
         profileArrayAdapter.addAll(listNames);
 
         listView.setAdapter(profileArrayAdapter);
-        listView.setItemChecked(0,true); }
-
-
-
-
-
+        listView.setItemChecked(0, true);
+    }
 
 
     @Override

@@ -27,10 +27,8 @@ import java.io.IOException;
 import java.io.OutputStream;
 
 
-public class Accueil extends BasicActivity {
-
-
-
+public class Accueil extends BasicActivity
+{
 
     public void accueilToSeCo (View view) {
         Intent intentSeCo = new Intent ( Accueil.this, SeConnecterActivity.class);
@@ -46,7 +44,7 @@ public class Accueil extends BasicActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        this.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        requestWindowFeature(Window.FEATURE_NO_TITLE);
 
         setContentView(R.layout.activity_accueil);
 
