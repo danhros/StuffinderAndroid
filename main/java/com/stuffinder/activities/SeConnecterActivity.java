@@ -1,6 +1,5 @@
 package com.stuffinder.activities;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
@@ -12,10 +11,9 @@ import android.widget.Toast;
 
 import com.stuffinder.R;
 import com.stuffinder.engine.EngineServiceProvider;
+import com.stuffinder.engine.FieldVerifier;
 import com.stuffinder.exceptions.AccountNotFoundException;
 import com.stuffinder.exceptions.IllegalFieldException;
-
-import com.stuffinder.engine.FieldVerifier;
 import com.stuffinder.exceptions.NetworkServiceException;
 
 public class SeConnecterActivity extends BasicActivity {
@@ -33,8 +31,8 @@ public class SeConnecterActivity extends BasicActivity {
 
    public void connexion (View view) {
 
-       String mdp = "123456"; //editTextMdp.getText().toString();
-       String identifiant = "jdupon"; // editTextIdentifiant.getText().toString();
+       String mdp = editTextMdp.getText().toString();
+       String identifiant = editTextIdentifiant.getText().toString();
 
        if(identifiant.length() == 0)
            Toast.makeText(SeConnecterActivity.this, "Entrez votre pseudo", Toast.LENGTH_LONG).show();
@@ -57,7 +55,7 @@ public class SeConnecterActivity extends BasicActivity {
                        Toast.makeText(SeConnecterActivity.this, "Pseudo incorrect", Toast.LENGTH_LONG).show();
                        break;
                    case IllegalFieldException.PASSWORD:
-                       Toast.makeText(SeConnecterActivity.this, "Mot de passe incorect ; il doit contenir au moins 6 caractères", Toast.LENGTH_LONG).show();
+                       Toast.makeText(SeConnecterActivity.this, "Mot de passe incorrect ; il doit contenir au moins 6 caractères", Toast.LENGTH_LONG).show();
                        break;
                } }
            catch (AccountNotFoundException e)   { Toast.makeText(SeConnecterActivity.this, "Vos pseudo et mot de passe sont incorrects",Toast.LENGTH_LONG).show(); }

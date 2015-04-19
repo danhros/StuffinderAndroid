@@ -1,33 +1,5 @@
 package com.stuffinder.webservice;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.OutputStream;
-import java.io.InputStream;
-import java.io.FileOutputStream;
-import java.io.InputStreamReader;
-import java.net.URLEncoder;
-import java.util.Iterator;
-import java.util.ArrayList;
-import java.util.List;
-import java.io.File;
-
-import org.apache.http.client.methods.HttpUriRequest;
-import org.json.JSONException;
-import org.json.JSONObject;
-import org.apache.http.HttpEntity;
-import org.apache.http.HttpResponse;
-import org.apache.http.StatusLine;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.impl.client.DefaultHttpClient;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.entity.ContentType;
-import org.apache.http.entity.mime.MultipartEntityBuilder;
-import org.apache.http.entity.mime.content.FileBody;
-import org.apache.http.entity.mime.content.StringBody;
-
-
 import com.stuffinder.data.Account;
 import com.stuffinder.data.Profile;
 import com.stuffinder.data.Tag;
@@ -37,6 +9,33 @@ import com.stuffinder.exceptions.IllegalFieldException;
 import com.stuffinder.exceptions.NetworkServiceException;
 import com.stuffinder.exceptions.NotAuthenticatedException;
 import com.stuffinder.interfaces.NetworkServiceInterface;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.net.URLEncoder;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+
+import ch.boye.httpclientandroidlib.HttpEntity;
+import ch.boye.httpclientandroidlib.HttpResponse;
+import ch.boye.httpclientandroidlib.StatusLine;
+import ch.boye.httpclientandroidlib.client.HttpClient;
+import ch.boye.httpclientandroidlib.client.methods.HttpGet;
+import ch.boye.httpclientandroidlib.client.methods.HttpPost;
+import ch.boye.httpclientandroidlib.client.methods.HttpUriRequest;
+import ch.boye.httpclientandroidlib.entity.ContentType;
+import ch.boye.httpclientandroidlib.entity.mime.content.FileBody;
+import ch.boye.httpclientandroidlib.entity.mime.content.StringBody;
+import ch.boye.httpclientandroidlib.impl.client.DefaultHttpClient;
 
 import static com.stuffinder.webservice.ConstantsWebService.server_address;
 import static com.stuffinder.webservice.ErrorCode.DATABASE_ACCESS_ISSUE;
@@ -234,7 +233,7 @@ public class NetworkService implements NetworkServiceInterface {
                             throw new AccountNotFoundException();
                         }
                     } catch (JSONException e) {
-                        // "Error Occured [Server's JSON response might be invalid]!"
+                        // "Error Occurred [Server's JSON response might be invalid]!"
                         throw new NetworkServiceException("Server response might be invalid.");
                     }
                 } else {
@@ -607,17 +606,14 @@ public class NetworkService implements NetworkServiceInterface {
                 httpResponse = executeRequest(new HttpGet(server_address + "addtag?pseudo=" + URLEncoder.encode(currentAccount.getPseudo(), "UTF-8") + "&password=" + URLEncoder.encode(currentPassword, "UTF-8") + "&id=" + URLEncoder.encode(tag.getUid(), "UTF-8") + "&object_name=" + URLEncoder.encode(tag.getObjectName(), "UTF-8")));
             }else {
                 HttpPost httppost = new HttpPost(server_address + "addtagwithphoto");
-                // check image with your test
-        	/* in final version : application\pictures\[pseudo]\[objectName].jpg */
-                File imageFile = new File(tag.getObjectImageName());
-                FileBody bin = new FileBody(imageFile);
-                MultipartEntityBuilder reqEntity = MultipartEntityBuilder.create();
-                reqEntity.addPart("pseudo", new StringBody(currentAccount.getPseudo(), ContentType.TEXT_PLAIN));
-                reqEntity.addPart("password", new StringBody(currentPassword, ContentType.TEXT_PLAIN));
-                reqEntity.addPart("objectName", new StringBody(tag.getObjectName(), ContentType.TEXT_PLAIN));
-                reqEntity.addPart("file", bin);
+                ch.boye.httpclientandroidlib.entity.mime.MultipartEntityBuilder reqEntity = ch.boye.httpclientandroidlib.entity.mime.MultipartEntityBuilder.create();
+                reqEntity.addPart("file", new FileBody(new File(tag.getObjectImageName())));
+                reqEntity.addPart("pseudo", new StringBody(currentAccount.getPseudo(), ContentType.MULTIPART_FORM_DATA));
+                reqEntity.addPart("password", new StringBody(currentPassword, ContentType.MULTIPART_FORM_DATA));
+                reqEntity.addPart("object_name", new StringBody(tag.getObjectName(), ContentType.MULTIPART_FORM_DATA));
+                reqEntity.addPart("id", new StringBody(tag.getUid(), ContentType.MULTIPART_FORM_DATA));
                 httppost.setEntity(reqEntity.build());
-                httpResponse = client.execute(httppost);
+                httpResponse = client.execute((HttpUriRequest) httppost);
             }
             StatusLine statusLine = httpResponse.getStatusLine();
             int statusCode = statusLine.getStatusCode();
@@ -803,12 +799,12 @@ public class NetworkService implements NetworkServiceInterface {
         	/* in final version : application\pictures\[pseudo]\[objectName].jpg */
             File imageFile = new File(newImageFileName);
             FileBody bin = new FileBody(imageFile);
-            MultipartEntityBuilder reqEntity = MultipartEntityBuilder.create();
+            ch.boye.httpclientandroidlib.entity.mime.MultipartEntityBuilder reqEntity = ch.boye.httpclientandroidlib.entity.mime.MultipartEntityBuilder.create();
+            reqEntity.addPart("file", bin);
             reqEntity.addPart("pseudo", new StringBody(currentAccount.getPseudo(), ContentType.TEXT_PLAIN));
             reqEntity.addPart("password", new StringBody(currentPassword, ContentType.TEXT_PLAIN));
             reqEntity.addPart("id", new StringBody(tag.getUid(), ContentType.TEXT_PLAIN));
-            reqEntity.addPart("file", bin);
-            httppost.setEntity(reqEntity.build());
+            httppost.setEntity((HttpEntity) reqEntity.build());
             HttpResponse httpResponse = client.execute(httppost);
             StatusLine statusLine = httpResponse.getStatusLine();
             int statusCode = statusLine.getStatusCode();
@@ -1014,19 +1010,19 @@ public class NetworkService implements NetworkServiceInterface {
                 jsonUIDs.put(Integer.toString(i), tagList.get(i).getUid());
             } catch (JSONException e) {
                 e.printStackTrace();
-                throw new NetworkServiceException("abnormal error has occured.");
+                throw new NetworkServiceException("abnormal error has occurred.");
             }
         }
 
         try {
             // check URL with your test
             HttpPost httppost = new HttpPost(server_address + "createprofilewithtags");
-             MultipartEntityBuilder reqEntity = MultipartEntityBuilder.create();
+             ch.boye.httpclientandroidlib.entity.mime.MultipartEntityBuilder reqEntity = ch.boye.httpclientandroidlib.entity.mime.MultipartEntityBuilder.create();
             reqEntity.addPart( "pseudo", new StringBody(currentAccount.getPseudo(), ContentType.TEXT_PLAIN));
             reqEntity.addPart( "password", new StringBody(currentPassword, ContentType.TEXT_PLAIN));
             reqEntity.addPart("profileName", new StringBody(profileName, ContentType.TEXT_PLAIN));
             reqEntity.addPart( "jsonUIDs", new StringBody(jsonUIDs.toString(), ContentType.TEXT_PLAIN));
-            httppost.setEntity(reqEntity.build());
+            httppost.setEntity((HttpEntity) reqEntity.build());
             HttpResponse httpResponse = client.execute(httppost);
             StatusLine statusLine = httpResponse.getStatusLine();
             int statusCode = statusLine.getStatusCode();
@@ -1237,13 +1233,12 @@ public class NetworkService implements NetworkServiceInterface {
         try {
             // check URL with your test
             HttpPost httppost = new HttpPost(server_address + "addtagstoprofile");
-            HttpEntity reqEntity = MultipartEntityBuilder.create()
-                    .addPart("pseudo", new StringBody(currentAccount.getPseudo(), ContentType.TEXT_PLAIN))
-                    .addPart("password", new StringBody(currentPassword, ContentType.TEXT_PLAIN))
-                    .addPart("profileName", new StringBody(profileName, ContentType.TEXT_PLAIN))
-                    .addPart("jsonUIDs", new StringBody(jsonUIDs.toString(), ContentType.TEXT_PLAIN))
-                    .build();
-            httppost.setEntity(reqEntity);
+             ch.boye.httpclientandroidlib.entity.mime.MultipartEntityBuilder reqEntity = ch.boye.httpclientandroidlib.entity.mime.MultipartEntityBuilder.create();
+                    reqEntity.addPart("pseudo", new StringBody(currentAccount.getPseudo(), ContentType.TEXT_PLAIN));
+                    reqEntity.addPart("password", new StringBody(currentPassword, ContentType.TEXT_PLAIN));
+                    reqEntity.addPart("profileName", new StringBody(profileName, ContentType.TEXT_PLAIN));
+                    reqEntity.addPart("jsonUIDs", new StringBody(jsonUIDs.toString(), ContentType.TEXT_PLAIN));
+            httppost.setEntity((HttpEntity) reqEntity.build());
             HttpResponse httpResponse = client.execute(httppost);
             StatusLine statusLine = httpResponse.getStatusLine();
             int statusCode = statusLine.getStatusCode();
@@ -1394,12 +1389,12 @@ public class NetworkService implements NetworkServiceInterface {
         try {
             // check URL with your test
             HttpPost httppost=new HttpPost(server_address + "removetagsfromprofile");
-            MultipartEntityBuilder reqEntity = MultipartEntityBuilder.create();
+            ch.boye.httpclientandroidlib.entity.mime.MultipartEntityBuilder reqEntity = ch.boye.httpclientandroidlib.entity.mime.MultipartEntityBuilder.create();
             reqEntity.addPart("pseudo", new StringBody(currentAccount.getPseudo(), ContentType.TEXT_PLAIN));
             reqEntity.addPart("password", new StringBody(currentPassword, ContentType.TEXT_PLAIN));
             reqEntity.addPart("profileName", new StringBody(profileName, ContentType.TEXT_PLAIN));
             reqEntity.addPart("jsonUIDs", new StringBody(jsonUIDs.toString(), ContentType.TEXT_PLAIN));
-            httppost.setEntity(reqEntity.build());
+            httppost.setEntity((HttpEntity) reqEntity.build());
             HttpResponse httpResponse = client.execute(httppost);
             StatusLine statusLine = httpResponse.getStatusLine();
             int statusCode = statusLine.getStatusCode();
@@ -1502,12 +1497,12 @@ public class NetworkService implements NetworkServiceInterface {
         try {
             // check URL with your test
             HttpPost httppost = new HttpPost(server_address + "replacetaglistofprofile");
-            MultipartEntityBuilder reqEntity = MultipartEntityBuilder.create();
+            ch.boye.httpclientandroidlib.entity.mime.MultipartEntityBuilder reqEntity = ch.boye.httpclientandroidlib.entity.mime.MultipartEntityBuilder.create();
             reqEntity.addPart( "pseudo", new StringBody(currentAccount.getPseudo(), ContentType.TEXT_PLAIN));
             reqEntity.addPart( "password", new StringBody(currentPassword, ContentType.TEXT_PLAIN));
             reqEntity.addPart("profileName", new StringBody(profile.getName(), ContentType.TEXT_PLAIN));
             reqEntity.addPart( "jsonUIDs", new StringBody(jsonUIDs.toString(), ContentType.TEXT_PLAIN));
-            httppost.setEntity(reqEntity.build());
+            httppost.setEntity((HttpEntity) reqEntity.build());
             HttpResponse httpResponse = client.execute(httppost);
             StatusLine statusLine = httpResponse.getStatusLine();
             int statusCode = statusLine.getStatusCode();

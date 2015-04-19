@@ -77,7 +77,7 @@ public class ModifierProfileBisActivity extends Activity {
 
     }
 
-    public void modifierProfil(View view) {
+    public void modifierProfil(View view) throws InterruptedException {
 
         SparseBooleanArray tab = listView.getCheckedItemPositions();
         List<Tag> newTagsProfileList = new ArrayList<>();
