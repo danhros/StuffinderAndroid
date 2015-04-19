@@ -317,7 +317,7 @@ public class BLEService  extends Service{
                 Log.i(getClass().getName(), "Connected to GATT server.");
                 // Attempts to discover services after successful connection.
                 Log.i(getClass().getName(), "Attempting to start service discovery:"
-                        + mBluetoothGatt.discoverServices());
+                        + gatt.discoverServices());
             }
             else if (newState == BluetoothProfile.STATE_DISCONNECTED)
             {
@@ -347,7 +347,7 @@ public class BLEService  extends Service{
             if (status == BluetoothGatt.GATT_SUCCESS) {
                 broadcastUpdate(ACTION_GATT_SERVICES_DISCOVERED);
 
-                getGattService(getSupportedGattService(mBluetoothGatt));
+                getGattService(getSupportedGattService(gatt));
 
                 if(locationCallback != null && getSupportedGattService(gatt) != null)
                     locationCallback.onTagConnected(null);
@@ -412,7 +412,7 @@ public class BLEService  extends Service{
         {
             broadcastUpdate(ACTION_DATA_AVAILABLE, characteristic);
         }
-    };
+    }
 
 
 
@@ -468,8 +468,12 @@ public class BLEService  extends Service{
     private BraceletCommunicationThread braceletCommunicationThread;
     private TagsSurveillanceThread tagsSurveillanceThread;
 
-    public void enableSurveillance(final String braceletUID, final Profile profile)
+
+
+    public void enableSurveillance(final String braceletUID, final Profile profile) throws BLEServiceException
     {
+        verifyIfBLESupported();
+
         if(profile.getTags().size() == 0)
             throw new IllegalArgumentException("the profile to be activated must have one tag at least.");
 
@@ -481,6 +485,17 @@ public class BLEService  extends Service{
 
         if(surveillanceCallback != null)
             surveillanceCallback.onSurveilllanceStarting();
+    }
+
+    public void disableSurveillance() throws BLEServiceException
+    {
+        verifyIfBLESupported();
+
+        tagsSurveillanceThread.setContinueTagsSurveillance(false);
+        braceletCommunicationThread.stopRunning();
+
+        if(surveillanceCallback != null)
+            surveillanceCallback.onSurveilllanceStopping();
     }
 
 
@@ -509,7 +524,6 @@ public class BLEService  extends Service{
         @Override
         public void run()
         {
-
             continueRunning = true;
             while (continueRunning) {
                 try {
@@ -537,27 +551,9 @@ public class BLEService  extends Service{
                         .setSmallIcon(R.drawable.ic_launcher)
                         .setContentTitle("A tag is missing")
                         .setContentText("Your " + tag.getObjectName() + " seems to be lost.");
-//
-//// Creates an explicit intent for an Activity in your app
-//        Intent resultIntent = new Intent(this);
-//
-//// The stack builder object will contain an artificial back stack for the
-//// started Activity.
-//// This ensures that navigating backward from the Activity leads out of
-//// your application to the Home screen.
-//        TaskStackBuilder stackBuilder = TaskStackBuilder.create(this);
-//// Adds the back stack for the Intent (but not the Intent itself)
-//        stackBuilder.addParentStack(ResultActivity.class);
-//// Adds the Intent that starts the Activity to the top of the stack
-//        stackBuilder.addNextIntent(resultIntent);
-//        PendingIntent resultPendingIntent =
-//                stackBuilder.getPendingIntent(
-//                        0,
-//                        PendingIntent.FLAG_UPDATE_CURRENT
-//                );
-//        mBuilder.setContentIntent(resultPendingIntent);
+
         NotificationManager mNotificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-// mId allows you to update the notification later on.
+
         mNotificationManager.notify(notificationId++, mBuilder.build());
     }
 
@@ -568,15 +564,8 @@ public class BLEService  extends Service{
         private boolean continueTagsSurveillance;
         private List<Tag> tagsToSurveil;
 
-        /**
-         * Constructs a new {@code Thread} with no {@code Runnable} object and a
-         * newly generated name. The new {@code Thread} will belong to the same
-         * {@code ThreadGroup} as the {@code Thread} calling this constructor.
-         *
-         * @see ThreadGroup
-         * @see Runnable
-         */
         private TagsSurveillanceThread(List<Tag> tagsToSurveil) {
+            super();
             continueTagsSurveillance = false;
             this.tagsToSurveil = new LinkedList<>(tagsToSurveil);
         }
@@ -628,6 +617,8 @@ public class BLEService  extends Service{
                         firstLoop = false;
                         if(surveillanceCallback != null && missingTags.size() > 0)
                             surveillanceCallback.onSurveillanceFailed(missingTags);
+                        else if(surveillanceCallback != null)
+                            surveillanceCallback.onSurveilllanceStarted();
                     }
                     else
                     {
@@ -646,6 +637,9 @@ public class BLEService  extends Service{
                     }
                 }
             }
+
+            if(surveillanceCallback != null)
+                surveillanceCallback.onSurveilllanceStopped();
         }
     }
 
@@ -675,19 +669,17 @@ public class BLEService  extends Service{
             {
 //                intentAction = ACTION_GATT_CONNECTED;
 //                broadcastUpdate(intentAction);
-                Log.i(getClass().getName(), "Connected to GATT server.");
+                Log.i(getClass().getName(), "Connected to bracelet GATT server.");
                 // Attempts to discover services after successful connection.
                 Log.i(getClass().getName(), "Attempting to start service discovery:"
-                        + mBluetoothGatt.discoverServices());
+                        + gatt.discoverServices());
             }
             else if (newState == BluetoothProfile.STATE_DISCONNECTED)
             {
 //                intentAction = ACTION_GATT_DISCONNECTED;
-                Log.i(getClass().getName(), "Disconnected from GATT server.");
+                Log.i(getClass().getName(), "Disconnected from bracelet GATT server.");
 //                broadcastUpdate(intentAction);
-
-                if(locationCallback != null)
-                    locationCallback.onTagDisconnected(null);
+                surveillanceCallback.onBraceletDisconnected();
             }
         }
 
@@ -707,7 +699,7 @@ public class BLEService  extends Service{
             if (status == BluetoothGatt.GATT_SUCCESS) {
                 broadcastUpdate(ACTION_GATT_SERVICES_DISCOVERED);
 
-                getGattService(getSupportedGattService(mBluetoothGatt));
+                getGattService(getSupportedGattService(gatt));
 
                 if(locationCallback != null && getSupportedGattService(gatt) != null)
                     locationCallback.onTagConnected(null);
@@ -722,55 +714,6 @@ public class BLEService  extends Service{
             {
                 Log.w(getClass().getName(), "onServicesDiscovered received: " + status);
             }
-        }
-
-        @Override
-        public void onCharacteristicRead(BluetoothGatt gatt, BluetoothGattCharacteristic characteristic, int status)
-        {
-            if (status == BluetoothGatt.GATT_SUCCESS)
-            {
-                broadcastUpdate(ACTION_DATA_AVAILABLE, characteristic);
-            }
-        }
-
-        @Override
-        public void onCharacteristicWrite(BluetoothGatt gatt, BluetoothGattCharacteristic characteristic, int status) {
-            if(status == BluetoothGatt.GATT_SUCCESS)
-            {
-                byte data[] = characteristic.getValue();
-
-                if(data != null && data.length > 0)
-                {
-                    switch(data[0])
-                    {
-                        case ALLUMER_LED:
-                            locationCallback.onLEDEnabled(true);
-                            break;
-                        case ETEINDRE_LED:
-                            locationCallback.onLEDEnabled(false);
-                            break;
-                        case ALLUMER_MOTEUR:
-                            locationCallback.onBuzzerEnabled(true);
-                            break;
-                        case ETEINDRE_MOTEUR:
-                            locationCallback.onBuzzerEnabled(false);
-                            break;
-                        case ALLUMER_SON:
-                            locationCallback.onSoundEnabled(true);
-                            break;
-                    }
-                }
-                else
-                    Logger.getLogger(getClass().getName()).log(Level.WARNING, "onCharacteristicWrite : no data found in characterictic object.");
-            }
-            else
-                Logger.getLogger(getClass().getName()).log(Level.WARNING, "onCharacteristicWrite : write operation seems to has failed.");
-        }
-
-        @Override
-        public void onCharacteristicChanged(BluetoothGatt gatt, BluetoothGattCharacteristic characteristic)
-        {
-            broadcastUpdate(ACTION_DATA_AVAILABLE, characteristic);
         }
     };
 
@@ -792,6 +735,8 @@ public class BLEService  extends Service{
         public abstract void onBraceletNotFound(String braceletUID);
 
         public abstract void onBraceletConnected();
+
+        public abstract void onBraceletConnectionFailed();
 
         public abstract void onBraceletDisconnected();
 
@@ -857,7 +802,6 @@ public class BLEService  extends Service{
     /**
      * Gatt connected the bluetooth device.
      */
-    private BluetoothGatt mBluetoothGatt;
     private Map<UUID, BluetoothGattCharacteristic> map = new HashMap<UUID, BluetoothGattCharacteristic>();
 
 
