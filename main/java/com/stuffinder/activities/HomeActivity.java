@@ -96,7 +96,7 @@ public class HomeActivity extends BasicActivity {
 
 
     @Override
-    public void finish() { // à modifier pour quitter l'application, ou se déconnecter et revenir à l'écran de connexion.
+    public void onBackPressed() { // à modifier pour quitter l'application, ou se déconnecter et revenir à l'écran de connexion.
         // 1. Instantiate an AlertDialog.Builder with its constructor
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
 
@@ -106,7 +106,7 @@ public class HomeActivity extends BasicActivity {
         // Add the buttons
         builder.setPositiveButton("Oui", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {
-                HomeActivity.super.finish();
+                HomeActivity.super.onBackPressed();
             }
         });
         builder.setNegativeButton("Non", new DialogInterface.OnClickListener() {

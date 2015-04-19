@@ -123,7 +123,7 @@ public class ModifierProfileBisActivity extends Activity {
             try {
                 EngineServiceProvider.getEngineService().replaceTagListOfProfile(profile, newTagsProfileList);
 
-                finish();
+                onBackPressed();
             } catch (NetworkServiceException e) {
                 Toast.makeText(this, "Une erreur réseau est survenue.", Toast.LENGTH_LONG).show();
             } catch (IllegalFieldException e) {
@@ -150,7 +150,7 @@ public class ModifierProfileBisActivity extends Activity {
     }
 
     public void retour(View view) {
-        finish();
+        onBackPressed();
     }
 
     @Override

@@ -103,11 +103,6 @@
             android:screenOrientation="portrait" >
         </activity>
         <activity
-            android:name=".activities.AjouterProfilsActivity"
-            android:label="@string/title_activity_ajouter_profils"
-            android:screenOrientation="portrait" >
-        </activity>
-        <activity
             android:name=".activities.ModifierProfileActivity"
             android:label="@string/title_activity_modifier_profile"
             android:screenOrientation="portrait" >
@@ -115,11 +110,6 @@
         <activity
             android:name=".activities.ModifierProfileBisActivity"
             android:label="@string/title_activity_modifier_profile_bis"
-            android:screenOrientation="portrait" >
-        </activity>
-        <activity
-            android:name=".activities.SynchroActivity"
-            android:label="@string/title_activity_synchro"
             android:screenOrientation="portrait" >
         </activity>
         <activity

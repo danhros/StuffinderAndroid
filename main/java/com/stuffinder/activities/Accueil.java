@@ -60,10 +60,10 @@ public class Accueil extends BasicActivity
             EngineServiceProvider.getEngineService().setAutoSynchronization(true);
         } catch (NetworkServiceException e) {
             Toast.makeText(this, "L'initialisation de l'application a échoué. L'application va être arrêté.", Toast.LENGTH_LONG).show();
-            finish();
+            onBackPressed();
         } catch (EngineServiceException e) {
             Toast.makeText(this, "L'initialisation de l'application a échoué. L'application va être arrêté.", Toast.LENGTH_LONG).show();
-            finish();
+            onBackPressed();
         }
 
     }

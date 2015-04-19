@@ -47,7 +47,7 @@ public class ConfigurationProfilsActivity extends Activity {
     }
 
     public void retour(View view) {
-        finish();
+        onBackPressed();
     }
 
     public void goToModif(View view) {

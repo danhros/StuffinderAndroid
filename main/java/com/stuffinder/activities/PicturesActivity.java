@@ -24,7 +24,7 @@ public class PicturesActivity extends BasicActivity {
     }
 
     public void retour11 (View view) {
-        finish();
+        onBackPressed();
     }
 
     public void goBack(View view, int position) {
@@ -37,7 +37,7 @@ public class PicturesActivity extends BasicActivity {
             else
                 callback.onPictureUnselected();
 
-        finish();
+        onBackPressed();
     }
 
     @Override

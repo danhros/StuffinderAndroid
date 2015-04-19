@@ -31,7 +31,7 @@ public class ConfigurationActivity extends BasicActivity {
     }
 
     public void retour (View view) {
-        finish(); }
+        onBackPressed(); }
 
 
     public void goToConfProf ( View view) {
@@ -40,14 +40,6 @@ public class ConfigurationActivity extends BasicActivity {
 
     }
 
-    public void goToSynch (View view) {
-        Intent intentSynch = new Intent ( ConfigurationActivity.this, SynchroActivity.class);
-        startActivity(intentSynch);
-    }
-
-    public void retour1 (View view) {
-        finish();
-    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {

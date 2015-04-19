@@ -45,7 +45,7 @@ public class ModifierProfileActivity extends Activity {
 
 
     public void retour(View view) {
-        finish();
+        onBackPressed();
     }
 
 
@@ -62,7 +62,7 @@ public class ModifierProfileActivity extends Activity {
 
             Intent intent = new Intent(this, ModifierProfileBisActivity.class);
 
-            finish();
+            onBackPressed();
             startActivity(intent);
 
         } catch (NotAuthenticatedException e) {// abnormal error.

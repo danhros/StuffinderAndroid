@@ -68,7 +68,7 @@ public class SupprimerProfilActivity extends Activity {
 
 
     public void retour(View view) {
-        finish();
+        onBackPressed();
     }
 
 
@@ -101,7 +101,7 @@ public class SupprimerProfilActivity extends Activity {
         if (nombreProfilSup == 0) {
             Toast.makeText(this, "Vous n'avez sélectionné aucun profil", Toast.LENGTH_LONG).show();
         } else {
-            finish();
+            onBackPressed();
         }
     }
 

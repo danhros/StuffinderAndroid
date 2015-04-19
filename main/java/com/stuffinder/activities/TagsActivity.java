@@ -47,7 +47,7 @@ public class TagsActivity extends BasicActivity {
     }
 
     public void retour6 (View view) {
-        finish();
+        onBackPressed();
     }
 
 

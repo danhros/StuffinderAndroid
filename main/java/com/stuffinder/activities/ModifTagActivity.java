@@ -26,7 +26,7 @@ public class ModifTagActivity extends BasicActivity {
     private static List<Tag> tagsList = new ArrayList<>();
 
     public void retour3 (View view) {
-        finish();
+        onBackPressed();
     }
 
     @Override
@@ -59,7 +59,7 @@ public class ModifTagActivity extends BasicActivity {
         Intent intent = new Intent(ModifTagActivity.this, InfoTagActivity.class);
 
         startActivity(intent);
-        finish();
+        onBackPressed();
 
     }
 

@@ -42,7 +42,7 @@ public class AjoutTagActivity extends BasicActivity {
     }
 
     public void retour2 (View view) {
-        finish();
+        onBackPressed();
     }
 
     public void choosePic (View view) {
@@ -70,7 +70,7 @@ public class AjoutTagActivity extends BasicActivity {
                 Tag tag = new Tag(identifiant, nom, null);
                 EngineServiceProvider.getEngineService().addTag(tag, imageFile);
 
-                finish();
+                onBackPressed();
             }
 
             catch (IllegalFieldException e) {

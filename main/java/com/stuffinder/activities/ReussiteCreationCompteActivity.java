@@ -26,7 +26,7 @@ public class ReussiteCreationCompteActivity extends BasicActivity {
     public void seConnecter ( View view) {
         Intent intent = new Intent ( ReussiteCreationCompteActivity.this, SeConnecterActivity.class);
 
-        finish(); // pour fermer cette activité avant de lancer l'activité "se connecter".
+        onBackPressed(); // pour fermer cette activité avant de lancer l'activité "se connecter".
         startActivity(intent);
     }
 

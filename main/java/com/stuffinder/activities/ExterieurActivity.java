@@ -51,7 +51,7 @@ public class ExterieurActivity extends BasicActivity {
     }
 
     public void retour(View view) {
-        finish();
+        onBackPressed();
     }
 
     @Override

@@ -64,7 +64,7 @@ public class InfoTagActivity extends BasicActivity {
     }
 
     public void retour7 (View view) {
-        finish();
+        onBackPressed();
     }
 
     public void goToPics (View view) {
@@ -149,7 +149,7 @@ public class InfoTagActivity extends BasicActivity {
             }
 
             if(hideAtEnd)
-                finish();
+                onBackPressed();
         }
 
     }
@@ -163,7 +163,7 @@ public class InfoTagActivity extends BasicActivity {
         try {
             EngineServiceProvider.getEngineService().removeTag(tagModif);
             oneTagRemoved = true;
-            finish();
+            onBackPressed();
         } catch (IllegalFieldException e) {// abnormal error.
             if(e.getReason() == IllegalFieldException.REASON_VALUE_NOT_FOUND)
                 Toast.makeText(this, "Suppresion impossible : le tag \"" + tagModif.getObjectName() + "\" a déjà été supprimé.", Toast.LENGTH_LONG).show();

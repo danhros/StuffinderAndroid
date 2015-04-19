@@ -68,7 +68,7 @@ public class CreerProfilActivity extends Activity {
 
 
     public void retour(View view) {
-        finish();
+        onBackPressed();
     }
 
 
@@ -96,7 +96,7 @@ public class CreerProfilActivity extends Activity {
 
             try {
                 profile = EngineServiceProvider.getEngineService().createProfile(nomProfil, tagsProfileList);
-                finish();
+                onBackPressed();
             } catch (IllegalFieldException e) {
                 {
                     switch(e.getFieldId())

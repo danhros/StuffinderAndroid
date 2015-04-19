@@ -30,7 +30,7 @@ public class CreerCompteActivity extends BasicActivity {
 
 
     public void retourAccueil ( View view) {
-        finish();
+        onBackPressed();
     }
 
 
@@ -84,7 +84,7 @@ public class CreerCompteActivity extends BasicActivity {
                 Account account = new Account(identifiant, prenom, nom, email);                            /* Création d'un compte*/
                 EngineServiceProvider.getEngineService().createAccount(account, mdp);                                        /*Demande de création de compte au web service */
 
-                finish();
+                onBackPressed();
                 startActivity(intentToReussite);
             }
 

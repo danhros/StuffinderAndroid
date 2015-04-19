@@ -26,7 +26,7 @@ public class InterieurActivity extends BasicActivity {
     private static List<Tag> arrayAdapter = new ArrayList<>();
 
     public void retour8 (View view){
-      finish();
+      onBackPressed();
     }
 
     public void goToLoc (View view, int position) {

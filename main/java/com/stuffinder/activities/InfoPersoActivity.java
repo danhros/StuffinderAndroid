@@ -63,7 +63,7 @@ public class InfoPersoActivity extends BasicActivity {
     }
 
     public void retour5 (View view) {
-        finish();
+        onBackPressed();
     }
 
     public void actionModifier(View view) {
@@ -90,7 +90,7 @@ public class InfoPersoActivity extends BasicActivity {
 
                 //Intent intent = new Intent (InfoPersoActivity.this,ConfigurationActivity.class);
                 //startActivity(intent);
-                finish();
+                onBackPressed();
             }
             catch (IllegalFieldException e) {
                 switch (e.getFieldId()) {

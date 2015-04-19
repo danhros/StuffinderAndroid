@@ -54,7 +54,7 @@ public class LocalisationActivity extends BasicActivity {
 
         if (!getPackageManager().hasSystemFeature(PackageManager.FEATURE_BLUETOOTH_LE)) { //alerte support BLE
             Toast.makeText(this, "BLE feature not supported.", Toast.LENGTH_SHORT).show();
-            finish();
+            onBackPressed();
         }
         else
         {
@@ -132,7 +132,9 @@ public class LocalisationActivity extends BasicActivity {
      */
     @Override
     public void onBackPressed() {
-        disconnectFromBLEService();
+        if(serviceConnection != null)
+            disconnectFromBLEService();
+
         super.onBackPressed();
     }
 
