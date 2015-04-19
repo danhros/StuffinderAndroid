@@ -55,7 +55,7 @@ public interface NetworkServiceInterface
 	 * @throws AccountNotFoundException If the couple (pseudo, password) doesn't exist.
 	 * @throws NetworkServiceException If a network service error has occurred.
 	 */
-	public Account authenticate(String pseudo, String password) throws AccountNotFoundException, NetworkServiceException;
+	public Account authenticate(String pseudo, String password) throws AccountNotFoundException, NetworkServiceException, InterruptedException;
 
     /**
      * To update the used password if it became incorrect after the authentication was performed.

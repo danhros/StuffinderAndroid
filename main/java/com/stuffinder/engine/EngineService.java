@@ -15,9 +15,6 @@ import com.stuffinder.exceptions.NetworkServiceException;
 import com.stuffinder.exceptions.NotAuthenticatedException;
 import com.stuffinder.exceptions.SynchronisationConflictException;
 
-import static com.stuffinder.engine.Requests.*;
-import static com.stuffinder.exceptions.IllegalFieldException.*;
-
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -29,6 +26,30 @@ import java.util.Set;
 import java.util.concurrent.Semaphore;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
+import static com.stuffinder.engine.Requests.AddTagRequest;
+import static com.stuffinder.engine.Requests.AddTagsToProfileRequest;
+import static com.stuffinder.engine.Requests.CreateProfileWithTagsRequest;
+import static com.stuffinder.engine.Requests.ModifyBraceletUIDRequest;
+import static com.stuffinder.engine.Requests.ModifyEmailRequest;
+import static com.stuffinder.engine.Requests.ModifyPasswordRequest;
+import static com.stuffinder.engine.Requests.ModifyProfileNameRequest;
+import static com.stuffinder.engine.Requests.ModifyTagObjectImageRequest;
+import static com.stuffinder.engine.Requests.ModifyTagObjectNameRequest;
+import static com.stuffinder.engine.Requests.RemoveProfileRequest;
+import static com.stuffinder.engine.Requests.RemoveTagRequest;
+import static com.stuffinder.engine.Requests.RemoveTagsFromProfileRequest;
+import static com.stuffinder.engine.Requests.ReplaceTagListOfProfileRequest;
+import static com.stuffinder.engine.Requests.Request;
+import static com.stuffinder.exceptions.IllegalFieldException.BRACELET_UID;
+import static com.stuffinder.exceptions.IllegalFieldException.PASSWORD;
+import static com.stuffinder.exceptions.IllegalFieldException.PROFILE_NAME;
+import static com.stuffinder.exceptions.IllegalFieldException.REASON_VALUE_ALREADY_USED;
+import static com.stuffinder.exceptions.IllegalFieldException.REASON_VALUE_INCORRECT;
+import static com.stuffinder.exceptions.IllegalFieldException.REASON_VALUE_NOT_FOUND;
+import static com.stuffinder.exceptions.IllegalFieldException.TAG_OBJECT_IMAGE;
+import static com.stuffinder.exceptions.IllegalFieldException.TAG_OBJECT_NAME;
+import static com.stuffinder.exceptions.IllegalFieldException.TAG_UID;
 
 /**
  * Created by propriétaire on 14/03/2015.
@@ -132,6 +153,8 @@ public class EngineService {
             tags.clear();
             profiles.clear();
             throw e;
+        } catch (InterruptedException e) {
+            e.printStackTrace();
         }
 
         return currentAccount;
@@ -887,6 +910,8 @@ public class EngineService {
             } catch (NotAuthenticatedException e) { // abnormal error, normally never occurs.
                 Logger.getLogger(getClass().getName()).log(Level.INFO, "The password became incorrect.");
                 isWrongAuthenticationInformation = true;
+            } catch (InterruptedException e) {
+                e.printStackTrace();
             }
         }
 

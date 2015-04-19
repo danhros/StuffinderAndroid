@@ -197,7 +197,7 @@ public class NetworkService implements NetworkServiceInterface {
     }
 
     @Override
-    public Account authenticate(String pseudo, String password)throws AccountNotFoundException, NetworkServiceException {
+    public Account authenticate(String pseudo, String password) throws AccountNotFoundException, NetworkServiceException, InterruptedException {
         // We first check the validity of the arguments to create the parameters
         if(! FieldVerifier.verifyName(pseudo))
             throw new IllegalFieldException(IllegalFieldException.PSEUDO, IllegalFieldException.REASON_VALUE_INCORRECT, pseudo);
@@ -234,6 +234,7 @@ public class NetworkService implements NetworkServiceInterface {
                         }
                     } catch (JSONException e) {
                         // "Error Occurred [Server's JSON response might be invalid]!"
+                        e.printStackTrace();
                         throw new NetworkServiceException("Server response might be invalid.");
                     }
                 } else {
@@ -256,8 +257,6 @@ public class NetworkService implements NetworkServiceInterface {
             }
         } catch (IOException | IllegalStateException e) {
             throw new NetworkServiceException("exception of type IOException or IllegalStateException catched.");
-        } catch (InterruptedException e) {
-            throw new NetworkServiceException("error occurred while executing request.");
         }
 
         return currentAccount;
