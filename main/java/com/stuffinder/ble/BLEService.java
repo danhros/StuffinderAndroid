@@ -21,7 +21,6 @@ import android.util.Log;
 
 
 import com.stuffinder.R;
-import com.stuffinder.activities.BasicActivity;
 import com.stuffinder.data.Profile;
 import com.stuffinder.data.Tag;
 import com.stuffinder.exceptions.BLEServiceException;
@@ -107,7 +106,11 @@ public class BLEService  extends Service{
         } catch (BLEServiceException e) {
             e.printStackTrace();
         }
-        //TODO add code to properly stop surveillance thread and remove all bluetooth connections.
+        try {
+            disableSurveillance();
+        } catch (BLEServiceException e) {
+            e.printStackTrace();
+        }
     }
 
 
@@ -143,8 +146,6 @@ public class BLEService  extends Service{
 
 
     //methods used for location.
-
-    //TODO implement these methods.
 
 
     private LocationCallback locationCallback;
@@ -452,10 +453,8 @@ public class BLEService  extends Service{
     /**
      * To disconnect the location service with the current tag.
      */
-    public void disconnectFromBracelet() throws BLEServiceException
+    private void disconnectFromBracelet() throws BLEServiceException
     {
-        verifyIfBLESupported();
-
         if(braceletBluetoothGatt != null)
         {
             disconnect(braceletBluetoothGatt);
@@ -468,14 +467,39 @@ public class BLEService  extends Service{
     private BraceletCommunicationThread braceletCommunicationThread;
     private TagsSurveillanceThread tagsSurveillanceThread;
 
+    private int surveillanceState = SURVEILLANCE_STOPPED;
+
+    public static final int SURVEILLANCE_STOPPING = 0;
+    public static final int SURVEILLANCE_STARTING = 1;
+    public static final int SURVEILLANCE_STARTED = 2;
+    public static final int SURVEILLANCE_STOPPED = 3;
+
+    public int getSurveillanceState()
+    {
+        return surveillanceState;
+    }
 
 
     public void enableSurveillance(final String braceletUID, final Profile profile) throws BLEServiceException
     {
         verifyIfBLESupported();
 
+        if(surveillanceState == SURVEILLANCE_STARTING || surveillanceState == SURVEILLANCE_STARTED)
+        {
+            disableSurveillance();
+
+            while(surveillanceState != SURVEILLANCE_STOPPED)
+                try {
+                    Thread.sleep(100);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+        }
+
         if(profile.getTags().size() == 0)
-            throw new IllegalArgumentException("the profile to be activated must have one tag at least.");
+            throw new IllegalArgumentException("The profile to be activated must have one tag at least.");
+
+        surveillanceState = SURVEILLANCE_STARTING;
 
         braceletCommunicationThread = new BraceletCommunicationThread(braceletUID);
         tagsSurveillanceThread = new TagsSurveillanceThread(profile.getTags());
@@ -491,11 +515,15 @@ public class BLEService  extends Service{
     {
         verifyIfBLESupported();
 
-        tagsSurveillanceThread.setContinueTagsSurveillance(false);
-        braceletCommunicationThread.stopRunning();
+        if(surveillanceState == SURVEILLANCE_STARTING || surveillanceState == SURVEILLANCE_STARTED)
+        {
+            surveillanceState = SURVEILLANCE_STOPPING;
+            tagsSurveillanceThread.setContinueTagsSurveillance(false);
+            braceletCommunicationThread.stopRunning();
 
-        if(surveillanceCallback != null)
-            surveillanceCallback.onSurveilllanceStopping();
+            if(surveillanceCallback != null)
+                surveillanceCallback.onSurveilllanceStopping();
+        }
     }
 
 
@@ -616,9 +644,16 @@ public class BLEService  extends Service{
                     {
                         firstLoop = false;
                         if(surveillanceCallback != null && missingTags.size() > 0)
+                        {
+                            surveillanceState = SURVEILLANCE_STOPPED;
                             surveillanceCallback.onSurveillanceFailed(missingTags);
+                            continueTagsSurveillance = false;
+                        }
                         else if(surveillanceCallback != null)
+                        {
+                            surveillanceState = SURVEILLANCE_STARTED;
                             surveillanceCallback.onSurveilllanceStarted();
+                        }
                     }
                     else
                     {
@@ -637,6 +672,8 @@ public class BLEService  extends Service{
                     }
                 }
             }
+
+            surveillanceState = SURVEILLANCE_STOPPED;
 
             if(surveillanceCallback != null)
                 surveillanceCallback.onSurveilllanceStopped();
@@ -702,11 +739,13 @@ public class BLEService  extends Service{
                 getGattService(getSupportedGattService(gatt));
 
                 if(locationCallback != null && getSupportedGattService(gatt) != null)
-                    locationCallback.onTagConnected(null);
+                    try {
+                        disconnectFromBracelet();
+                    } catch (BLEServiceException e) {// will never occur.
+                        e.printStackTrace();
+                    }
                 else if(locationCallback != null)
                 {
-                    locationCallback.onTagConnected(null);
-                    locationCallback.onTagNotFound();
                 }
 
             }
@@ -739,8 +778,6 @@ public class BLEService  extends Service{
         public abstract void onBraceletConnectionFailed();
 
         public abstract void onBraceletDisconnected();
-
-        public abstract void onTagsNotFound(List<Tag> tagList);
     }
 
     public void setSurveillanceCallback(SurveillanceCallback surveillanceCallback)

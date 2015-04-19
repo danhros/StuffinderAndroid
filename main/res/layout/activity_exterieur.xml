@@ -54,7 +54,7 @@
         android:textStyle="normal"
         android:textSize="18sp"
         android:ellipsize="end"
-        android:onClick="activation"
+        android:onClick="onEnableSurveillance"
         android:layout_alignBottom="@+id/button7"
         android:layout_alignParentStart="false"
         android:layout_marginLeft="25dp" />
@@ -71,7 +71,7 @@
         android:textStyle="normal"
         android:textSize="18sp"
         android:ellipsize="end"
-        android:onClick="desactivation"
+        android:onClick="onDisableSurveillance"
         android:layout_marginTop="51dp"
         android:layout_below="@+id/listExt"
         android:layout_alignEnd="@+id/listExt"
