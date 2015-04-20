@@ -1,6 +1,7 @@
 package com.stuffinder.activities;
 
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
@@ -54,7 +55,12 @@ public class Accueil extends BasicActivity
         try {
             NetworkServiceProvider.getNetworkService().initNetworkService();
             EngineServiceProvider.getEngineService().initEngineService(this);
-            BLEService.startBLEService(this);
+
+            if (!getPackageManager().hasSystemFeature(PackageManager.FEATURE_BLUETOOTH_LE))
+                Toast.makeText(this, "La technologie Bluetooth LE n'est pas supportée.", Toast.LENGTH_SHORT).show();
+            else
+                BLEService.startBLEService(this);
+
             initializeDefaultImageSet();
 
             EngineServiceProvider.getEngineService().setAutoSynchronization(true);

@@ -4,6 +4,7 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.view.Menu;
@@ -56,7 +57,9 @@ public class ExterieurActivity extends BasicActivity {
 
     @Override
     public void onBackPressed() {
-        disconnectFromBLEService();
+        if(service != null)
+            disconnectFromBLEService();
+
         super.onBackPressed();
     }
 
@@ -67,19 +70,26 @@ public class ExterieurActivity extends BasicActivity {
         this.requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.activity_exterieur);
 
-        listView = (ListView) findViewById(R.id.listExt);
+        if (!getPackageManager().hasSystemFeature(PackageManager.FEATURE_BLUETOOTH_LE)) { //alerte support BLE
+            Toast.makeText(this, "La technologie Bluetooth LE n'est pas supportée.", Toast.LENGTH_SHORT).show();
+            onBackPressed();
+        }
+        else
+        {
+            listView = (ListView) findViewById(R.id.listExt);
 
 
-        for (int i = 0 ; i < listProfiles.size(); i ++  ) { listNames.add(listProfiles.get(i).getName()); }
+            for (int i = 0 ; i < listProfiles.size(); i ++  ) { listNames.add(listProfiles.get(i).getName()); }
 
-        ArrayAdapter<String> profileArrayAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_single_choice);
-        profileArrayAdapter.addAll(listNames);
+            ArrayAdapter<String> profileArrayAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_single_choice);
+            profileArrayAdapter.addAll(listNames);
 
-       listView.setAdapter(profileArrayAdapter);
-       listView.setItemChecked(0,true);
-       listView.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
+            listView.setAdapter(profileArrayAdapter);
+            listView.setItemChecked(0,true);
+            listView.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
 
-        connectToBLEService();
+            connectToBLEService();
+        }
     }
 
 

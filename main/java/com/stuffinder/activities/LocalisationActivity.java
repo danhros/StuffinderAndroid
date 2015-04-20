@@ -53,7 +53,7 @@ public class LocalisationActivity extends BasicActivity {
         nomObjTextView.setText(tagLoc.getObjectName());
 
         if (!getPackageManager().hasSystemFeature(PackageManager.FEATURE_BLUETOOTH_LE)) { //alerte support BLE
-            Toast.makeText(this, "BLE feature not supported.", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "La technologie Bluetooth LE n'est pas supportée.", Toast.LENGTH_SHORT).show();
             onBackPressed();
         }
         else
