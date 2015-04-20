@@ -106,6 +106,7 @@ public class HomeActivity extends BasicActivity {
         // Add the buttons
         builder.setPositiveButton("Oui", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {
+                EngineServiceProvider.getEngineService().logOut();
                 HomeActivity.super.onBackPressed();
             }
         });
