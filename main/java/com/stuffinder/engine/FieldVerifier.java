@@ -1,6 +1,9 @@
 package com.stuffinder.engine;
 
 
+import android.graphics.BitmapFactory;
+
+import java.io.File;
 
 /**
  * This class provides methods to verify if fields like passwords or e-mail addresses are syntactically correct.
@@ -27,7 +30,7 @@ public class FieldVerifier
 
     public static boolean verifyTagUID(String uid)
     {
-        return uid.length() > 0;
+        return uid.matches("([0-9A-F][0-9A-F]:){5}[0-9A-F][0-9A-F]");
     }
 
     public static boolean verifyTagName(String name)
@@ -35,21 +38,19 @@ public class FieldVerifier
         return name.length() > 0;
     }
 
-    @SuppressWarnings("unused")
     public static boolean verifyImageFileName(String imageFileName)
-    {/*
-        try {
-            if(imageFileName == null)
-                throw new NullPointerException();
-
-            new ImageIcon(ImageIO.read(new File(imageFileName))); // to test if the file can be loaded as an image.
-
-            return true;
-        } catch (IOException e) {
-            e.printStackTrace();
+    {
+        return verifyImageFileName(new File(imageFileName));
+    }
+    public static boolean verifyImageFileName(File imageFile)
+    {
+        if (imageFile == null || !imageFile.exists())
             return false;
-        }*/
-        return true;
+
+        BitmapFactory.Options options = new BitmapFactory.Options();
+        options.inJustDecodeBounds = true;
+        BitmapFactory.decodeFile(imageFile.getAbsolutePath(), options);
+        return options.outWidth != -1 && options.outHeight != -1;
     }
 
 

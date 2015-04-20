@@ -1,16 +1,17 @@
 package com.stuffinder.activities;
 
-import android.app.Activity;
+
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
-import android.widget.ArrayAdapter;
+import android.widget.AdapterView;
 import android.widget.ListView;
 
 import com.stuffinder.R;
+import com.stuffinder.adaptateurs.MyArrayAdapter;
 import com.stuffinder.data.Tag;
 
 import java.util.ArrayList;
@@ -19,18 +20,18 @@ import java.util.Comparator;
 import java.util.List;
 
 
-public class InterieurActivity extends Activity {
+public class InterieurActivity extends BasicActivity {
 
     private ListView mListInt = null;
     private static List<Tag> arrayAdapter = new ArrayList<>();
 
     public void retour8 (View view){
-      finish();
+      onBackPressed();
     }
 
-    public void goToLoc (View view) {
-        int rang = mListInt.getCheckedItemPosition() ;
-        Tag tag = arrayAdapter.get(rang);
+    public void goToLoc (View view, int position) {
+
+        Tag tag = arrayAdapter.get(position);
 
         LocalisationActivity.ChangeTag(tag);
 
@@ -47,11 +48,21 @@ public class InterieurActivity extends Activity {
 
         mListInt = (ListView) findViewById(R.id.listInt);
 
-        ArrayAdapter<Tag> tagArrayAdapter = new ArrayAdapter<Tag>(this, android.R.layout.simple_list_item_single_choice);
-        tagArrayAdapter.addAll(arrayAdapter);
+//        ArrayAdapter<Tag> tagArrayAdapter = new ArrayAdapter<Tag>(this, android.R.layout.simple_list_item_single_choice);
+//        tagArrayAdapter.addAll(arrayAdapter);
 
-        mListInt.setAdapter(tagArrayAdapter);
-        mListInt.setItemChecked(0,true);
+        mListInt.setAdapter(new MyArrayAdapter(this, arrayAdapter));
+
+        //mListInt.setAdapter(tagArrayAdapter);
+        //mListInt.setItemChecked(0,true);
+
+        mListInt.setOnItemClickListener(new AdapterView.OnItemClickListener(){
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                goToLoc(view, position);
+
+            }
+        });
     }
 
 
@@ -64,7 +75,7 @@ public class InterieurActivity extends Activity {
         Collections.sort(arrayAdapter, new Comparator<Tag>() {
             @Override
             public int compare(Tag lhs, Tag rhs) {
-                return lhs.getObjectName().compareTo(rhs.getObjectName());
+                return lhs.getObjectName().compareToIgnoreCase(rhs.getObjectName());
             }
         });
     }

@@ -1,29 +1,38 @@
 package com.stuffinder.activities;
 
-import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
+import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-
+import com.stuffinder.R;
 import com.stuffinder.data.Tag;
-import com.stuffinder.engine.NetworkServiceProvider;
+import com.stuffinder.engine.EngineServiceProvider;
 import com.stuffinder.exceptions.IllegalFieldException;
 import com.stuffinder.exceptions.NetworkServiceException;
 import com.stuffinder.exceptions.NotAuthenticatedException;
-import com.stuffinder.R;
 
-public class InfoTagActivity extends Activity {
+import java.io.File;
+
+public class InfoTagActivity extends BasicActivity {
 
     EditText editTextNom;
-    EditText editTextImage;
+    ImageView imageView;
 
     private static Tag tagModif;
+
+    private File currentImage;
 
 
 
@@ -35,22 +44,40 @@ public class InfoTagActivity extends Activity {
         setContentView(R.layout.activity_info_tag);
 
         editTextNom = (EditText)findViewById(R.id.editTextNom) ;
-        editTextImage = (EditText)findViewById(R.id.editTextImage) ;
+        editTextNom.setText(tagModif.getObjectName(), TextView.BufferType.EDITABLE);
 
+        imageView = (ImageView)findViewById(R.id.imageViewTag);
+        if(tagModif.getObjectImageName() != null)
+        {
+            currentImage = new File(tagModif.getObjectImageName());
 
-            editTextNom.setText(tagModif.getObjectName(), TextView.BufferType.EDITABLE);
-            editTextImage.setText(tagModif.getObjectImageName(), TextView.BufferType.EDITABLE);
+            Bitmap myBitmap = BitmapFactory.decodeFile(tagModif.getObjectImageName());
+            if(myBitmap != null)
+                imageView.setImageBitmap(myBitmap);
+            else
+            {
+                Log.w(getClass().getName(), "image \"" + tagModif.getObjectImageName() + "\" fails to be loaded or decoded.");
+                imageView.setImageResource(R.drawable.question);
+            }
+        }
 
     }
 
     public void retour7 (View view) {
-        finish();
+        onBackPressed();
+    }
+
+    public void goToPics (View view) {
+
+        PicturesActivity.getTag(tagModif);
+        Intent intentPics = new Intent (this, PicturesActivity.class);
+        PicturesActivity.setCallback(new PicChooserCallback());
+        startActivity(intentPics);
     }
 
     public void modifierTag(View view) {
 
         String objectName = editTextNom.getText().toString();
-        String objectImageFileName = editTextImage.getText().toString();
 
         if(objectName.length() == 0)
             Toast.makeText(this, "Entrer nom", Toast.LENGTH_LONG).show();
@@ -61,7 +88,7 @@ public class InfoTagActivity extends Activity {
             if(! objectName.equals(tagModif.getObjectName())) // the object name is modified.
             {
                 try {
-                    tagModif = NetworkServiceProvider.getNetworkService().modifyObjectName(tagModif, objectName);
+                    tagModif = EngineServiceProvider.getEngineService().modifyObjectName(tagModif, objectName);
                 } catch (IllegalFieldException e) {
                     switch(e.getFieldId())
                     {
@@ -91,10 +118,10 @@ public class InfoTagActivity extends Activity {
                 }
             }
 
-            if(hideAtEnd && ! objectImageFileName.equals(tagModif.getObjectImageName())) // the image filename is modified.
+            if(hideAtEnd && ((currentImage == null && tagModif.getObjectImageName() != null) || (currentImage != null && tagModif.getObjectImageName() == null) || (currentImage != null && ! currentImage.getPath().equals(tagModif.getObjectImageName())))) // the image filename is modified.
             {
                 try {
-                    tagModif = NetworkServiceProvider.getNetworkService().modifyObjectImage(tagModif, objectImageFileName);
+                    tagModif = EngineServiceProvider.getEngineService().modifyObjectImage(tagModif, currentImage);
                 } catch (IllegalFieldException e) {
                     switch(e.getFieldId())
                     {
@@ -122,9 +149,62 @@ public class InfoTagActivity extends Activity {
             }
 
             if(hideAtEnd)
-                finish();
+                onBackPressed();
         }
 
+    }
+
+    void supprimerTagsSelectionnes(){
+
+        boolean errorOccured = false;
+        boolean oneTagRemoved = false;
+
+        int i=0;
+        try {
+            EngineServiceProvider.getEngineService().removeTag(tagModif);
+            oneTagRemoved = true;
+            onBackPressed();
+        } catch (IllegalFieldException e) {// abnormal error.
+            if(e.getReason() == IllegalFieldException.REASON_VALUE_NOT_FOUND)
+                Toast.makeText(this, "Suppresion impossible : le tag \"" + tagModif.getObjectName() + "\" a déjà été supprimé.", Toast.LENGTH_LONG).show();
+            else
+                Toast.makeText(this, "Une erreur anormale est survenue. Veuiller redémarrer l'application", Toast.LENGTH_LONG).show();
+            errorOccured = true;
+        } catch (NotAuthenticatedException e) {// abnormal error.
+            Toast.makeText(this, "Une erreur anormale est survenue. Veuiller redémarrer l'application", Toast.LENGTH_LONG).show();
+            errorOccured = true;
+        } catch (NetworkServiceException e) {
+            Toast.makeText(this, "Une erreur réseau est survenue.", Toast.LENGTH_LONG).show();
+            errorOccured = true;
+        }
+
+
+    }
+
+    public void actionSupprimerTagsSelectionnes(View view){
+        // 1. Instantiate an AlertDialog.Builder with its constructor
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+
+        // 2. Chain together various setter methods to set the dialog characteristics
+        builder.setMessage("Cette opération est définitive.")
+                .setTitle("Êtes-vous certain de vouloir supprimer ce tag ?");
+
+        // Add the buttons
+        builder.setPositiveButton("Oui", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                supprimerTagsSelectionnes();
+            }
+        });
+        builder.setNegativeButton("Non", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+            }
+        });
+
+
+        // 3. Get the AlertDialog from create()
+        AlertDialog dialog = builder.create();
+
+        dialog.show();
     }
 
 
@@ -154,6 +234,22 @@ public class InfoTagActivity extends Activity {
     {
         tagModif = tag ;
 
+    }
+
+    class PicChooserCallback extends PicturesActivity.PictureChooserCallback
+    {
+        @Override
+        public void onPictureSelected(int drawableResourceId) {
+            currentImage = getImageFileByResource(drawableResourceId);
+
+            imageView.setImageResource(drawableResourceId);
+        }
+
+        @Override
+        public void onPictureUnselected() {
+            currentImage = null;
+            imageView.setImageDrawable(null);
+        }
     }
 
 }

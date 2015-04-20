@@ -1,8 +1,11 @@
 package com.stuffinder.activities;
 
-import android.app.Activity;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -10,15 +13,23 @@ import android.view.Window;
 import android.widget.Toast;
 
 import com.stuffinder.R;
+import com.stuffinder.ble.BLEService;
+import com.stuffinder.engine.EngineService;
+import com.stuffinder.engine.EngineServiceProvider;
 import com.stuffinder.engine.NetworkServiceProvider;
+import com.stuffinder.exceptions.EngineServiceException;
 import com.stuffinder.exceptions.NetworkServiceException;
 import com.stuffinder.tests.NetworkServiceEmulator;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.OutputStream;
 
-public class Accueil extends Activity {
 
-
-
+public class Accueil extends BasicActivity
+{
 
     public void accueilToSeCo (View view) {
         Intent intentSeCo = new Intent ( Accueil.this, SeConnecterActivity.class);
@@ -34,18 +45,92 @@ public class Accueil extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        this.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        requestWindowFeature(Window.FEATURE_NO_TITLE);
 
         setContentView(R.layout.activity_accueil);
 
+        EngineServiceProvider.setEngineService(EngineService.getInstance());
         NetworkServiceProvider.setNetworkService(NetworkServiceEmulator.getInstance());
+
         try {
             NetworkServiceProvider.getNetworkService().initNetworkService();
+            EngineServiceProvider.getEngineService().initEngineService(this);
+
+            if (!getPackageManager().hasSystemFeature(PackageManager.FEATURE_BLUETOOTH_LE))
+                Toast.makeText(this, "La technologie Bluetooth LE n'est pas supportée.", Toast.LENGTH_SHORT).show();
+            else
+                BLEService.startBLEService(this);
+
+            initializeDefaultImageSet();
+
+            EngineServiceProvider.getEngineService().setAutoSynchronization(true);
         } catch (NetworkServiceException e) {
             Toast.makeText(this, "L'initialisation de l'application a échoué. L'application va être arrêté.", Toast.LENGTH_LONG).show();
-            finish();
+            onBackPressed();
+        } catch (EngineServiceException e) {
+            Toast.makeText(this, "L'initialisation de l'application a échoué. L'application va être arrêté.", Toast.LENGTH_LONG).show();
+            onBackPressed();
         }
 
+    }
+
+    void initializeDefaultImageSet()
+    {
+        File folder = new File(getFilesDir(), "default_images");
+        folder.mkdirs();
+        int resources[] = {R.drawable.bag, R.drawable.carkey, R.drawable.keys, R.drawable.smartphone, R.drawable.tablet, R.drawable.tag, R.drawable.wallet};
+
+        File initMark = new File(folder, "initialized");
+        if(initMark.exists())
+        {
+            Log.i(getClass().getName(), "Default image folder is already initialized.");
+            return;
+        }
+
+        for(int i=0; i < resources.length; i++)
+        {
+            try {
+                copyResourceToFolder(folder, resources[i], getResources().getResourceEntryName(resources[i]));
+                Log.i(getClass().getName(), "resource copied : " + getResources().getResourceEntryName(resources[i]));
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            }
+        }
+
+        try {
+            if(initMark.createNewFile())
+                Log.i(getClass().getName(), "initialization finished.");
+            else
+                Log.i(getClass().getName(), "initialization failed at the end. application can continue to run.");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    void copyResourceToFolder(File folder, int resourceId, String newFilename) throws FileNotFoundException
+    {
+        File file = new File(folder, newFilename + ".png");
+
+        OutputStream outputStream = new FileOutputStream(file);
+
+        BitmapFactory.Options bmOptions;
+        bmOptions = new BitmapFactory.Options();
+        bmOptions.inSampleSize = 1;
+        Bitmap bbicon = BitmapFactory.decodeResource(getResources(), resourceId);
+
+        bbicon.compress(Bitmap.CompressFormat.PNG, 100, outputStream);
+        try {
+            outputStream.flush();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        finally {
+            try {
+                outputStream.close();
+            } catch (IOException e1) {
+                e1.printStackTrace();
+            }
+        }
     }
 
 

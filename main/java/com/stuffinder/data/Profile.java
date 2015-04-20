@@ -20,6 +20,10 @@ public class Profile
 		return name;
 	}
 
+    public void setName(String name)
+    {
+        this.name = name;
+    }
 
 
 	public List<Tag> getTags()
@@ -45,8 +49,7 @@ public class Profile
 
 	public boolean equals(Object obj)
 	{
-		return (!(obj instanceof Profile)) ? false : 
-					name.equals(((Profile) obj).getName());
+		return (obj instanceof Profile) && name.equals(((Profile) obj).getName());
 	}
 
 	public int hashCode()

@@ -1,6 +1,5 @@
 package com.stuffinder.activities;
 
-import android.app.Activity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -11,7 +10,7 @@ import android.view.Window;
 import com.stuffinder.R;
 
 
-public class ReussiteCreationCompteActivity extends Activity {
+public class ReussiteCreationCompteActivity extends BasicActivity {
 
 
 
@@ -27,7 +26,7 @@ public class ReussiteCreationCompteActivity extends Activity {
     public void seConnecter ( View view) {
         Intent intent = new Intent ( ReussiteCreationCompteActivity.this, SeConnecterActivity.class);
 
-        finish(); // pour fermer cette activité avant de lancer l'activité "se connecter".
+        onBackPressed(); // pour fermer cette activité avant de lancer l'activité "se connecter".
         startActivity(intent);
     }
 

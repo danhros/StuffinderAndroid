@@ -1,6 +1,5 @@
 package com.stuffinder.activities;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
@@ -11,13 +10,13 @@ import android.widget.Toast;
 
 import com.stuffinder.R;
 import com.stuffinder.data.Tag;
-import com.stuffinder.engine.NetworkServiceProvider;
+import com.stuffinder.engine.EngineServiceProvider;
 import com.stuffinder.exceptions.NetworkServiceException;
 import com.stuffinder.exceptions.NotAuthenticatedException;
 
 import java.util.List;
 
-public class TagsActivity extends Activity {
+public class TagsActivity extends BasicActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,7 +33,7 @@ public class TagsActivity extends Activity {
 
     public void goToModif (View view) {
         try {
-            List<Tag> list = NetworkServiceProvider.getNetworkService().getTags();
+            List<Tag> list = EngineServiceProvider.getEngineService().getTags();
 
             ModifTagActivity.ChangeTagsList(list);
             Intent intentModif = new Intent (TagsActivity.this, ModifTagActivity.class);
@@ -48,22 +47,7 @@ public class TagsActivity extends Activity {
     }
 
     public void retour6 (View view) {
-        finish();
-    }
-
-    public void goToSuppr (View view) {
-
-        try {
-            List<Tag> list = NetworkServiceProvider.getNetworkService().getTags();
-
-            SupprTagActivity.changeTagsList(list);
-            Intent intentSuppr = new Intent (TagsActivity.this, SupprTagActivity.class);
-            startActivity(intentSuppr);
-        } catch (NotAuthenticatedException e) {// abnormal error.
-            Toast.makeText(this, "Une erreur anormale est survenue. Veuiller redémarrer l'application", Toast.LENGTH_LONG).show();
-        } catch (NetworkServiceException e) {
-            Toast.makeText(this, "Une erreur réseau est survenue.", Toast.LENGTH_LONG).show();
-        }
+        onBackPressed();
     }
 
 
