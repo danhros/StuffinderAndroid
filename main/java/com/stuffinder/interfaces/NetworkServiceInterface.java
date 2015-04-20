@@ -56,7 +56,15 @@ public interface NetworkServiceInterface
 	 * @throws NetworkServiceException If a network service error has occurred.
 	 */
 	public Account authenticate(String pseudo, String password) throws AccountNotFoundException, NetworkServiceException;
-	
+
+    /**
+     * To update the used password if it became incorrect after the authentication was performed.
+     * @param password The password
+     * @throws NotAuthenticatedException If the authentication isn't done.
+     * @throws IllegalFieldException If the given password is syntactically incorrect.
+     */
+    public void updatePassword(String password) throws NotAuthenticatedException, IllegalFieldException;
+
 	/**
 	 * To logout.
 	 */
@@ -68,7 +76,6 @@ public interface NetworkServiceInterface
 	 * @throws NotAuthenticatedException If the authentication is not done.
 	 */
 	public Account getCurrentAccount() throws NotAuthenticatedException;
-
 
 	
 	/**
@@ -88,9 +95,22 @@ public interface NetworkServiceInterface
 	 * @throws NetworkServiceException If a network service error has occurred.
 	 */
 	public void modifyPassword(String newPassword) throws NotAuthenticatedException, IllegalFieldException, NetworkServiceException;
-	
-	
-	/**
+
+    /**
+     * Modifies the password of the current account.
+     * @param braceletUID The new password
+     * @throws NotAuthenticatedException If the authentication is not done.
+     * @throws IllegalFieldException If the specified bracelet UID is illegal (Field id is {@link com.stuffinder.exceptions.IllegalFieldException#BRACELET_UID BRACELET_UID}). Possible reasons are :
+     * <ul>
+     *     <li>{@link com.stuffinder.exceptions.IllegalFieldException#REASON_VALUE_ALREADY_USED REASON_VALUE_ALREADY_USED} if this bracelet is already used by another account.</li>
+     *     <li>{@link com.stuffinder.exceptions.IllegalFieldException#REASON_VALUE_INCORRECT} if the specified bracelet UID is syntactically incorrect.</li>
+     * </ul>
+     * @throws NetworkServiceException If a network service error has occurred.
+     */
+    public void modifyBraceletUID(String braceletUID) throws NotAuthenticatedException, IllegalFieldException, NetworkServiceException;
+
+
+    /**
 	 * To get the tags list of the current account.
 	 * @return the tags list if the authentication is already done successfully.
 	 * @throws NotAuthenticatedException If the authentication is not done.
@@ -113,8 +133,25 @@ public interface NetworkServiceInterface
 	 * @throws NetworkServiceException If a network service error has occurred.
 	 */
 	public Tag addTag(Tag tag) throws NotAuthenticatedException, IllegalFieldException, NetworkServiceException;
-	
-	/**
+
+
+    /**
+     * Downloads an object image and returns the path of the downloaded image file.
+     * @param tag The tag to be modified.
+     * @return the local filePath of the tag.
+     * @throws NotAuthenticatedException If the authentication is not done.
+     * @throws IllegalFieldException If one field (i.e. one information) is illegal. <br/>
+     * The possible fields with the reason(s) are : <br/>
+     * <ul>
+     * 		<li>{@link IllegalFieldException#TAG_UID tag uid} (reasons {@link IllegalFieldException#REASON_VALUE_INCORRECT value incorrect} if it is syntactically incorrect and {@link IllegalFieldException#REASON_VALUE_NOT_FOUND value not found} if the tag is not found) </li>
+     * 	   	<li>{@link com.stuffinder.exceptions.IllegalFieldException#TAG_OBJECT_IMAGE TAG_OBJECT_IMAGE} (reason {@link com.stuffinder.exceptions.IllegalFieldException#REASON_VALUE_NOT_FOUND REASON_VALUE_NOT_FOUND} if there is no image associated with this tag).</li>
+     * </ul>
+     * @throws NetworkServiceException If a network service error has occurred.
+     */
+    public String downloadObjectImage(Tag tag)  throws NotAuthenticatedException, IllegalFieldException, NetworkServiceException;
+
+
+    /**
 	 * Modifies the object name for a tag.
 	 * @param tag The tag to be modified.
 	 * @param newObjectName The new object name.
@@ -202,7 +239,21 @@ public interface NetworkServiceInterface
 	 * @throws NetworkServiceException If a network service error has occurred.
 	 */
 	public Profile createProfile(String profileName, List<Tag> tagList) throws NotAuthenticatedException, IllegalFieldException, NetworkServiceException;
-	
+
+    /**
+     * Modify the name of a profile.
+     * @param profile The profile to be modified.
+     * @param newProfileName the new name for the profile.
+     * @return The profile modified if this operation succeeds.
+     * @throws NotAuthenticatedException If the authentication is not done.
+     * @throws IllegalFieldException If one field (i.e. one information) is illegal. <br/>
+     * The possible fields with the reason(s) are : <br/>
+     * <ul>
+     * 		<li>{@link IllegalFieldException#PROFILE_NAME Profile name} (reasons {@link IllegalFieldException#REASON_VALUE_INCORRECT REASON_VALUE_INCORRECT} if it is syntactically incorrect, {@link IllegalFieldException#REASON_VALUE_NOT_FOUND REASON_VALUE_NOT_FOUND} if there is no profile with this name and {@link IllegalFieldException#REASON_VALUE_ALREADY_USED REASON_VALUE_ALREADY_USED} if you have already another profile with this name) </li>
+     * </ul>
+     * @throws NetworkServiceException If a network service error has occurred.
+     */
+    public Profile modifyProfileName(Profile profile, String newProfileName) throws NotAuthenticatedException, IllegalFieldException, NetworkServiceException;
 
 	/**
 	 * Adds a tag in a profile.
@@ -378,4 +429,28 @@ public interface NetworkServiceInterface
 	 * @throws NetworkServiceException If a network service error has occurred.
 	 */
 	public List<Profile> getProfiles() throws NotAuthenticatedException, NetworkServiceException;
+
+
+
+
+    /**
+     *
+     * @return the last update time about account personnal information .
+     * @throws NetworkServiceException
+     */
+    public int getLastPersonnalInformationUpdateTime() throws NetworkServiceException, NotAuthenticatedException;
+
+    /**
+     *
+     * @return the last update time about tags.
+     * @throws NetworkServiceException
+     */
+    public long getLastTagsUpdateTime() throws NetworkServiceException, NotAuthenticatedException;
+
+    /**
+     *
+     * @return The last update time about profiles.
+     * @throws NetworkServiceException
+     */
+    public long getLastProfilesUpdateTime() throws NetworkServiceException, NotAuthenticatedException;
 }

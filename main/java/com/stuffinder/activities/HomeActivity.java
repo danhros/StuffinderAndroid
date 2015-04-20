@@ -1,6 +1,5 @@
 package com.stuffinder.activities;
 
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
@@ -12,15 +11,16 @@ import android.view.Window;
 import android.widget.Toast;
 
 import com.stuffinder.R;
+import com.stuffinder.data.Profile;
 import com.stuffinder.data.Tag;
-import com.stuffinder.engine.NetworkServiceProvider;
+import com.stuffinder.engine.EngineServiceProvider;
 import com.stuffinder.exceptions.NetworkServiceException;
 import com.stuffinder.exceptions.NotAuthenticatedException;
 
 import java.util.List;
 
 
-public class HomeActivity extends Activity {
+public class HomeActivity extends BasicActivity {
 
 
     @Override
@@ -35,7 +35,7 @@ public class HomeActivity extends Activity {
     public void goToInterieur(View view){
 
         try {
-            List<Tag> list = NetworkServiceProvider.getNetworkService().getTags();
+            List<Tag> list = EngineServiceProvider.getEngineService().getTags();
 
             InterieurActivity.ChangeTagsList(list);
             Intent intentInt = new Intent (HomeActivity.this, InterieurActivity.class);
@@ -49,12 +49,28 @@ public class HomeActivity extends Activity {
     }
 
     public void goToExterieur(View view){
-        Intent intentExt = new Intent(HomeActivity.this, ExterieurActivity.class);
-        startActivity(intentExt);}
+
+        try {
+            List<Profile> list = EngineServiceProvider.getEngineService().getProfiles();
+
+            ExterieurActivity.ChangeListProfiles(list); // Si on arrive à récupérer les infos , on les envoies à l'activié suivante , " extérieurActivity"//
+
+            Intent intentExt = new Intent (HomeActivity.this, ExterieurActivity.class);
+            startActivity(intentExt);
+
+        } catch (NotAuthenticatedException e) {// abnormal error.
+            Toast.makeText(this, "Une erreur anormale est survenue. Veuiller redémarrer l'application", Toast.LENGTH_LONG).show();
+        } catch (NetworkServiceException e) {
+            Toast.makeText(this, "Une erreur réseau est survenue.", Toast.LENGTH_LONG).show();
+        }
+
+
+    }
 
     public void goToConfiguration(View view){
         Intent intentConf = new Intent(HomeActivity.this, ConfigurationActivity.class);
-        startActivity(intentConf);}
+        startActivity(intentConf);
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -80,17 +96,17 @@ public class HomeActivity extends Activity {
 
 
     @Override
-    public void finish() { // à modifier pour quitter l'application, ou se déconnecter et revenir à l'écran de connexion.
+    public void onBackPressed() { // à modifier pour quitter l'application, ou se déconnecter et revenir à l'écran de connexion.
         // 1. Instantiate an AlertDialog.Builder with its constructor
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
 
         // 2. Chain together various setter methods to set the dialog characteristics
-        builder.setMessage("Do you really want to quit ?")
+        builder.setMessage("Voulez vous vraiment quitter ?")
                 .setTitle("");
         // Add the buttons
         builder.setPositiveButton("Oui", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {
-                HomeActivity.super.finish();
+                HomeActivity.super.onBackPressed();
             }
         });
         builder.setNegativeButton("Non", new DialogInterface.OnClickListener() {

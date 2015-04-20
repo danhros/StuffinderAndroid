@@ -1,6 +1,5 @@
 package com.stuffinder.activities;
 
-import android.app.Activity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -12,14 +11,14 @@ import android.widget.Toast;
 
 
 import com.stuffinder.data.Account;
-import com.stuffinder.engine.NetworkServiceProvider;
+import com.stuffinder.engine.EngineServiceProvider;
 import com.stuffinder.exceptions.IllegalFieldException;
 import com.stuffinder.exceptions.NetworkServiceException;
 import com.stuffinder.exceptions.NotAuthenticatedException;
 import com.stuffinder.R;
 
 
-public class InfoPersoActivity extends Activity {
+public class InfoPersoActivity extends BasicActivity {
 
 
     TextView nomTextView ;
@@ -51,7 +50,7 @@ public class InfoPersoActivity extends Activity {
 
         Account account = null;
         try {
-            account = NetworkServiceProvider.getNetworkService().getCurrentAccount();
+            account = EngineServiceProvider.getEngineService().getCurrentAccount();
             nomTextView.setText(account.getLastName());
             prenomTextView.setText(account.getFirstName());
             idTextView.setText(account.getPseudo());
@@ -64,7 +63,7 @@ public class InfoPersoActivity extends Activity {
     }
 
     public void retour5 (View view) {
-        finish();
+        onBackPressed();
     }
 
     public void actionModifier(View view) {
@@ -84,14 +83,14 @@ public class InfoPersoActivity extends Activity {
         {
             try {
                 if(! email.equals(currentEmail)) // l'adresse email a changé.
-                    NetworkServiceProvider.getNetworkService().modifyEMailAddress(editTextMail.getText().toString());
+                    EngineServiceProvider.getEngineService().modifyEMailAddress(editTextMail.getText().toString());
 
                 if(mdp.length() > 0)
-                    NetworkServiceProvider.getNetworkService().modifyPassword(editTextMdp.getText().toString());
+                    EngineServiceProvider.getEngineService().modifyPassword(editTextMdp.getText().toString());
 
                 //Intent intent = new Intent (InfoPersoActivity.this,ConfigurationActivity.class);
                 //startActivity(intent);
-                finish();
+                onBackPressed();
             }
             catch (IllegalFieldException e) {
                 switch (e.getFieldId()) {

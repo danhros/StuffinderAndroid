@@ -11,14 +11,14 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.stuffinder.R;
-import com.stuffinder.engine.NetworkServiceProvider;
+import com.stuffinder.engine.EngineServiceProvider;
 import com.stuffinder.exceptions.AccountNotFoundException;
 import com.stuffinder.exceptions.IllegalFieldException;
 
 import com.stuffinder.engine.FieldVerifier;
 import com.stuffinder.exceptions.NetworkServiceException;
 
-public class SeConnecterActivity extends Activity {
+public class SeConnecterActivity extends BasicActivity {
 
     EditText editTextIdentifiant;
     EditText editTextMdp;
@@ -26,7 +26,7 @@ public class SeConnecterActivity extends Activity {
 
 
     public void retourAccueil ( View view) {
-        finish();
+        onBackPressed();
     }
 
 
@@ -35,7 +35,6 @@ public class SeConnecterActivity extends Activity {
 
        String mdp = editTextMdp.getText().toString();
        String identifiant = editTextIdentifiant.getText().toString();
-       Intent intent = new Intent ( SeConnecterActivity.this, HomeActivity.class);
 
        if(identifiant.length() == 0)
            Toast.makeText(SeConnecterActivity.this, "Entrez votre pseudo", Toast.LENGTH_LONG).show();
@@ -46,9 +45,10 @@ public class SeConnecterActivity extends Activity {
            try {
                if (! FieldVerifier.verifyName(identifiant)) { throw new IllegalFieldException(IllegalFieldException.PSEUDO, IllegalFieldException.REASON_VALUE_INCORRECT, identifiant);}
                if (! FieldVerifier.verifyPassword(mdp) ) { throw new IllegalFieldException(IllegalFieldException.PASSWORD, IllegalFieldException.REASON_VALUE_INCORRECT, mdp);}
-               NetworkServiceProvider.getNetworkService().authenticate( identifiant, mdp);
+               EngineServiceProvider.getEngineService().authenticate( identifiant, mdp);
 
-               finish();
+               Intent intent = new Intent ( SeConnecterActivity.this, HomeActivity.class);
+               onBackPressed();
                startActivity(intent);
            }
            catch ( IllegalFieldException e ) {

@@ -1,6 +1,5 @@
 package com.stuffinder.activities;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
@@ -11,7 +10,7 @@ import android.view.Window;
 import com.stuffinder.R;
 
 
-public class ConfigurationActivity extends Activity {
+public class ConfigurationActivity extends BasicActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,9 +30,16 @@ public class ConfigurationActivity extends Activity {
         startActivity(intentPuces);
     }
 
-    public void retour1 (View view) {
-        finish();
+    public void retour (View view) {
+        onBackPressed(); }
+
+
+    public void goToConfProf ( View view) {
+        Intent intentConfProfile = new Intent(ConfigurationActivity.this, ConfigurationProfilsActivity.class );
+        startActivity(intentConfProfile);
+
     }
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
