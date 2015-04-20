@@ -492,7 +492,7 @@ public class NetworkService implements NetworkServiceInterface {
                     try {
                         result = convertInputStreamToString(inputStream);
                     } catch (InterruptedException e) {
-                        e.printStackTrace();
+                        throw new NetworkServiceException("error occurred while executing request.");
                     }
                     try {
                         // creation JSON Object
@@ -831,7 +831,7 @@ public class NetworkService implements NetworkServiceInterface {
                     try {
                         result = convertInputStreamToString(inputStream);
                     } catch (InterruptedException e) {
-                        e.printStackTrace();
+                        throw new NetworkServiceException("error occurred while executing request.");
                     }
                     try {
                         // creation JSON Object
@@ -1049,7 +1049,7 @@ public class NetworkService implements NetworkServiceInterface {
                     try {
                         result = convertInputStreamToString(inputStream);
                     } catch (InterruptedException e) {
-                        e.printStackTrace();
+                        throw new NetworkServiceException("error occurred while executing request.");
                     }
 
                     try {
@@ -1092,7 +1092,7 @@ public class NetworkService implements NetworkServiceInterface {
     }
 
     @Override
-    public Profile modifyProfileName(Profile profile, String newProfileName) throws NotAuthenticatedException, IllegalFieldException, NetworkServiceException, InterruptedException {
+    public Profile modifyProfileName(Profile profile, String newProfileName) throws NotAuthenticatedException, IllegalFieldException, NetworkServiceException {
         if(currentAccount == null) { throw new NotAuthenticatedException(); }
         String profileName = profile.getName();
         // We first check the validity of the arguments to create the parameters
@@ -1117,7 +1117,7 @@ public class NetworkService implements NetworkServiceInterface {
                     try {
                         result = convertInputStreamToString(inputStream);
                     } catch (InterruptedException e) {
-                        e.printStackTrace();
+                        throw new NetworkServiceException("error occurred while executing request.");
                     }
                     try {
                         // creation JSON Object
@@ -1152,6 +1152,8 @@ public class NetworkService implements NetworkServiceInterface {
             }
         } catch (IOException | IllegalStateException e) {
             throw new NetworkServiceException("exception of type IOException or IllegalStateException catched.");
+        } catch (InterruptedException e) {
+            throw new NetworkServiceException("error occurred while executing request.");
         }
         return profile;
     }
@@ -1181,7 +1183,7 @@ public class NetworkService implements NetworkServiceInterface {
                     try {
                         result = convertInputStreamToString(inputStream);
                     } catch (InterruptedException e) {
-                        e.printStackTrace();
+                        throw new NetworkServiceException("error occurred while executing request.");
                     }
                     try {
                         // creation JSON Object
@@ -1265,7 +1267,7 @@ public class NetworkService implements NetworkServiceInterface {
                     try {
                         result = convertInputStreamToString(inputStream);
                     } catch (InterruptedException e) {
-                        e.printStackTrace();
+                        throw new NetworkServiceException("error occurred while executing request.");
                     }
 
                     try {
@@ -1337,7 +1339,7 @@ public class NetworkService implements NetworkServiceInterface {
                     try {
                         result = convertInputStreamToString(inputStream);
                     } catch (InterruptedException e) {
-                        e.printStackTrace();
+                        throw new NetworkServiceException("error occurred while executing request.");
                     }
                     try {
                         // creation JSON Object
@@ -1421,7 +1423,7 @@ public class NetworkService implements NetworkServiceInterface {
                     try {
                         result = convertInputStreamToString(inputStream);
                     } catch (InterruptedException e) {
-                        e.printStackTrace();
+                        throw new NetworkServiceException("error occurred while executing request.");
                     }
                     try {
                         // creation JSON Object
@@ -1468,13 +1470,13 @@ public class NetworkService implements NetworkServiceInterface {
     }
 
 
-    public Profile removeAllFromProfile(Profile profile) throws NotAuthenticatedException, IllegalFieldException, NetworkServiceException, InterruptedException {
+    public Profile removeAllFromProfile(Profile profile) throws NotAuthenticatedException, IllegalFieldException, NetworkServiceException {
 
         return replaceTagListOfProfile(profile,new ArrayList<Tag>());
     }
 
     @Override
-    public Profile replaceTagListOfProfile(Profile profile, List<Tag> tagList) throws NotAuthenticatedException, IllegalFieldException, NetworkServiceException, InterruptedException {
+    public Profile replaceTagListOfProfile(Profile profile, List<Tag> tagList) throws NotAuthenticatedException, IllegalFieldException, NetworkServiceException {
         if(currentAccount == null) {
             throw new NotAuthenticatedException();
         }
@@ -1529,7 +1531,7 @@ public class NetworkService implements NetworkServiceInterface {
                     try {
                         result = convertInputStreamToString(inputStream);
                     } catch (InterruptedException e) {
-                        e.printStackTrace();
+                        throw new NetworkServiceException("error occurred while executing request.");
                     }
 
                     try {
@@ -1573,7 +1575,7 @@ public class NetworkService implements NetworkServiceInterface {
     }
 
     @Override
-    public void removeProfile(Profile profile) throws NotAuthenticatedException, IllegalFieldException, NetworkServiceException, InterruptedException {
+    public void removeProfile(Profile profile) throws NotAuthenticatedException, IllegalFieldException, NetworkServiceException {
         if(currentAccount == null) { throw new NotAuthenticatedException(); }
         // changer aussi currentAccount ? -> changer visibilitÈ de l'attribut Profils
         String profileName = profile.getName();
@@ -1596,7 +1598,7 @@ public class NetworkService implements NetworkServiceInterface {
                     try {
                         result = convertInputStreamToString(inputStream);
                     } catch (InterruptedException e) {
-                        e.printStackTrace();
+                        throw new NetworkServiceException("error occurred while executing request.");
                     }
                     try {
                         // creation JSON Object
@@ -1632,6 +1634,8 @@ public class NetworkService implements NetworkServiceInterface {
             }
         } catch (IOException | IllegalStateException e) {
             throw new NetworkServiceException("exception of type IOException or IllegalStateException catched.");
+        } catch (InterruptedException e) {
+            throw new NetworkServiceException("error occurred while executing request.");
         }
 
     }
@@ -1659,7 +1663,7 @@ public class NetworkService implements NetworkServiceInterface {
                     try {
                         result = convertInputStreamToString(inputStream);
                     } catch (InterruptedException e) {
-                        e.printStackTrace();
+                        throw new NetworkServiceException("error occurred while executing request.");
                     }
                     try {
                         // creation JSON Object
@@ -1727,7 +1731,7 @@ public class NetworkService implements NetworkServiceInterface {
                     try {
                         result = convertInputStreamToString(inputStream);
                     } catch (InterruptedException e) {
-                        e.printStackTrace();
+                        throw new NetworkServiceException("error occurred while executing request.");
                     }
                     try {
                         // creation JSON Object

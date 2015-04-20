@@ -55,7 +55,7 @@ public interface NetworkServiceInterface
 	 * @throws AccountNotFoundException If the couple (pseudo, password) doesn't exist.
 	 * @throws NetworkServiceException If a network service error has occurred.
 	 */
-	public Account authenticate(String pseudo, String password) throws AccountNotFoundException, NetworkServiceException, InterruptedException;
+	public Account authenticate(String pseudo, String password) throws AccountNotFoundException, NetworkServiceException;
 
     /**
      * To update the used password if it became incorrect after the authentication was performed.
@@ -253,7 +253,7 @@ public interface NetworkServiceInterface
      * </ul>
      * @throws NetworkServiceException If a network service error has occurred.
      */
-    public Profile modifyProfileName(Profile profile, String newProfileName) throws NotAuthenticatedException, IllegalFieldException, NetworkServiceException, InterruptedException;
+    public Profile modifyProfileName(Profile profile, String newProfileName) throws NotAuthenticatedException, IllegalFieldException, NetworkServiceException;
 
 	/**
 	 * Adds a tag in a profile.
@@ -392,7 +392,7 @@ public interface NetworkServiceInterface
 	 * 
 	 * 
 	 */
-	public Profile replaceTagListOfProfile(Profile profile, List<Tag> tagList) throws NotAuthenticatedException, IllegalFieldException, NetworkServiceException, InterruptedException;
+	public Profile replaceTagListOfProfile(Profile profile, List<Tag> tagList) throws NotAuthenticatedException, IllegalFieldException, NetworkServiceException;
 
 	
 	/**
@@ -406,7 +406,7 @@ public interface NetworkServiceInterface
 	 * </ul>
 	 * @throws NetworkServiceException If a network error has occurred.
 	 */
-	public void removeProfile(Profile profile) throws NotAuthenticatedException, IllegalFieldException, NetworkServiceException, InterruptedException;
+	public void removeProfile(Profile profile) throws NotAuthenticatedException, IllegalFieldException, NetworkServiceException;
 
 	/**
 	 * To get a profile by a name.
