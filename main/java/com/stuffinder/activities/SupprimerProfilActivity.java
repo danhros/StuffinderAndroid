@@ -7,6 +7,7 @@ import android.util.SparseBooleanArray;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.Window;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.view.View;
@@ -28,10 +29,9 @@ public class SupprimerProfilActivity extends Activity {
 
 
     private static List<Profile> listProfiles = new ArrayList<>();
-    private static Profile profile = null;
+    private static Profile selectedProfile = null;
     private ListView listView = null;
     private List<String> listNames = new ArrayList<>();
-    private int nombreProfilSup = 0;
 
 
     public static void ChangeListProfiles(List<Profile> list) {        // Méthode qui agit sur la variable de classe listProfiles, elle met à jour les données de la liste des profils
@@ -62,8 +62,20 @@ public class SupprimerProfilActivity extends Activity {
         profileArrayAdapter.addAll(listNames);
 
         listView.setAdapter(profileArrayAdapter);
-        listView.setItemChecked(0, true);
+
         listView.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
+
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                @Override
+                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                    selectedProfile = listProfiles.get(position);
+                }
+            }
+        );
+
+        listView.setItemChecked(0, true);
+        if(listProfiles.size() > 0)
+            selectedProfile = listProfiles.get(0);
     }
 
 
@@ -74,14 +86,10 @@ public class SupprimerProfilActivity extends Activity {
 
     public void supprimer(View view) {
 
-        SparseBooleanArray tab = listView.getCheckedItemPositions();
-
-        for (int i = 0; i < tab.size(); i++) {
-
-            if (tab.get(i)) {
-                nombreProfilSup++;
+            if (selectedProfile != null) {
                 try {
-                    EngineServiceProvider.getEngineService().removeProfile(listProfiles.get(i));
+                    EngineServiceProvider.getEngineService().removeProfile(selectedProfile);
+                    onBackPressed();
                 } catch (IllegalFieldException e) {
                     if(e.getReason() == IllegalFieldException.REASON_VALUE_INCORRECT)
                     {
@@ -96,13 +104,8 @@ public class SupprimerProfilActivity extends Activity {
                     return;
                 }
             }
-        }
-
-        if (nombreProfilSup == 0) {
+        else
             Toast.makeText(this, "Vous n'avez sélectionné aucun profil", Toast.LENGTH_LONG).show();
-        } else {
-            onBackPressed();
-        }
     }
 
 
