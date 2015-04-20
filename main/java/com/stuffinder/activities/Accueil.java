@@ -19,7 +19,7 @@ import com.stuffinder.engine.EngineServiceProvider;
 import com.stuffinder.engine.NetworkServiceProvider;
 import com.stuffinder.exceptions.EngineServiceException;
 import com.stuffinder.exceptions.NetworkServiceException;
-import com.stuffinder.tests.NetworkServiceEmulator;
+import com.stuffinder.webservice.NetworkService;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -50,7 +50,7 @@ public class Accueil extends BasicActivity
         setContentView(R.layout.activity_accueil);
 
         EngineServiceProvider.setEngineService(EngineService.getInstance());
-        NetworkServiceProvider.setNetworkService(NetworkServiceEmulator.getInstance());
+        NetworkServiceProvider.setNetworkService(NetworkService.getInstance());
 
         try {
             NetworkServiceProvider.getNetworkService().initNetworkService();
