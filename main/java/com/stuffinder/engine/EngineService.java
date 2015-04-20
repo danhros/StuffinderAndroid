@@ -1828,7 +1828,8 @@ public class EngineService {
                                         Logger.getLogger(getClass().getName()).log(Level.INFO, "image file may not be deleted from auto sync folder.");
 
                                 tag.setObjectImageName(newImageName);
-                                tag.setImageVersion(result.getImageVersion());
+                                if(result != null)
+                                    tag.setImageVersion(result.getImageVersion());
 
                                 accountMutex.release();
 

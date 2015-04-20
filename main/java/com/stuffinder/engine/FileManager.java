@@ -282,6 +282,11 @@ public class FileManager {
         return new File(autoSyncImageFolder.getAbsolutePath(), getFilenameFromTag(tag)); // TODO traiter les differents types de fichiers images.
     }
 
+    public static File getTemporaryTagImageFile(Tag tag)
+    {
+        return new File(rootFolder, getFilenameFromTag(tag)); // TODO traiter les differents types de fichiers images.
+    }
+
     private static String getFilenameFromTag(Tag tag)
     {
         return tag.getUid().replaceAll("\\:", "_") + ".png";
