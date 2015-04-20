@@ -560,6 +560,11 @@ public class NetworkService implements NetworkServiceInterface {
                             for (int i = 0; i < arrayOfJsonTag.length(); i++) {
                                 JSONObject tagjson = arrayOfJsonTag.getJSONObject(i);
                                 Tag tag = new Tag(tagjson.getString("tag_id"), tagjson.getString("object_name"));
+                                if (tagjson.getBoolean("picture")){
+                                    tag.setObjectImageName("picture");
+                                }else{
+                                    tag.setObjectImageName(null);
+                                }
                                 res.add(tag);
                             }
 
@@ -818,7 +823,7 @@ public class NetworkService implements NetworkServiceInterface {
             reqEntity.addPart("pseudo", new StringBody(currentAccount.getPseudo(), ContentType.TEXT_PLAIN));
             reqEntity.addPart("password", new StringBody(currentPassword, ContentType.TEXT_PLAIN));
             reqEntity.addPart("id", new StringBody(tag.getUid(), ContentType.TEXT_PLAIN));
-            httppost.setEntity((HttpEntity) reqEntity.build());
+            httppost.setEntity(reqEntity.build());
             HttpResponse httpResponse = client.execute(httppost);
             StatusLine statusLine = httpResponse.getStatusLine();
             int statusCode = statusLine.getStatusCode();
