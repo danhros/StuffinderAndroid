@@ -4,6 +4,7 @@ import com.stuffinder.data.Account;
 import com.stuffinder.data.Profile;
 import com.stuffinder.data.Tag;
 import com.stuffinder.engine.FieldVerifier;
+import com.stuffinder.engine.FileManager;
 import com.stuffinder.exceptions.AccountNotFoundException;
 import com.stuffinder.exceptions.IllegalFieldException;
 import com.stuffinder.exceptions.NetworkServiceException;
@@ -697,7 +698,7 @@ public class NetworkService implements NetworkServiceInterface {
             throw new IllegalFieldException(IllegalFieldException.TAG_UID, IllegalFieldException.REASON_VALUE_INCORRECT, tag.getUid());
         if(currentAccount == null) { throw new NotAuthenticatedException(); }
         InputStream inputStream = null;
-        String destinationFile = "/data/data/com.stuffinder/files" + tag.getUid()+".png";
+        String destinationFile = FileManager.getTemporaryTagImageFile(tag).getAbsolutePath();
         String result = "";
         try {
             // make GET request to the given URL
