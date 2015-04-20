@@ -197,7 +197,7 @@ public class NetworkService implements NetworkServiceInterface {
     }
 
     @Override
-    public Account authenticate(String pseudo, String password) throws AccountNotFoundException, NetworkServiceException, InterruptedException {
+    public Account authenticate(String pseudo, String password) throws AccountNotFoundException, NetworkServiceException {
         // We first check the validity of the arguments to create the parameters
         if(! FieldVerifier.verifyName(pseudo))
             throw new IllegalFieldException(IllegalFieldException.PSEUDO, IllegalFieldException.REASON_VALUE_INCORRECT, pseudo);
@@ -257,6 +257,10 @@ public class NetworkService implements NetworkServiceInterface {
             }
         } catch (IOException | IllegalStateException e) {
             throw new NetworkServiceException("exception of type IOException or IllegalStateException catched.");
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        } catch (NetworkServiceException e) {
+            e.printStackTrace();
         }
 
         return currentAccount;
