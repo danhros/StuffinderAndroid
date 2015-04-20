@@ -220,6 +220,8 @@ public class BLEService  extends Service{
 
     private int getDistance(int rssi){
 
+        rssi = rssi < 0 ? -rssi : rssi;
+
         if (rssi < 40)
             return TRES_PROCHE;
 
@@ -685,7 +687,8 @@ public class BLEService  extends Service{
 
         @Override
         public void onLeScan(final BluetoothDevice device, final int rssi, byte[] scanRecord) {
-            if (device != null) {
+            if (device != null && rssi > - 70) {
+
                 mDevices.add(device);
             }
 
