@@ -702,7 +702,7 @@ public class NetworkService implements NetworkServiceInterface {
         String result = "";
         try {
             // make GET request to the given URL
-            HttpResponse httpResponse = executeRequest(new HttpGet(server_address + "downloadobjectimage?pseudo=" + URLEncoder.encode(currentAccount.getPseudo(), "UTF-8") + "&password=" + URLEncoder.encode(currentPassword, "UTF-8") + "&id=" + URLEncoder.encode(tag.getUid(), "UTF-8")));
+            HttpResponse httpResponse = executeRequest(new HttpGet(server_address + "downloadimagetag?pseudo=" + URLEncoder.encode(currentAccount.getPseudo(), "UTF-8") + "&password=" + URLEncoder.encode(currentPassword, "UTF-8") + "&id=" + URLEncoder.encode(tag.getUid(), "UTF-8")));
             StatusLine statusLine = httpResponse.getStatusLine();
             int statusCode = statusLine.getStatusCode();
             if (statusCode == 200) {
