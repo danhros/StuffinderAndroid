@@ -548,7 +548,7 @@ public class BLEService  extends Service{
         }
 
         public void stopRunning() {
-            this.continueRunning = true;
+            this.continueRunning = false;
         }
 
         @Override
@@ -558,13 +558,19 @@ public class BLEService  extends Service{
             while (continueRunning) {
                 try {
                     connectToBracelet(braceletUID);
+                    try {
+                        Thread.sleep(5000); //delai entre chaque annonce au bracelet
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
                     disconnectFromBracelet();
                 } catch (BLEServiceException e) {
                     e.printStackTrace();
                 }
 
                 try {
-                    Thread.sleep(5000); //delai entre chaque annonce au bracelet
+                    if(continueRunning)
+                        Thread.sleep(5000); //delai entre chaque annonce au bracelet
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
@@ -573,20 +579,57 @@ public class BLEService  extends Service{
     }
 
     private int notificationId = 0;
+    HashMap<Tag, Integer> tagNotificationIndexes = new HashMap<>();
+    HashMap<Tag, Integer> tagNotificationNumbers = new HashMap<>();
 
     private void notifyMissingTag(Tag tag)
     {
+        Integer index = tagNotificationIndexes.get(tag);
+
+        if(index == null)
+        {
+            index = notificationId++;
+            tagNotificationIndexes.put(tag, index);
+        }
+
+        Integer number = tagNotificationNumbers.get(tag);
+        number = number == null ? 1 : number + 1;
+
+        tagNotificationNumbers.put(tag, number);
+
+
         Notification.Builder mBuilder =
                 new Notification.Builder(this)
                         .setSmallIcon(R.drawable.ic_launcher)
-                        .setContentTitle("A tag is missing")
-                        .setContentText("Your " + tag.getObjectName() + " seems to be lost.");
+                        .setContentTitle("Un object est manquant")
+                        .setContentText("Votre objet " + tag.getObjectName() + " est perdu depuis " + 15 * number + " secondes.");
 
         NotificationManager mNotificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
 
-        mNotificationManager.notify(notificationId++, mBuilder.build());
+        mNotificationManager.notify(index, mBuilder.build());
     }
 
+    private void notifyTagFoundAgain(Tag tag)
+    {
+        Integer number = tagNotificationNumbers.get(tag);
+
+        if(number != null)
+        {
+            Integer index = tagNotificationIndexes.get(tag);
+            tagNotificationNumbers.remove(tag);
+
+
+            Notification.Builder mBuilder =
+                    new Notification.Builder(this)
+                            .setSmallIcon(R.drawable.ic_launcher)
+                            .setContentTitle("Un object est manquant")
+                            .setContentText("Votre objet" + tag.getObjectName() + " a été retrouvé.");
+
+            NotificationManager mNotificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+
+            mNotificationManager.notify(index, mBuilder.build());
+        }
+    }
 
 
     private class TagsSurveillanceThread extends Thread
@@ -612,6 +655,8 @@ public class BLEService  extends Service{
         public void run()
         {
             boolean firstLoop = true;
+            continueTagsSurveillance = true;
+            tagNotificationNumbers.clear();
 
             while (continueTagsSurveillance) {
                 mDevices.clear();
@@ -640,6 +685,8 @@ public class BLEService  extends Service{
 
                         if (i == 0)
                             missingTags.add(t);
+                        else
+                            notifyTagFoundAgain(t); // will notify if the tag was lost and is found again.
                     }
 
                     if(firstLoop)
@@ -719,18 +766,9 @@ public class BLEService  extends Service{
 //                intentAction = ACTION_GATT_DISCONNECTED;
                 Log.i(getClass().getName(), "Disconnected from bracelet GATT server.");
 //                broadcastUpdate(intentAction);
-                surveillanceCallback.onBraceletDisconnected();
-            }
-        }
 
-        public void onReadRemoteRssi(BluetoothGatt gatt, int rssi, int status) {
-            if (status == BluetoothGatt.GATT_SUCCESS) {
-//                broadcastUpdate(ACTION_GATT_RSSI, rssi);
-
-                if(locationCallback != null)
-                    locationCallback.onDistanceMeasured(getDistance(rssi));
-            } else {
-                Log.w(getClass().getName(), "onReadRemoteRssi received: " + status);
+                if(surveillanceCallback != null)
+                    surveillanceCallback.onBraceletDisconnected();
             }
         }
 
@@ -741,13 +779,13 @@ public class BLEService  extends Service{
 
                 getGattService(getSupportedGattService(gatt));
 
-                if(locationCallback != null && getSupportedGattService(gatt) != null)
+                if(surveillanceCallback != null && getSupportedGattService(gatt) != null)
                     try {
                         disconnectFromBracelet();
                     } catch (BLEServiceException e) {// will never occur.
                         e.printStackTrace();
                     }
-                else if(locationCallback != null)
+                else if(surveillanceCallback != null)
                 {
                 }
 

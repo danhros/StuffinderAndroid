@@ -55,6 +55,12 @@ public class ExterieurActivity extends BasicActivity {
     }
 
     @Override
+    public void onBackPressed() {
+        disconnectFromBLEService();
+        super.onBackPressed();
+    }
+
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
