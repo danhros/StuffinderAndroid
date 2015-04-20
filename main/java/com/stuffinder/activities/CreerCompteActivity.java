@@ -92,7 +92,7 @@ public class CreerCompteActivity extends BasicActivity {
                 switch (e.getFieldId()) {
                     case IllegalFieldException.PSEUDO:
                         if(e.getReason() == IllegalFieldException.REASON_VALUE_ALREADY_USED)
-                            Toast.makeText(CreerCompteActivity.this, "Pseudo déja utilise", Toast.LENGTH_LONG).show();
+                            Toast.makeText(CreerCompteActivity.this, "Pseudo déjà utilise", Toast.LENGTH_LONG).show();
                         else
                             Toast.makeText(CreerCompteActivity.this, "Pseudo incorrect", Toast.LENGTH_LONG).show();
                         break;
@@ -105,7 +105,7 @@ public class CreerCompteActivity extends BasicActivity {
                         Toast.makeText(CreerCompteActivity.this, "Email Incorrect", Toast.LENGTH_LONG).show();
                         break;
                     case IllegalFieldException.PASSWORD:
-                        Toast.makeText(CreerCompteActivity.this, "Mot de passe incorect ; il doit contenir au moins 6 caractères", Toast.LENGTH_LONG).show();
+                        Toast.makeText(CreerCompteActivity.this, "Mot de passe incorrect ; il doit contenir au moins 6 caractères", Toast.LENGTH_LONG).show();
                         break;
                 }
             }

@@ -36,6 +36,8 @@ import ch.boye.httpclientandroidlib.entity.ContentType;
 import ch.boye.httpclientandroidlib.entity.mime.content.FileBody;
 import ch.boye.httpclientandroidlib.entity.mime.content.StringBody;
 import ch.boye.httpclientandroidlib.impl.client.DefaultHttpClient;
+import ch.boye.httpclientandroidlib.impl.conn.PoolingClientConnectionManager;
+import ch.boye.httpclientandroidlib.util.EntityUtils;
 
 import static com.stuffinder.webservice.ConstantsWebService.server_address;
 import static com.stuffinder.webservice.ErrorCode.DATABASE_ACCESS_ISSUE;
@@ -104,7 +106,10 @@ public class NetworkService implements NetworkServiceInterface {
 
     @Override
     public void initNetworkService() throws NetworkServiceException {
-        NetworkService.client = new DefaultHttpClient();
+
+        PoolingClientConnectionManager httpClientConnectionManager = new PoolingClientConnectionManager();
+        httpClientConnectionManager.setDefaultMaxPerRoute(25);
+        NetworkService.client = new DefaultHttpClient(httpClientConnectionManager);
 
         lastPersonalInformationUpdateDate = -1;
         lastProfilesUpdateDate = -1;
@@ -536,6 +541,7 @@ public class NetworkService implements NetworkServiceInterface {
             HttpResponse httpResponse = executeRequest(new HttpGet(server_address + "retrievetag?pseudo=" + URLEncoder.encode(currentAccount.getPseudo(), "UTF-8") + "&password=" + URLEncoder.encode(currentPassword, "UTF-8")));
             StatusLine statusLine = httpResponse.getStatusLine();
             int statusCode = statusLine.getStatusCode();
+
             if (statusCode == 200) {
                 // receive response as inputStream
                 HttpEntity entity = httpResponse.getEntity();
@@ -556,15 +562,20 @@ public class NetworkService implements NetworkServiceInterface {
                                 Tag tag = new Tag(tagjson.getString("tag_id"), tagjson.getString("object_name"));
                                 res.add(tag);
                             }
+
+                            EntityUtils.consume(entity);
                         }
                         else {
+                            EntityUtils.consume(entity);
                             throw new NotAuthenticatedException();
                         }
                     } catch (JSONException e) {
+                        EntityUtils.consume(entity);
                         e.printStackTrace();
                         throw new NetworkServiceException("Server response might be invalid.");
                     }
                 } else {
+                    EntityUtils.consume(entity);
                     throw new NetworkServiceException("Connection issue with the server, null input stream");
                 }
             }
@@ -616,7 +627,7 @@ public class NetworkService implements NetworkServiceInterface {
                 reqEntity.addPart("object_name", new StringBody(tag.getObjectName(), ContentType.MULTIPART_FORM_DATA));
                 reqEntity.addPart("id", new StringBody(tag.getUid(), ContentType.MULTIPART_FORM_DATA));
                 httppost.setEntity(reqEntity.build());
-                httpResponse = client.execute((HttpUriRequest) httppost);
+                httpResponse = client.execute(httppost);
             }
             StatusLine statusLine = httpResponse.getStatusLine();
             int statusCode = statusLine.getStatusCode();
@@ -1740,23 +1751,29 @@ public class NetworkService implements NetworkServiceInterface {
                                             .getJSONObject(i);
                                     Tag tag = new Tag(tagjson.getString("tag_id"),
                                             tagjson.getString("object_name"),
-                                            tagjson.getString("picture"));
+                                            tagjson.getString("picture_version"));
                                     profile.addTag(tag);
                                 }
                                 profileList.add(profile);
                             }
+
+                            EntityUtils.consume(entity);
                         }
                         // Else display error message
                         else {
+                            EntityUtils.consume(entity);
                             throw new NetworkServiceException(
                                     "Wrong pseudo/password combination or access to the DB");
                         }
                     } catch (JSONException e) {
+                        EntityUtils.consume(entity);
                         // "Error Occurred [Server's JSON response might be invalid]!"
+                        e.printStackTrace();
                         throw new NetworkServiceException(
-                                "Server response might be invalid.");
+                                "Server response might be invalid.  ");
                     }
                 } else {
+                    EntityUtils.consume(entity);
                     throw new NetworkServiceException(
                             "Connection issue with the server, null input stream");
                 }
