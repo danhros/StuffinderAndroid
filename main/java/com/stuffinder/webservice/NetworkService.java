@@ -196,6 +196,21 @@ public class NetworkService implements NetworkServiceInterface {
 
     }
 
+    private void processError(int error) throws NetworkServiceException, NotAuthenticatedException {
+        switch (error){
+            case ErrorCode.DATABASE_ACCESS_ISSUE :
+                throw new NetworkServiceException("database access issue.");
+            case ErrorCode.ILLEGAL_USE_OF_SPECIAL_CHARACTER :
+                throw new NetworkServiceException("illegal use of special character.");
+            case ErrorCode.INVALID_PSEUDO_PASSWORD_COMBINATION :
+                throw new NotAuthenticatedException();
+            case ErrorCode.JSON_ENCODING_ISSUE :
+                throw new NetworkServiceException("json encoding issue.");
+            default:
+                throw new NetworkServiceException("unknown error.");
+        }
+    }
+
     private void extractLastUpdateDatesFromJSONObject(JSONObject jsonObject) throws JSONException {
         lastPersonalInformationUpdateDate = jsonObject.getLong("lastpersonalinformationsupdatetime");
         lastTagsUpdateDate = jsonObject.getLong("lasttagsupdatetime");
@@ -264,9 +279,7 @@ public class NetworkService implements NetworkServiceInterface {
         } catch (IOException | IllegalStateException e) {
             throw new NetworkServiceException("exception of type IOException or IllegalStateException catched.");
         } catch (InterruptedException e) {
-            e.printStackTrace();
-        } catch (NetworkServiceException e) {
-            e.printStackTrace();
+            throw new NetworkServiceException("Error occurred while executing request.");
         }
 
         return currentAccount;
@@ -970,6 +983,9 @@ public class NetworkService implements NetworkServiceInterface {
                         }
                         // Else display error message
 
+                        else if (returnCode == ErrorCode.INVALID_PSEUDO_PASSWORD_COMBINATION) {
+                            throw new NotAuthenticatedException();
+                        }
                         else if (returnCode == ErrorCode.ILLEGAL_USE_OF_SPECIAL_CHARACTER) {
                             throw new NetworkServiceException("Illegal use of special character");
 
@@ -1066,6 +1082,9 @@ public class NetworkService implements NetworkServiceInterface {
                             extractLastUpdateDatesFromJSONObject(obj);
                         }
                         // Else display error message
+                        else if (returnCode == ErrorCode.INVALID_PSEUDO_PASSWORD_COMBINATION) {
+                            throw new NotAuthenticatedException();
+                        }
                         else if (returnCode == DATABASE_ACCESS_ISSUE) {
                             throw new NetworkServiceException("Problem of access to the DB");
                         } else {
@@ -1132,10 +1151,14 @@ public class NetworkService implements NetworkServiceInterface {
                         if (returnCode == NO_ERROR) {
                             extractLastUpdateDatesFromJSONObject(obj);
                         }
-                        // Else display error message
-                        else {
-                            throw new NetworkServiceException("Wrong pseudo/password combination or access to the DB");
+                        else if (returnCode == ErrorCode.ILLEGAL_USE_OF_SPECIAL_CHARACTER) {
+                            throw new NetworkServiceException("Illegal use of special character");
                         }
+                        else if (returnCode == ErrorCode.INVALID_PSEUDO_PASSWORD_COMBINATION) {
+                            throw new NotAuthenticatedException();
+                        }
+                        else
+                            throw new NetworkServiceException("Unknown error.");
                     } catch (JSONException e) {
                         // "Error Occurred [Server's JSON response might be invalid]!"
                         throw new NetworkServiceException("Server response might be invalid.");
@@ -1199,10 +1222,14 @@ public class NetworkService implements NetworkServiceInterface {
                             extractLastUpdateDatesFromJSONObject(obj);
                            profile.addTag(tag);
                         }
-                        // Else display error message
-                        else {
-                            throw new NetworkServiceException("Wrong pseudo/password combination or access to the DB");
+                        else if (returnCode == ErrorCode.ILLEGAL_USE_OF_SPECIAL_CHARACTER) {
+                            throw new NetworkServiceException("Illegal use of special character");
                         }
+                        else if (returnCode == ErrorCode.INVALID_PSEUDO_PASSWORD_COMBINATION) {
+                            throw new NotAuthenticatedException();
+                        }
+                        else
+                            throw new NetworkServiceException("Unknown error.");
                     } catch (JSONException e) {
                         // "Error Occurred [Server's JSON response might be invalid]!"
                         throw new NetworkServiceException("Server response might be invalid.");
@@ -1355,10 +1382,14 @@ public class NetworkService implements NetworkServiceInterface {
                             extractLastUpdateDatesFromJSONObject(obj);
                             profile.removeTag(tag);
                         }
-                        // Else display error message
-                        else {
-                            throw new NetworkServiceException("Wrong pseudo/password combination or access to the DB");
+                        else if (returnCode == ErrorCode.ILLEGAL_USE_OF_SPECIAL_CHARACTER) {
+                            throw new NetworkServiceException("Illegal use of special character");
                         }
+                        else if (returnCode == ErrorCode.INVALID_PSEUDO_PASSWORD_COMBINATION) {
+                            throw new NotAuthenticatedException();
+                        }
+                        else
+                            throw new NetworkServiceException("Unknown error.");
                     } catch (JSONException e) {
                         // "Error Occurred [Server's JSON response might be invalid]!"
                         throw new NetworkServiceException("Server response might be invalid.");
@@ -1443,12 +1474,14 @@ public class NetworkService implements NetworkServiceInterface {
                                profile.removeTag(tag);
                             }
                         }
-                        // Else display error message
-                        else if (returnCode == 1) {
-                            throw new NetworkServiceException("Problem of access to the DB");
-                        } else {
+                        else if (returnCode == ErrorCode.ILLEGAL_USE_OF_SPECIAL_CHARACTER) {
+                            throw new NetworkServiceException("Illegal use of special character");
+                        }
+                        else if (returnCode == ErrorCode.INVALID_PSEUDO_PASSWORD_COMBINATION) {
                             throw new NotAuthenticatedException();
                         }
+                        else
+                            throw new NetworkServiceException("Unknown error.");
                     } catch (JSONException e) {
                         // "Error Occurred [Server's JSON response might be invalid]!"
                         throw new NetworkServiceException("Server response might be invalid.");
@@ -1613,10 +1646,14 @@ public class NetworkService implements NetworkServiceInterface {
                         if (returnCode == NO_ERROR) {
                             extractLastUpdateDatesFromJSONObject(obj);
                         }
-                        // Else display error message
-                        else {
-                            throw new NetworkServiceException("Wrong pseudo/password combination or access to the DB");
+                        else if (returnCode == ErrorCode.ILLEGAL_USE_OF_SPECIAL_CHARACTER) {
+                            throw new NetworkServiceException("Illegal use of special character");
                         }
+                        else if (returnCode == ErrorCode.INVALID_PSEUDO_PASSWORD_COMBINATION) {
+                            throw new NotAuthenticatedException();
+                        }
+                        else
+                            throw new NetworkServiceException("Unknown error.");
                     } catch (JSONException e) {
                         // "Error Occurred [Server's JSON response might be invalid]!"
                         throw new NetworkServiceException("Server response might be invalid.");
@@ -1685,10 +1722,14 @@ public class NetworkService implements NetworkServiceInterface {
                                 newProfile.addTag(tag1);
                             }
                         }
-                        // Else display error message
-                        else {
-                            throw new NetworkServiceException("Wrong pseudo/password combination or access to the DB");
+                        else if (returnCode == ErrorCode.ILLEGAL_USE_OF_SPECIAL_CHARACTER) {
+                            throw new NetworkServiceException("Illegal use of special character");
                         }
+                        else if (returnCode == ErrorCode.INVALID_PSEUDO_PASSWORD_COMBINATION) {
+                            throw new NotAuthenticatedException();
+                        }
+                        else
+                            throw new NetworkServiceException("Unknown error.");
                     } catch (JSONException e) {
                         // "Error Occurred [Server's JSON response might be invalid]!"
                         throw new NetworkServiceException("Server response might be invalid.");
@@ -1769,12 +1810,14 @@ public class NetworkService implements NetworkServiceInterface {
 
                             EntityUtils.consume(entity);
                         }
-                        // Else display error message
-                        else {
-                            EntityUtils.consume(entity);
-                            throw new NetworkServiceException(
-                                    "Wrong pseudo/password combination or access to the DB");
+                        else if (returnCode == ErrorCode.ILLEGAL_USE_OF_SPECIAL_CHARACTER) {
+                            throw new NetworkServiceException("Illegal use of special character");
                         }
+                        else if (returnCode == ErrorCode.INVALID_PSEUDO_PASSWORD_COMBINATION) {
+                            throw new NotAuthenticatedException();
+                        }
+                        else
+                            throw new NetworkServiceException("Unknown error.");
                     } catch (JSONException e) {
                         EntityUtils.consume(entity);
                         // "Error Occurred [Server's JSON response might be invalid]!"
@@ -1890,6 +1933,11 @@ public class NetworkService implements NetworkServiceInterface {
                         else if (returnCode == ErrorCode.ILLEGAL_USE_OF_SPECIAL_CHARACTER) {
                             throw new NetworkServiceException("Illegal use of special character");
                         }
+                        else if (returnCode == ErrorCode.INVALID_PSEUDO_PASSWORD_COMBINATION) {
+                            throw new NotAuthenticatedException();
+                        }
+                        else
+                            throw new NetworkServiceException("Unknown error.");
                     } catch (JSONException e) {
                         throw new NetworkServiceException("Server response might be invalid.");
                     }
