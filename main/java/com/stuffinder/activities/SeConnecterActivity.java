@@ -1,6 +1,5 @@
 package com.stuffinder.activities;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
@@ -47,7 +46,7 @@ public class SeConnecterActivity extends BasicActivity {
                if (! FieldVerifier.verifyPassword(mdp) ) { throw new IllegalFieldException(IllegalFieldException.PASSWORD, IllegalFieldException.REASON_VALUE_INCORRECT, mdp);}
                EngineServiceProvider.getEngineService().authenticate( identifiant, mdp);
 
-               Intent intent = new Intent ( SeConnecterActivity.this, HomeActivity.class);
+               Intent intent = new Intent (SeConnecterActivity.this, HomeActivity.class);
                onBackPressed();
                startActivity(intent);
            }
