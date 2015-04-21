@@ -3,7 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:background="#ff24088f">
+    android:background="#ff3309e4">
 
     <Button
         style="@android:style/MediaButton.Previous"
@@ -11,7 +11,7 @@
         android:layout_height="wrap_content"
         android:text="Retour"
         android:id="@+id/button4"
-        android:background="#ff24088f"
+        android:background="#ff3309e4"
         android:textColor="#ffffffff"
         android:textSize="10dp"
         android:layout_alignParentTop="true"

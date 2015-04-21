@@ -5,7 +5,7 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     android:paddingBottom="@dimen/activity_vertical_margin"
     tools:context="com.stuffinder.activities.ModifierProfileActivity"
-    android:background="#ff24088f">
+    android:background="#ff3309e4">
 
     <Button
         style="@android:style/MediaButton.Previous"
@@ -13,7 +13,7 @@
         android:layout_height="33dp"
         android:text="Retour"
         android:id="@+id/buttonRetour"
-        android:background="#ff24088f"
+        android:background="#ff3309e4"
         android:textColor="#ffffffff"
         android:textSize="10dp"
         android:onClick="retour"
