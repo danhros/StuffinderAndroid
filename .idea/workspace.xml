@@ -1,0 +1,2214 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AndroidConfiguredLogFilters">
+    <filters>
+      <filter>
+        <option name="logLevel" value="verbose" />
+        <option name="logMessagePattern" value="" />
+        <option name="logTagPattern" value="" />
+        <option name="name" value="app: com.stuffinder" />
+        <option name="packageNamePattern" value="com.stuffinder" />
+        <option name="pid" value="" />
+      </filter>
+    </filters>
+  </component>
+  <component name="AndroidLayouts">
+    <shared>
+      <config />
+    </shared>
+  </component>
+  <component name="AndroidLogFilters">
+    <option name="TOOL_WINDOW_CONFIGURED_FILTER" value="app: com.stuffinder" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="4d85a6d5-279d-49cd-a374-e5f952c43e06" name="Default" comment="" />
+    <ignored path="Stuffinder.iws" />
+    <ignored path=".idea/workspace.xml" />
+    <option name="TRACKING_ENABLED" value="true" />
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="ChangesViewManager" flattened_view="true" show_ignored="false" />
+  <component name="Commander">
+    <leftPanel />
+    <rightPanel />
+    <splitter proportion="0.5" />
+  </component>
+  <component name="CreatePatchCommitExecutor">
+    <option name="PATCH_PATH" value="" />
+  </component>
+  <component name="DaemonCodeAnalyzer">
+    <disable_hints />
+  </component>
+  <component name="ExecutionTargetManager" SELECTED_TARGET="default_target" />
+  <component name="FavoritesManager">
+    <favorites_list name="Stuffinder" />
+  </component>
+  <component name="FileEditorManager">
+    <leaf />
+  </component>
+  <component name="FindManager">
+    <FindUsagesManager>
+      <setting name="OPEN_NEW_TAB" value="true" />
+    </FindUsagesManager>
+  </component>
+  <component name="Git.Settings">
+    <option name="PREVIOUS_COMMIT_AUTHORS">
+      <list>
+        <option value=" " />
+        <option value="a" />
+      </list>
+    </option>
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/app/src" />
+    <option name="RECENT_BRANCH_BY_REPOSITORY">
+      <map>
+        <entry key="$PROJECT_DIR$/app/src" value="ApplicationBranch" />
+      </map>
+    </option>
+  </component>
+  <component name="GradleLocalSettings">
+    <option name="tasksExpandState">
+      <map>
+        <entry key="" value="true" />
+      </map>
+    </option>
+    <option name="availableProjects">
+      <map>
+        <entry>
+          <key>
+            <ExternalProjectPojo>
+              <option name="name" value="Stuffinder" />
+              <option name="path" value="$PROJECT_DIR$" />
+            </ExternalProjectPojo>
+          </key>
+          <value>
+            <list>
+              <ExternalProjectPojo>
+                <option name="name" value=":app" />
+                <option name="path" value="$PROJECT_DIR$/app" />
+              </ExternalProjectPojo>
+              <ExternalProjectPojo>
+                <option name="name" value="Stuffinder" />
+                <option name="path" value="$PROJECT_DIR$" />
+              </ExternalProjectPojo>
+            </list>
+          </value>
+        </entry>
+      </map>
+    </option>
+    <option name="availableTasks">
+      <map>
+        <entry key="$PROJECT_DIR$/app">
+          <value>
+            <list>
+              <ExternalTaskPojo>
+                <option name="description" value="Displays the Android dependencies of the project" />
+                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$/app" />
+                <option name="name" value="androidDependencies" />
+              </ExternalTaskPojo>
+              <ExternalTaskPojo>
+                <option name="description" value="Assembles all variants of all applications and secondary packages." />
+                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$/app" />
+                <option name="name" value="assemble" />
+              </ExternalTaskPojo>
+              <ExternalTaskPojo>
+                <option name="description" value="Assembles all Debug builds" />
+                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$/app" />
+                <option name="name" value="assembleDebug" />
+              </ExternalTaskPojo>
+              <ExternalTaskPojo>
+                <option name="description" value="Assembles the Test build for the Debug build" />
+                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$/app" />
+                <option name="name" value="assembleDebugTest" />
+              </ExternalTaskPojo>
+              <ExternalTaskPojo>
+                <option name="description" value="Assembles all Release builds" />
+                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$/app" />
+                <option name="name" value="assembleRelease" />
+              </ExternalTaskPojo>
+              <ExternalTaskPojo>
+                <option name="description" value="Assembles and tests this project." />
+                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$/app" />
+                <option name="name" value="build" />
+              </ExternalTaskPojo>
+              <ExternalTaskPojo>
+                <option name="description" value="Assembles and tests this project and all projects that depend on it." />
+                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$/app" />
+                <option name="name" value="buildDependents" />
+              </ExternalTaskPojo>
+              <ExternalTaskPojo>
+                <option name="description" value="Assembles and tests this project and all projects it depends on." />
+                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$/app" />
+                <option name="name" value="buildNeeded" />
+              </ExternalTaskPojo>
+              <ExternalTaskPojo>
+                <option name="description" value="Runs all checks." />
+                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$/app" />
+                <option name="name" value="check" />
+              </ExternalTaskPojo>
+              <ExternalTaskPojo>
+                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$/app" />
+                <option name="name" value="checkDebugManifest" />
+              </ExternalTaskPojo>
+              <ExternalTaskPojo>
+                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$/app" />
+                <option name="name" value="checkReleaseManifest" />
+              </ExternalTaskPojo>
+              <ExternalTaskPojo>
+                <option name="description" value="Deletes the build directory." />
+                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$/app" />
+                <option name="name" value="clean" />
+              </ExternalTaskPojo>
+              <ExternalTaskPojo>
+                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$/app" />
+                <option name="name" value="compileDebugAidl" />
+              </ExternalTaskPojo>
+              <ExternalTaskPojo>
+                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$/app" />
+                <option name="name" value="compileDebugJava" />
+              </ExternalTaskPojo>
+              <ExternalTaskPojo>
+                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$/app" />
+                <option name="name" value="compileDebugNdk" />
+              </ExternalTaskPojo>
+              <ExternalTaskPojo>
+                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$/app" />
+                <option name="name" value="compileDebugRenderscript" />
+              </ExternalTaskPojo>
+              <ExternalTaskPojo>
+                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$/app" />
+                <option name="name" value="compileDebugSources" />
+              </ExternalTaskPojo>
+              <ExternalTaskPojo>
+                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$/app" />
+                <option name="name" value="compileDebugTestAidl" />
+              </ExternalTaskPojo>
+              <ExternalTaskPojo>
+                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$/app" />
+                <option name="name" value="compileDebugTestJava" />
+              </ExternalTaskPojo>
+              <ExternalTaskPojo>
+                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$/app" />
+                <option name="name" value="compileDebugTestNdk" />
+              </ExternalTaskPojo>
+              <ExternalTaskPojo>
+                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$/app" />
+                <option name="name" value="compileDebugTestRenderscript" />
+              </ExternalTaskPojo>
+              <ExternalTaskPojo>
+                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$/app" />
+                <option name="name" value="compileDebugTestSources" />
+              </ExternalTaskPojo>
+              <ExternalTaskPojo>
+                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$/app" />
+                <option name="name" value="compileLint" />
+              </ExternalTaskPojo>
+              <ExternalTaskPojo>
+                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$/app" />
+                <option name="name" value="compileReleaseAidl" />
+              </ExternalTaskPojo>
+              <ExternalTaskPojo>
+                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$/app" />
+                <option name="name" value="compileReleaseJava" />
+              </ExternalTaskPojo>
+              <ExternalTaskPojo>
+                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$/app" />
+                <option name="name" value="compileReleaseNdk" />
+              </ExternalTaskPojo>
+              <ExternalTaskPojo>
+                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$/app" />
+                <option name="name" value="compileReleaseRenderscript" />
+              </ExternalTaskPojo>
+              <ExternalTaskPojo>
+                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$/app" />
+                <option name="name" value="compileReleaseSources" />
+              </ExternalTaskPojo>
+              <ExternalTaskPojo>
+                <option name="description" value="Installs and runs the tests for Build 'debug' on connected devices." />
+                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$/app" />
+                <option name="name" value="connectedAndroidTest" />
+              </ExternalTaskPojo>
+              <ExternalTaskPojo>
+                <option name="description" value="Runs all device checks on currently connected devices." />
+                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$/app" />
+                <option name="name" value="connectedCheck" />
+              </ExternalTaskPojo>
+              <ExternalTaskPojo>
+                <option name="description" value="Runs all device checks using Device Providers and Test Servers." />
+                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$/app" />
+                <option name="name" value="deviceCheck" />
+              </ExternalTaskPojo>
+              <ExternalTaskPojo>
+                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$/app" />
+                <option name="name" value="dexDebug" />
+              </ExternalTaskPojo>
+              <ExternalTaskPojo>
+                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$/app" />
+                <option name="name" value="dexDebugTest" />
+              </ExternalTaskPojo>
+              <ExternalTaskPojo>
+                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$/app" />
+                <option name="name" value="dexRelease" />
+              </ExternalTaskPojo>
+              <ExternalTaskPojo>
+                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$/app" />
+                <option name="name" value="generateDebugAssets" />
+              </ExternalTaskPojo>
+              <ExternalTaskPojo>
+                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$/app" />
+                <option name="name" value="generateDebugBuildConfig" />
+              </ExternalTaskPojo>
+              <ExternalTaskPojo>
+                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$/app" />
+                <option name="name" value="generateDebugResValues" />
+              </ExternalTaskPojo>
+              <ExternalTaskPojo>
+                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$/app" />
+                <option name="name" value="generateDebugResources" />
+              </ExternalTaskPojo>
+              <ExternalTaskPojo>
+                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$/app" />
+                <option name="name" value="generateDebugSources" />
+              </ExternalTaskPojo>
+              <ExternalTaskPojo>
+                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$/app" />
+                <option name="name" value="generateDebugTestAssets" />
+              </ExternalTaskPojo>
+              <ExternalTaskPojo>
+                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$/app" />
+                <option name="name" value="generateDebugTestBuildConfig" />
+              </ExternalTaskPojo>
+              <ExternalTaskPojo>
+                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$/app" />
+                <option name="name" value="generateDebugTestResValues" />
+              </ExternalTaskPojo>
+              <ExternalTaskPojo>
+                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$/app" />
+                <option name="name" value="generateDebugTestResources" />
+              </ExternalTaskPojo>
+              <ExternalTaskPojo>
+                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$/app" />
+                <option name="name" value="generateDebugTestSources" />
+              </ExternalTaskPojo>
+              <ExternalTaskPojo>
+                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$/app" />
+                <option name="name" value="generateReleaseAssets" />
+              </ExternalTaskPojo>
+              <ExternalTaskPojo>
+                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$/app" />
+                <option name="name" value="generateReleaseBuildConfig" />
+              </ExternalTaskPojo>
+              <ExternalTaskPojo>
+                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$/app" />
+                <option name="name" value="generateReleaseResValues" />
+              </ExternalTaskPojo>
+              <ExternalTaskPojo>
+                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$/app" />
+                <option name="name" value="generateReleaseResources" />
+              </ExternalTaskPojo>
+              <ExternalTaskPojo>
+                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$/app" />
+                <option name="name" value="generateReleaseSources" />
+              </ExternalTaskPojo>
+              <ExternalTaskPojo>
+                <option name="description" value="Installs the Debug build" />
+                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$/app" />
+                <option name="name" value="installDebug" />
+              </ExternalTaskPojo>
+              <ExternalTaskPojo>
+                <option name="description" value="Installs the Test build for the Debug build" />
+                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$/app" />
+                <option name="name" value="installDebugTest" />
+              </ExternalTaskPojo>
+              <ExternalTaskPojo>
+                <option name="description" value="Runs lint on all variants." />
+                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$/app" />
+                <option name="name" value="lint" />
+              </ExternalTaskPojo>
+              <ExternalTaskPojo>
+                <option name="description" value="Runs lint on the Debug build" />
+                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$/app" />
+                <option name="name" value="lintDebug" />
+              </ExternalTaskPojo>
+              <ExternalTaskPojo>
+                <option name="description" value="Runs lint on the Release build" />
+                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$/app" />
+                <option name="name" value="lintRelease" />
+              </ExternalTaskPojo>
+              <ExternalTaskPojo>
+                <option name="description" value="Runs lint on just the fatal issues in the Release build" />
+                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$/app" />
+                <option name="name" value="lintVitalRelease" />
+              </ExternalTaskPojo>
+              <ExternalTaskPojo>
+                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$/app" />
+                <option name="name" value="mergeDebugAssets" />
+              </ExternalTaskPojo>
+              <ExternalTaskPojo>
+                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$/app" />
+                <option name="name" value="mergeDebugResources" />
+              </ExternalTaskPojo>
+              <ExternalTaskPojo>
+                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$/app" />
+                <option name="name" value="mergeDebugTestAssets" />
+              </ExternalTaskPojo>
+              <ExternalTaskPojo>
+                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$/app" />
+                <option name="name" value="mergeDebugTestResources" />
+              </ExternalTaskPojo>
+              <ExternalTaskPojo>
+                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$/app" />
+                <option name="name" value="mergeReleaseAssets" />
+              </ExternalTaskPojo>
+              <ExternalTaskPojo>
+                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$/app" />
+                <option name="name" value="mergeReleaseResources" />
+              </ExternalTaskPojo>
+              <ExternalTaskPojo>
+                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$/app" />
+                <option name="name" value="packageDebug" />
+              </ExternalTaskPojo>
+              <ExternalTaskPojo>
+                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$/app" />
+                <option name="name" value="packageDebugTest" />
+              </ExternalTaskPojo>
+              <ExternalTaskPojo>
+                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$/app" />
+                <option name="name" value="packageRelease" />
+              </ExternalTaskPojo>
+              <ExternalTaskPojo>
+                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$/app" />
+                <option name="name" value="preBuild" />
+              </ExternalTaskPojo>
+              <ExternalTaskPojo>
+                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$/app" />
+                <option name="name" value="preDebugBuild" />
+              </ExternalTaskPojo>
+              <ExternalTaskPojo>
+                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$/app" />
+                <option name="name" value="preDebugTestBuild" />
+              </ExternalTaskPojo>
+              <ExternalTaskPojo>
+                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$/app" />
+                <option name="name" value="preDexDebug" />
+              </ExternalTaskPojo>
+              <ExternalTaskPojo>
+                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$/app" />
+                <option name="name" value="preDexDebugTest" />
+              </ExternalTaskPojo>
+              <ExternalTaskPojo>
+                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$/app" />
+                <option name="name" value="preDexRelease" />
+              </ExternalTaskPojo>
+              <ExternalTaskPojo>
+                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$/app" />
+                <option name="name" value="preReleaseBuild" />
+              </ExternalTaskPojo>
+              <ExternalTaskPojo>
+                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$/app" />
+                <option name="name" value="prepareDebugDependencies" />
+              </ExternalTaskPojo>
+              <ExternalTaskPojo>
+                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$/app" />
+                <option name="name" value="prepareDebugTestDependencies" />
+              </ExternalTaskPojo>
+              <ExternalTaskPojo>
+                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$/app" />
+                <option name="name" value="prepareReleaseDependencies" />
+              </ExternalTaskPojo>
+              <ExternalTaskPojo>
+                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$/app" />
+                <option name="name" value="processDebugJavaRes" />
+              </ExternalTaskPojo>
+              <ExternalTaskPojo>
+                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$/app" />
+                <option name="name" value="processDebugManifest" />
+              </ExternalTaskPojo>
+              <ExternalTaskPojo>
+                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$/app" />
+                <option name="name" value="processDebugResources" />
+              </ExternalTaskPojo>
+              <ExternalTaskPojo>
+                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$/app" />
+                <option name="name" value="processDebugTestJavaRes" />
+              </ExternalTaskPojo>
+              <ExternalTaskPojo>
+                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$/app" />
+                <option name="name" value="processDebugTestManifest" />
+              </ExternalTaskPojo>
+              <ExternalTaskPojo>
+                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$/app" />
+                <option name="name" value="processDebugTestResources" />
+              </ExternalTaskPojo>
+              <ExternalTaskPojo>
+                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$/app" />
+                <option name="name" value="processReleaseJavaRes" />
+              </ExternalTaskPojo>
+              <ExternalTaskPojo>
+                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$/app" />
+                <option name="name" value="processReleaseManifest" />
+              </ExternalTaskPojo>
+              <ExternalTaskPojo>
+                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$/app" />
+                <option name="name" value="processReleaseResources" />
+              </ExternalTaskPojo>
+              <ExternalTaskPojo>
+                <option name="description" value="Displays the signing info for each variant" />
+                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$/app" />
+                <option name="name" value="signingReport" />
+              </ExternalTaskPojo>
+              <ExternalTaskPojo>
+                <option name="description" value="Uninstall all applications." />
+                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$/app" />
+                <option name="name" value="uninstallAll" />
+              </ExternalTaskPojo>
+              <ExternalTaskPojo>
+                <option name="description" value="Uninstalls the Debug build" />
+                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$/app" />
+                <option name="name" value="uninstallDebug" />
+              </ExternalTaskPojo>
+              <ExternalTaskPojo>
+                <option name="description" value="Uninstalls the Test build for the Debug build" />
+                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$/app" />
+                <option name="name" value="uninstallDebugTest" />
+              </ExternalTaskPojo>
+              <ExternalTaskPojo>
+                <option name="description" value="Uninstalls the Release build" />
+                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$/app" />
+                <option name="name" value="uninstallRelease" />
+              </ExternalTaskPojo>
+              <ExternalTaskPojo>
+                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$/app" />
+                <option name="name" value="validateDebugSigning" />
+              </ExternalTaskPojo>
+              <ExternalTaskPojo>
+                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$/app" />
+                <option name="name" value="zipalignDebug" />
+              </ExternalTaskPojo>
+            </list>
+          </value>
+        </entry>
+      </map>
+    </option>
+    <option name="modificationStamps">
+      <map>
+        <entry key="$PROJECT_DIR$" value="4288564193049" />
+      </map>
+    </option>
+    <option name="projectBuildClasspath">
+      <map>
+        <entry key="$PROJECT_DIR$">
+          <value>
+            <ExternalProjectBuildClasspathPojo>
+              <option name="modulesBuildClasspath">
+                <map>
+                  <entry key="$PROJECT_DIR$">
+                    <value>
+                      <ExternalModuleBuildClasspathPojo>
+                        <option name="entries">
+                          <list>
+                            <option value="$APPLICATION_HOME_DIR$/gradle/m2repository/com/android/tools/build/gradle/1.0.0/gradle-1.0.0-sources.jar" />
+                            <option value="$APPLICATION_HOME_DIR$/gradle/m2repository/com/android/tools/build/builder/1.0.0/builder-1.0.0-sources.jar" />
+                            <option value="$APPLICATION_HOME_DIR$/gradle/m2repository/com/android/tools/build/builder-model/1.0.0/builder-model-1.0.0-sources.jar" />
+                            <option value="$APPLICATION_HOME_DIR$/gradle/m2repository/com/android/tools/build/builder/1.0.0/builder-1.0.0.jar" />
+                            <option value="$APPLICATION_HOME_DIR$/gradle/m2repository/com/android/tools/build/gradle/1.0.0/gradle-1.0.0.jar" />
+                            <option value="$APPLICATION_HOME_DIR$/gradle/m2repository/com/android/tools/build/builder-model/1.0.0/builder-model-1.0.0.jar" />
+                          </list>
+                        </option>
+                        <option name="path" value="$PROJECT_DIR$" />
+                      </ExternalModuleBuildClasspathPojo>
+                    </value>
+                  </entry>
+                  <entry key="$PROJECT_DIR$/app">
+                    <value>
+                      <ExternalModuleBuildClasspathPojo>
+                        <option name="entries">
+                          <list>
+                            <option value="$APPLICATION_HOME_DIR$/gradle/m2repository/com/android/tools/build/gradle/1.0.0/gradle-1.0.0-sources.jar" />
+                            <option value="$APPLICATION_HOME_DIR$/gradle/m2repository/com/android/tools/build/builder/1.0.0/builder-1.0.0-sources.jar" />
+                            <option value="$APPLICATION_HOME_DIR$/gradle/m2repository/com/android/tools/build/builder-model/1.0.0/builder-model-1.0.0-sources.jar" />
+                            <option value="$APPLICATION_HOME_DIR$/gradle/m2repository/com/android/tools/build/builder/1.0.0/builder-1.0.0.jar" />
+                            <option value="$APPLICATION_HOME_DIR$/gradle/m2repository/com/android/tools/build/gradle/1.0.0/gradle-1.0.0.jar" />
+                            <option value="$APPLICATION_HOME_DIR$/gradle/m2repository/com/android/tools/build/builder-model/1.0.0/builder-model-1.0.0.jar" />
+                          </list>
+                        </option>
+                        <option name="path" value="$PROJECT_DIR$/app" />
+                      </ExternalModuleBuildClasspathPojo>
+                    </value>
+                  </entry>
+                  <entry key="$PROJECT_DIR$/httpclientandroidlib">
+                    <value>
+                      <ExternalModuleBuildClasspathPojo>
+                        <option name="entries">
+                          <list>
+                            <option value="$APPLICATION_HOME_DIR$/gradle/m2repository/com/android/tools/build/gradle/1.0.0/gradle-1.0.0-sources.jar" />
+                            <option value="$APPLICATION_HOME_DIR$/gradle/m2repository/com/android/tools/build/builder/1.0.0/builder-1.0.0-sources.jar" />
+                            <option value="$APPLICATION_HOME_DIR$/gradle/m2repository/com/android/tools/build/builder-model/1.0.0/builder-model-1.0.0-sources.jar" />
+                            <option value="$APPLICATION_HOME_DIR$/gradle/m2repository/com/android/tools/build/builder/1.0.0/builder-1.0.0.jar" />
+                            <option value="$APPLICATION_HOME_DIR$/gradle/m2repository/com/android/tools/build/gradle/1.0.0/gradle-1.0.0.jar" />
+                            <option value="$APPLICATION_HOME_DIR$/gradle/m2repository/com/android/tools/build/builder-model/1.0.0/builder-model-1.0.0.jar" />
+                          </list>
+                        </option>
+                        <option name="path" value="$PROJECT_DIR$/httpclientandroidlib" />
+                      </ExternalModuleBuildClasspathPojo>
+                    </value>
+                  </entry>
+                  <entry key="$PROJECT_DIR$/httpcomponents-client-android-4.3.5">
+                    <value>
+                      <ExternalModuleBuildClasspathPojo>
+                        <option name="entries">
+                          <list>
+                            <option value="$APPLICATION_HOME_DIR$/gradle/m2repository/com/android/tools/build/gradle/1.0.0/gradle-1.0.0-sources.jar" />
+                            <option value="$APPLICATION_HOME_DIR$/gradle/m2repository/com/android/tools/build/builder/1.0.0/builder-1.0.0-sources.jar" />
+                            <option value="$APPLICATION_HOME_DIR$/gradle/m2repository/com/android/tools/build/builder-model/1.0.0/builder-model-1.0.0-sources.jar" />
+                            <option value="$APPLICATION_HOME_DIR$/gradle/m2repository/com/android/tools/build/builder/1.0.0/builder-1.0.0.jar" />
+                            <option value="$APPLICATION_HOME_DIR$/gradle/m2repository/com/android/tools/build/gradle/1.0.0/gradle-1.0.0.jar" />
+                            <option value="$APPLICATION_HOME_DIR$/gradle/m2repository/com/android/tools/build/builder-model/1.0.0/builder-model-1.0.0.jar" />
+                          </list>
+                        </option>
+                        <option name="path" value="$PROJECT_DIR$/httpcomponents-client-android-4.3.5" />
+                      </ExternalModuleBuildClasspathPojo>
+                    </value>
+                  </entry>
+                  <entry key="$PROJECT_DIR$/mylibrary">
+                    <value>
+                      <ExternalModuleBuildClasspathPojo>
+                        <option name="entries">
+                          <list>
+                            <option value="$APPLICATION_HOME_DIR$/gradle/m2repository/com/android/tools/build/gradle/1.0.0/gradle-1.0.0-sources.jar" />
+                            <option value="$APPLICATION_HOME_DIR$/gradle/m2repository/com/android/tools/build/builder/1.0.0/builder-1.0.0-sources.jar" />
+                            <option value="$APPLICATION_HOME_DIR$/gradle/m2repository/com/android/tools/build/builder-model/1.0.0/builder-model-1.0.0-sources.jar" />
+                            <option value="$APPLICATION_HOME_DIR$/gradle/m2repository/com/android/tools/build/builder/1.0.0/builder-1.0.0.jar" />
+                            <option value="$APPLICATION_HOME_DIR$/gradle/m2repository/com/android/tools/build/gradle/1.0.0/gradle-1.0.0.jar" />
+                            <option value="$APPLICATION_HOME_DIR$/gradle/m2repository/com/android/tools/build/builder-model/1.0.0/builder-model-1.0.0.jar" />
+                          </list>
+                        </option>
+                        <option name="path" value="$PROJECT_DIR$/mylibrary" />
+                      </ExternalModuleBuildClasspathPojo>
+                    </value>
+                  </entry>
+                </map>
+              </option>
+              <option name="name" value="app" />
+              <option name="projectBuildClasspath">
+                <list>
+                  <option value="$APPLICATION_HOME_DIR$/gradle/gradle-2.2.1/lib/ant-1.9.3.jar" />
+                  <option value="$APPLICATION_HOME_DIR$/gradle/gradle-2.2.1/lib/ant-launcher-1.9.3.jar" />
+                  <option value="$APPLICATION_HOME_DIR$/gradle/gradle-2.2.1/lib/gradle-base-services-2.2.1.jar" />
+                  <option value="$APPLICATION_HOME_DIR$/gradle/gradle-2.2.1/lib/gradle-base-services-groovy-2.2.1.jar" />
+                  <option value="$APPLICATION_HOME_DIR$/gradle/gradle-2.2.1/lib/gradle-cli-2.2.1.jar" />
+                  <option value="$APPLICATION_HOME_DIR$/gradle/gradle-2.2.1/lib/gradle-core-2.2.1.jar" />
+                  <option value="$APPLICATION_HOME_DIR$/gradle/gradle-2.2.1/lib/gradle-docs-2.2.1.jar" />
+                  <option value="$APPLICATION_HOME_DIR$/gradle/gradle-2.2.1/lib/gradle-launcher-2.2.1.jar" />
+                  <option value="$APPLICATION_HOME_DIR$/gradle/gradle-2.2.1/lib/gradle-messaging-2.2.1.jar" />
+                  <option value="$APPLICATION_HOME_DIR$/gradle/gradle-2.2.1/lib/gradle-model-core-2.2.1.jar" />
+                  <option value="$APPLICATION_HOME_DIR$/gradle/gradle-2.2.1/lib/gradle-model-groovy-2.2.1.jar" />
+                  <option value="$APPLICATION_HOME_DIR$/gradle/gradle-2.2.1/lib/gradle-native-2.2.1.jar" />
+                  <option value="$APPLICATION_HOME_DIR$/gradle/gradle-2.2.1/lib/gradle-open-api-2.2.1.jar" />
+                  <option value="$APPLICATION_HOME_DIR$/gradle/gradle-2.2.1/lib/gradle-resources-2.2.1.jar" />
+                  <option value="$APPLICATION_HOME_DIR$/gradle/gradle-2.2.1/lib/gradle-tooling-api-2.2.1.jar" />
+                  <option value="$APPLICATION_HOME_DIR$/gradle/gradle-2.2.1/lib/gradle-ui-2.2.1.jar" />
+                  <option value="$APPLICATION_HOME_DIR$/gradle/gradle-2.2.1/lib/gradle-wrapper-2.2.1.jar" />
+                  <option value="$APPLICATION_HOME_DIR$/gradle/gradle-2.2.1/lib/groovy-all-2.3.6.jar" />
+                  <option value="$APPLICATION_HOME_DIR$/gradle/gradle-2.2.1/lib/plugins/ant-antlr-1.9.3.jar" />
+                  <option value="$APPLICATION_HOME_DIR$/gradle/gradle-2.2.1/lib/plugins/gradle-announce-2.2.1.jar" />
+                  <option value="$APPLICATION_HOME_DIR$/gradle/gradle-2.2.1/lib/plugins/gradle-antlr-2.2.1.jar" />
+                  <option value="$APPLICATION_HOME_DIR$/gradle/gradle-2.2.1/lib/plugins/gradle-build-comparison-2.2.1.jar" />
+                  <option value="$APPLICATION_HOME_DIR$/gradle/gradle-2.2.1/lib/plugins/gradle-build-init-2.2.1.jar" />
+                  <option value="$APPLICATION_HOME_DIR$/gradle/gradle-2.2.1/lib/plugins/gradle-code-quality-2.2.1.jar" />
+                  <option value="$APPLICATION_HOME_DIR$/gradle/gradle-2.2.1/lib/plugins/gradle-cunit-2.2.1.jar" />
+                  <option value="$APPLICATION_HOME_DIR$/gradle/gradle-2.2.1/lib/plugins/gradle-dependency-management-2.2.1.jar" />
+                  <option value="$APPLICATION_HOME_DIR$/gradle/gradle-2.2.1/lib/plugins/gradle-diagnostics-2.2.1.jar" />
+                  <option value="$APPLICATION_HOME_DIR$/gradle/gradle-2.2.1/lib/plugins/gradle-ear-2.2.1.jar" />
+                  <option value="$APPLICATION_HOME_DIR$/gradle/gradle-2.2.1/lib/plugins/gradle-ide-2.2.1.jar" />
+                  <option value="$APPLICATION_HOME_DIR$/gradle/gradle-2.2.1/lib/plugins/gradle-ide-native-2.2.1.jar" />
+                  <option value="$APPLICATION_HOME_DIR$/gradle/gradle-2.2.1/lib/plugins/gradle-ivy-2.2.1.jar" />
+                  <option value="$APPLICATION_HOME_DIR$/gradle/gradle-2.2.1/lib/plugins/gradle-jacoco-2.2.1.jar" />
+                  <option value="$APPLICATION_HOME_DIR$/gradle/gradle-2.2.1/lib/plugins/gradle-javascript-2.2.1.jar" />
+                  <option value="$APPLICATION_HOME_DIR$/gradle/gradle-2.2.1/lib/plugins/gradle-jetty-2.2.1.jar" />
+                  <option value="$APPLICATION_HOME_DIR$/gradle/gradle-2.2.1/lib/plugins/gradle-language-groovy-2.2.1.jar" />
+                  <option value="$APPLICATION_HOME_DIR$/gradle/gradle-2.2.1/lib/plugins/gradle-language-java-2.2.1.jar" />
+                  <option value="$APPLICATION_HOME_DIR$/gradle/gradle-2.2.1/lib/plugins/gradle-language-jvm-2.2.1.jar" />
+                  <option value="$APPLICATION_HOME_DIR$/gradle/gradle-2.2.1/lib/plugins/gradle-language-native-2.2.1.jar" />
+                  <option value="$APPLICATION_HOME_DIR$/gradle/gradle-2.2.1/lib/plugins/gradle-maven-2.2.1.jar" />
+                  <option value="$APPLICATION_HOME_DIR$/gradle/gradle-2.2.1/lib/plugins/gradle-osgi-2.2.1.jar" />
+                  <option value="$APPLICATION_HOME_DIR$/gradle/gradle-2.2.1/lib/plugins/gradle-platform-base-2.2.1.jar" />
+                  <option value="$APPLICATION_HOME_DIR$/gradle/gradle-2.2.1/lib/plugins/gradle-platform-jvm-2.2.1.jar" />
+                  <option value="$APPLICATION_HOME_DIR$/gradle/gradle-2.2.1/lib/plugins/gradle-platform-native-2.2.1.jar" />
+                  <option value="$APPLICATION_HOME_DIR$/gradle/gradle-2.2.1/lib/plugins/gradle-plugin-development-2.2.1.jar" />
+                  <option value="$APPLICATION_HOME_DIR$/gradle/gradle-2.2.1/lib/plugins/gradle-plugin-use-2.2.1.jar" />
+                  <option value="$APPLICATION_HOME_DIR$/gradle/gradle-2.2.1/lib/plugins/gradle-plugins-2.2.1.jar" />
+                  <option value="$APPLICATION_HOME_DIR$/gradle/gradle-2.2.1/lib/plugins/gradle-publish-2.2.1.jar" />
+                  <option value="$APPLICATION_HOME_DIR$/gradle/gradle-2.2.1/lib/plugins/gradle-reporting-2.2.1.jar" />
+                  <option value="$APPLICATION_HOME_DIR$/gradle/gradle-2.2.1/lib/plugins/gradle-resources-http-2.2.1.jar" />
+                  <option value="$APPLICATION_HOME_DIR$/gradle/gradle-2.2.1/lib/plugins/gradle-scala-2.2.1.jar" />
+                  <option value="$APPLICATION_HOME_DIR$/gradle/gradle-2.2.1/lib/plugins/gradle-signing-2.2.1.jar" />
+                  <option value="$APPLICATION_HOME_DIR$/gradle/gradle-2.2.1/lib/plugins/gradle-sonar-2.2.1.jar" />
+                  <option value="$APPLICATION_HOME_DIR$/gradle/gradle-2.2.1/lib/plugins/ivy-2.2.0.jar" />
+                  <option value="$PROJECT_DIR$/buildSrc/src/main/java" />
+                  <option value="$PROJECT_DIR$/buildSrc/src/main/groovy" />
+                </list>
+              </option>
+            </ExternalProjectBuildClasspathPojo>
+          </value>
+        </entry>
+      </map>
+    </option>
+  </component>
+  <component name="IdeDocumentHistory">
+    <option name="changedFiles">
+      <list>
+        <option value="$PROJECT_DIR$/app/src/main/java/com/stuffinder/engine/Constants.java" />
+        <option value="$PROJECT_DIR$/app/src/main/res/layout/password_dialog.xml" />
+        <option value="$PROJECT_DIR$/app/src/main/java/com/stuffinder/engine/ThreadAlarm.java" />
+        <option value="$PROJECT_DIR$/app/src/main/res/layout/activity_ajout_tag.xml" />
+        <option value="$PROJECT_DIR$/app/src/main/java/com/stuffinder/data/Tag.java" />
+        <option value="$PROJECT_DIR$/app/src/main/java/com/stuffinder/exceptions/IllegalFieldException.java" />
+        <option value="$PROJECT_DIR$/app/src/main/java/com/stuffinder/engine/RequestType.java" />
+        <option value="$PROJECT_DIR$/app/src/main/java/com/stuffinder/engine/Requests.java" />
+        <option value="$PROJECT_DIR$/app/src/main/java/com/stuffinder/adaptateurs/GridAdapter.java" />
+        <option value="$PROJECT_DIR$/app/src/main/java/com/stuffinder/engine/ImageLoader.java" />
+        <option value="$PROJECT_DIR$/app/src/main/java/com/stuffinder/interfaces/NetworkServiceInterface.java" />
+        <option value="$PROJECT_DIR$/app/src/main/java/com/stuffinder/data/Account.java" />
+        <option value="$PROJECT_DIR$/app/src/main/java/com/stuffinder/data/Position.java" />
+        <option value="$PROJECT_DIR$/app/src/main/java/com/stuffinder/data/Profile.java" />
+        <option value="$PROJECT_DIR$/app/src/main/java/com/stuffinder/activities/AjouterProfilsActivity.java" />
+        <option value="$PROJECT_DIR$/app/src/main/java/com/stuffinder/webservice/TagCode.java" />
+        <option value="$PROJECT_DIR$/app/src/main/java/com/stuffinder/engine/FieldVerifier.java" />
+        <option value="$PROJECT_DIR$/app/src/main/java/com/stuffinder/tests/NetworkServiceEmulator.java" />
+        <option value="$PROJECT_DIR$/build.gradle" />
+        <option value="$PROJECT_DIR$/app/build.gradle" />
+        <option value="$PROJECT_DIR$/app/src/main/res/layout/activity_exterieur.xml" />
+        <option value="$PROJECT_DIR$/app/src/main/java/com/stuffinder/activities/AjoutTagActivity.java" />
+        <option value="$PROJECT_DIR$/app/src/main/java/com/stuffinder/activities/ConfigurationProfilsActivity.java" />
+        <option value="$PROJECT_DIR$/app/src/main/java/com/stuffinder/activities/CreerProfilActivity.java" />
+        <option value="$PROJECT_DIR$/app/src/main/java/com/stuffinder/activities/InfoPersoActivity.java" />
+        <option value="$PROJECT_DIR$/app/src/main/java/com/stuffinder/activities/InfoTagActivity.java" />
+        <option value="$PROJECT_DIR$/app/src/main/java/com/stuffinder/activities/InterieurActivity.java" />
+        <option value="$PROJECT_DIR$/app/src/main/java/com/stuffinder/activities/ModifTagActivity.java" />
+        <option value="$PROJECT_DIR$/app/src/main/java/com/stuffinder/activities/ModifierProfileActivity.java" />
+        <option value="$PROJECT_DIR$/app/src/main/java/com/stuffinder/activities/ModifierProfileBisActivity.java" />
+        <option value="$PROJECT_DIR$/app/src/main/java/com/stuffinder/activities/PicturesActivity.java" />
+        <option value="$PROJECT_DIR$/app/src/main/java/com/stuffinder/activities/ReussiteCreationCompteActivity.java" />
+        <option value="$PROJECT_DIR$/app/src/main/java/com/stuffinder/activities/SynchroActivity.java" />
+        <option value="$PROJECT_DIR$/app/src/main/java/com/stuffinder/activities/TagsActivity.java" />
+        <option value="$PROJECT_DIR$/app/src/main/java/com/stuffinder/activities/BasicActivity.java" />
+        <option value="$PROJECT_DIR$/app/src/main/AndroidManifest.xml" />
+        <option value="$PROJECT_DIR$/app/src/main/java/com/stuffinder/activities/ConfigurationActivity.java" />
+        <option value="$PROJECT_DIR$/app/src/main/java/com/stuffinder/ble/BLEService.java" />
+        <option value="$PROJECT_DIR$/app/src/main/java/com/stuffinder/adaptateurs/MyArrayAdapter.java" />
+        <option value="$PROJECT_DIR$/app/src/main/java/com/stuffinder/activities/ExterieurActivity.java" />
+        <option value="$PROJECT_DIR$/app/src/main/java/com/stuffinder/activities/LocalisationActivity.java" />
+        <option value="$PROJECT_DIR$/app/src/main/java/com/stuffinder/activities/Accueil.java" />
+        <option value="$PROJECT_DIR$/app/src/main/java/com/stuffinder/activities/HomeActivity.java" />
+        <option value="$PROJECT_DIR$/app/src/main/java/com/stuffinder/activities/CreerCompteActivity.java" />
+        <option value="$PROJECT_DIR$/app/src/main/java/com/stuffinder/engine/FileManager.java" />
+        <option value="$PROJECT_DIR$/app/src/main/java/com/stuffinder/activities/SupprimerProfilActivity.java" />
+        <option value="$PROJECT_DIR$/app/src/main/java/com/stuffinder/engine/EngineService.java" />
+        <option value="$PROJECT_DIR$/app/src/main/java/com/stuffinder/webservice/NetworkService.java" />
+        <option value="$PROJECT_DIR$/app/src/main/java/com/stuffinder/webservice/ErrorCode.java" />
+        <option value="E:/NetworkServiceEmulator.java" />
+        <option value="$PROJECT_DIR$/app/src/main/java/com/stuffinder/activities/SeConnecterActivity.java" />
+      </list>
+    </option>
+  </component>
+  <component name="ProjectFrameBounds">
+    <option name="x" value="-8" />
+    <option name="y" value="-8" />
+    <option name="width" value="1616" />
+    <option name="height" value="876" />
+  </component>
+  <component name="ProjectInspectionProfilesVisibleTreeState">
+    <entry key="Project Default">
+      <profile-state>
+        <expanded-state>
+          <State>
+            <id />
+          </State>
+          <State>
+            <id>Code style issues</id>
+          </State>
+          <State>
+            <id>Data flow issues</id>
+          </State>
+          <State>
+            <id>GPath inspectionsGroovy</id>
+          </State>
+          <State>
+            <id>Groovy</id>
+          </State>
+          <State>
+            <id>JUnit issues</id>
+          </State>
+          <State>
+            <id>Java language level migration aids</id>
+          </State>
+          <State>
+            <id>Naming ConventionsGroovy</id>
+          </State>
+          <State>
+            <id>Naming conventions</id>
+          </State>
+          <State>
+            <id>Numeric issues</id>
+          </State>
+          <State>
+            <id>Probable bugs</id>
+          </State>
+          <State>
+            <id>Probable bugsGroovy</id>
+          </State>
+        </expanded-state>
+        <selected-state>
+          <State>
+            <id>Abstraction issues</id>
+          </State>
+        </selected-state>
+      </profile-state>
+    </entry>
+  </component>
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true">
+    <OptionsSetting value="true" id="Add" />
+    <OptionsSetting value="true" id="Remove" />
+    <OptionsSetting value="true" id="Checkout" />
+    <OptionsSetting value="true" id="Update" />
+    <OptionsSetting value="true" id="Status" />
+    <OptionsSetting value="true" id="Edit" />
+    <ConfirmationsSetting value="0" id="Add" />
+    <ConfirmationsSetting value="0" id="Remove" />
+  </component>
+  <component name="ProjectReloadState">
+    <option name="STATE" value="0" />
+  </component>
+  <component name="ProjectView">
+    <navigator currentView="AndroidView" proportions="" version="1">
+      <flattenPackages />
+      <showMembers />
+      <showModules />
+      <showLibraryContents />
+      <hideEmptyPackages />
+      <abbreviatePackageNames />
+      <autoscrollToSource />
+      <autoscrollFromSource />
+      <sortByType />
+    </navigator>
+    <panes>
+      <pane id="PackagesPane" />
+      <pane id="ProjectPane">
+        <subPane>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="Stuffinder" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="Stuffinder" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="Stuffinder" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="Stuffinder" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="Stuffinder" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="build" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="intermediates" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="Stuffinder" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="Stuffinder" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="app" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="Stuffinder" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="Stuffinder" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="app" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="src" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="main" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="Stuffinder" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="Stuffinder" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="app" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="src" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="main" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="java" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="stuffinder" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="webservice" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="Stuffinder" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="Stuffinder" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="app" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="src" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="main" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="java" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="stuffinder" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="Stuffinder" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="Stuffinder" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="app" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="src" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="main" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="java" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="stuffinder" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="engine" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="Stuffinder" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="Stuffinder" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="app" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="src" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="main" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="java" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="stuffinder" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="activities" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="Stuffinder" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="Stuffinder" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="app" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="src" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="Stuffinder" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="Stuffinder" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="app" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="libs" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+        </subPane>
+      </pane>
+      <pane id="AndroidView">
+        <subPane>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="Stuffinder" />
+              <option name="myItemType" value="com.android.tools.idea.navigator.nodes.AndroidViewProjectNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="Stuffinder" />
+              <option name="myItemType" value="com.android.tools.idea.navigator.nodes.AndroidViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="app" />
+              <option name="myItemType" value="com.android.tools.idea.navigator.nodes.AndroidModuleNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="res" />
+              <option name="myItemType" value="com.android.tools.idea.navigator.nodes.AndroidResFolderNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="Stuffinder" />
+              <option name="myItemType" value="com.android.tools.idea.navigator.nodes.AndroidViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="app" />
+              <option name="myItemType" value="com.android.tools.idea.navigator.nodes.AndroidModuleNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="res" />
+              <option name="myItemType" value="com.android.tools.idea.navigator.nodes.AndroidResFolderNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="layout" />
+              <option name="myItemType" value="com.android.tools.idea.navigator.nodes.AndroidResFolderTypeNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="Stuffinder" />
+              <option name="myItemType" value="com.android.tools.idea.navigator.nodes.AndroidViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="app" />
+              <option name="myItemType" value="com.android.tools.idea.navigator.nodes.AndroidModuleNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="java" />
+              <option name="myItemType" value="com.android.tools.idea.navigator.nodes.AndroidSourceTypeNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="Stuffinder" />
+              <option name="myItemType" value="com.android.tools.idea.navigator.nodes.AndroidViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="app" />
+              <option name="myItemType" value="com.android.tools.idea.navigator.nodes.AndroidModuleNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="java" />
+              <option name="myItemType" value="com.android.tools.idea.navigator.nodes.AndroidSourceTypeNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="stuffinder" />
+              <option name="myItemType" value="com.android.tools.idea.navigator.nodes.AndroidPsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="webservice" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="Stuffinder" />
+              <option name="myItemType" value="com.android.tools.idea.navigator.nodes.AndroidViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="app" />
+              <option name="myItemType" value="com.android.tools.idea.navigator.nodes.AndroidModuleNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="java" />
+              <option name="myItemType" value="com.android.tools.idea.navigator.nodes.AndroidSourceTypeNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="stuffinder" />
+              <option name="myItemType" value="com.android.tools.idea.navigator.nodes.AndroidPsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="interfaces" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="Stuffinder" />
+              <option name="myItemType" value="com.android.tools.idea.navigator.nodes.AndroidViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="app" />
+              <option name="myItemType" value="com.android.tools.idea.navigator.nodes.AndroidModuleNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="java" />
+              <option name="myItemType" value="com.android.tools.idea.navigator.nodes.AndroidSourceTypeNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="stuffinder" />
+              <option name="myItemType" value="com.android.tools.idea.navigator.nodes.AndroidPsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="exceptions" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="Stuffinder" />
+              <option name="myItemType" value="com.android.tools.idea.navigator.nodes.AndroidViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="app" />
+              <option name="myItemType" value="com.android.tools.idea.navigator.nodes.AndroidModuleNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="java" />
+              <option name="myItemType" value="com.android.tools.idea.navigator.nodes.AndroidSourceTypeNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="stuffinder" />
+              <option name="myItemType" value="com.android.tools.idea.navigator.nodes.AndroidPsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="engine" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="Stuffinder" />
+              <option name="myItemType" value="com.android.tools.idea.navigator.nodes.AndroidViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="app" />
+              <option name="myItemType" value="com.android.tools.idea.navigator.nodes.AndroidModuleNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="java" />
+              <option name="myItemType" value="com.android.tools.idea.navigator.nodes.AndroidSourceTypeNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="stuffinder" />
+              <option name="myItemType" value="com.android.tools.idea.navigator.nodes.AndroidPsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="data" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="Stuffinder" />
+              <option name="myItemType" value="com.android.tools.idea.navigator.nodes.AndroidViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="app" />
+              <option name="myItemType" value="com.android.tools.idea.navigator.nodes.AndroidModuleNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="java" />
+              <option name="myItemType" value="com.android.tools.idea.navigator.nodes.AndroidSourceTypeNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="stuffinder" />
+              <option name="myItemType" value="com.android.tools.idea.navigator.nodes.AndroidPsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="Stuffinder" />
+              <option name="myItemType" value="com.android.tools.idea.navigator.nodes.AndroidViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="app" />
+              <option name="myItemType" value="com.android.tools.idea.navigator.nodes.AndroidModuleNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="java" />
+              <option name="myItemType" value="com.android.tools.idea.navigator.nodes.AndroidSourceTypeNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="stuffinder" />
+              <option name="myItemType" value="com.android.tools.idea.navigator.nodes.AndroidPsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="activities" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="Stuffinder" />
+              <option name="myItemType" value="com.android.tools.idea.navigator.nodes.AndroidViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="app" />
+              <option name="myItemType" value="com.android.tools.idea.navigator.nodes.AndroidModuleNode" />
+            </PATH_ELEMENT>
+          </PATH>
+        </subPane>
+      </pane>
+      <pane id="Scope" />
+    </panes>
+  </component>
+  <component name="PropertiesComponent">
+    <property name="GoToClass.includeLibraries" value="false" />
+    <property name="GoToClass.toSaveIncludeLibraries" value="false" />
+    <property name="GoToFile.includeJavaFiles" value="false" />
+    <property name="MemberChooser.sorted" value="false" />
+    <property name="MemberChooser.showClasses" value="true" />
+    <property name="MemberChooser.copyJavadoc" value="false" />
+    <property name="options.lastSelected" value="editor.preferences.appearance" />
+    <property name="options.splitter.main.proportions" value="0.3" />
+    <property name="options.splitter.details.proportions" value="0.2" />
+    <property name="options.searchVisible" value="true" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/app/libs/httpmime-4.4.1.jar" />
+    <property name="recentsLimit" value="5" />
+    <property name="FullScreen" value="false" />
+    <property name="OverrideImplement.combined" value="true" />
+    <property name="OverrideImplement.overriding.sorted" value="false" />
+    <property name="ANDROID_EXTENDED_DEVICE_CHOOSER_SERIALS" value="192.168.56.101:5555" />
+    <property name="ANDROID_EXTENDED_DEVICE_CHOOSER_AVD" value="Nexus_5_API_21_x86" />
+    <property name="android.project.structure.last.selected" value="SDK Location" />
+    <property name="android.project.structure.proportion" value="0.15" />
+    <property name="LayoutCode.rearrangeEntriesJava" value="true" />
+  </component>
+  <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="C:\Users\proprietairel\Android\projects\Stuffinder\app\libs" />
+      <recent name="C:\Users\proprietairel\Android\projects\Stuffinder\app\src\main\res\drawable-xxhdpi" />
+      <recent name="C:\Users\proprietairel\Android\projects\Stuffinder\app\src\main\java\com\stuffinder\ble" />
+      <recent name="C:\Users\proprietairel\Android\projects\Stuffinder\app\src\main\java\com\stuffinder\webservice" />
+    </key>
+  </component>
+  <component name="RunManager" selected="Android Application.app">
+    <configuration default="true" type="AndroidTestRunConfigurationType" factoryName="Android Tests">
+      <module name="" />
+      <option name="TESTING_TYPE" value="0" />
+      <option name="INSTRUMENTATION_RUNNER_CLASS" value="" />
+      <option name="METHOD_NAME" value="" />
+      <option name="CLASS_NAME" value="" />
+      <option name="PACKAGE_NAME" value="" />
+      <option name="TARGET_SELECTION_MODE" value="EMULATOR" />
+      <option name="USE_LAST_SELECTED_DEVICE" value="false" />
+      <option name="PREFERRED_AVD" value="" />
+      <option name="USE_COMMAND_LINE" value="true" />
+      <option name="COMMAND_LINE" value="" />
+      <option name="WIPE_USER_DATA" value="false" />
+      <option name="DISABLE_BOOT_ANIMATION" value="false" />
+      <option name="NETWORK_SPEED" value="full" />
+      <option name="NETWORK_LATENCY" value="none" />
+      <option name="CLEAR_LOGCAT" value="false" />
+      <option name="SHOW_LOGCAT_AUTOMATICALLY" value="true" />
+      <option name="FILTER_LOGCAT_AUTOMATICALLY" value="true" />
+      <method />
+    </configuration>
+    <configuration default="true" type="Remote" factoryName="Remote">
+      <option name="USE_SOCKET_TRANSPORT" value="true" />
+      <option name="SERVER_MODE" value="false" />
+      <option name="SHMEM_ADDRESS" value="javadebug" />
+      <option name="HOST" value="localhost" />
+      <option name="PORT" value="5005" />
+      <method />
+    </configuration>
+    <configuration default="true" type="TestNG" factoryName="TestNG">
+      <module name="" />
+      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
+      <option name="ALTERNATIVE_JRE_PATH" />
+      <option name="SUITE_NAME" />
+      <option name="PACKAGE_NAME" />
+      <option name="MAIN_CLASS_NAME" />
+      <option name="METHOD_NAME" />
+      <option name="GROUP_NAME" />
+      <option name="TEST_OBJECT" value="CLASS" />
+      <option name="VM_PARAMETERS" value="-ea" />
+      <option name="PARAMETERS" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+      <option name="OUTPUT_DIRECTORY" />
+      <option name="ANNOTATION_TYPE" />
+      <option name="ENV_VARIABLES" />
+      <option name="PASS_PARENT_ENVS" value="true" />
+      <option name="TEST_SEARCH_SCOPE">
+        <value defaultName="moduleWithDependencies" />
+      </option>
+      <option name="USE_DEFAULT_REPORTERS" value="false" />
+      <option name="PROPERTIES_FILE" />
+      <envs />
+      <properties />
+      <listeners />
+      <method />
+    </configuration>
+    <configuration default="true" type="Application" factoryName="Application">
+      <option name="MAIN_CLASS_NAME" />
+      <option name="VM_PARAMETERS" />
+      <option name="PROGRAM_PARAMETERS" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
+      <option name="ALTERNATIVE_JRE_PATH" />
+      <option name="ENABLE_SWING_INSPECTOR" value="false" />
+      <option name="ENV_VARIABLES" />
+      <option name="PASS_PARENT_ENVS" value="true" />
+      <module name="" />
+      <envs />
+      <method />
+    </configuration>
+    <configuration default="true" type="JUnit" factoryName="JUnit">
+      <module name="" />
+      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
+      <option name="ALTERNATIVE_JRE_PATH" />
+      <option name="PACKAGE_NAME" />
+      <option name="MAIN_CLASS_NAME" />
+      <option name="METHOD_NAME" />
+      <option name="TEST_OBJECT" value="class" />
+      <option name="VM_PARAMETERS" value="-ea" />
+      <option name="PARAMETERS" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+      <option name="ENV_VARIABLES" />
+      <option name="PASS_PARENT_ENVS" value="true" />
+      <option name="TEST_SEARCH_SCOPE">
+        <value defaultName="moduleWithDependencies" />
+      </option>
+      <envs />
+      <patterns />
+      <method />
+    </configuration>
+    <configuration default="true" type="AndroidRunConfigurationType" factoryName="Android Application">
+      <module name="" />
+      <option name="ACTIVITY_CLASS" value="" />
+      <option name="MODE" value="default_activity" />
+      <option name="DEPLOY" value="true" />
+      <option name="ARTIFACT_NAME" value="" />
+      <option name="TARGET_SELECTION_MODE" value="EMULATOR" />
+      <option name="USE_LAST_SELECTED_DEVICE" value="false" />
+      <option name="PREFERRED_AVD" value="" />
+      <option name="USE_COMMAND_LINE" value="true" />
+      <option name="COMMAND_LINE" value="" />
+      <option name="WIPE_USER_DATA" value="false" />
+      <option name="DISABLE_BOOT_ANIMATION" value="false" />
+      <option name="NETWORK_SPEED" value="full" />
+      <option name="NETWORK_LATENCY" value="none" />
+      <option name="CLEAR_LOGCAT" value="false" />
+      <option name="SHOW_LOGCAT_AUTOMATICALLY" value="true" />
+      <option name="FILTER_LOGCAT_AUTOMATICALLY" value="true" />
+      <method />
+    </configuration>
+    <configuration default="false" name="app" type="AndroidRunConfigurationType" factoryName="Android Application">
+      <module name="app" />
+      <option name="ACTIVITY_CLASS" value="" />
+      <option name="MODE" value="default_activity" />
+      <option name="DEPLOY" value="true" />
+      <option name="ARTIFACT_NAME" value="" />
+      <option name="TARGET_SELECTION_MODE" value="SHOW_DIALOG" />
+      <option name="USE_LAST_SELECTED_DEVICE" value="false" />
+      <option name="PREFERRED_AVD" value="" />
+      <option name="USE_COMMAND_LINE" value="true" />
+      <option name="COMMAND_LINE" value="" />
+      <option name="WIPE_USER_DATA" value="false" />
+      <option name="DISABLE_BOOT_ANIMATION" value="false" />
+      <option name="NETWORK_SPEED" value="full" />
+      <option name="NETWORK_LATENCY" value="none" />
+      <option name="CLEAR_LOGCAT" value="false" />
+      <option name="SHOW_LOGCAT_AUTOMATICALLY" value="true" />
+      <option name="FILTER_LOGCAT_AUTOMATICALLY" value="true" />
+      <RunnerSettings RunnerId="AndroidDebugRunner" />
+      <ConfigurationWrapper RunnerId="AndroidDebugRunner" />
+      <method />
+    </configuration>
+    <list size="1">
+      <item index="0" class="java.lang.String" itemvalue="Android Application.app" />
+    </list>
+    <configuration name="&lt;template&gt;" type="Applet" default="true" selected="false">
+      <option name="MAIN_CLASS_NAME" />
+      <option name="HTML_FILE_NAME" />
+      <option name="HTML_USED" value="false" />
+      <option name="WIDTH" value="400" />
+      <option name="HEIGHT" value="300" />
+      <option name="POLICY_FILE" value="$APPLICATION_HOME_DIR$/bin/appletviewer.policy" />
+      <option name="VM_PARAMETERS" />
+    </configuration>
+    <configuration name="&lt;template&gt;" type="#org.jetbrains.idea.devkit.run.PluginConfigurationType" default="true" selected="false">
+      <option name="VM_PARAMETERS" value="-Xmx512m -Xms256m -XX:MaxPermSize=250m -ea" />
+    </configuration>
+    <configuration name="&lt;template&gt;" type="WebApp" default="true" selected="false">
+      <Host>localhost</Host>
+      <Port>5050</Port>
+    </configuration>
+  </component>
+  <component name="ShelveChangesManager" show_recycled="false" />
+  <component name="SliceManager">
+    <option name="analysisUIOptions">
+      <AnalysisUIOptions />
+    </option>
+  </component>
+  <component name="StructureViewFactory">
+    <option name="ACTIVE_ACTIONS" value=",ALPHA_COMPARATOR" />
+  </component>
+  <component name="SvnConfiguration">
+    <configuration />
+    <supportedVersion>125</supportedVersion>
+  </component>
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="4d85a6d5-279d-49cd-a374-e5f952c43e06" name="Default" comment="" />
+      <created>1426202210689</created>
+      <updated>1426202210689</updated>
+    </task>
+    <task id="LOCAL-00001" summary="Classe Engine service : ajout de la classe réalisant la synchronisation avec le serveur et la gestion des requêtes réalisées (ajout de tag, modification, ...). Implémentation non terminée ( la synchronisation automatique est fonctionnelle si aucune erreur survient).&#10;&#10;Classe EngineServiceProvider : classe permettant de récupérer l'instance courante du service EngineService.&#10;&#10;Classes du paquetage activities : modification pour utiliser EngineServiceProvider à la place de NetworkServiceProvider.&#10;&#10;Classe Requests : classes contenant les classes correspondant aux différents types de requête (ajout de tag, modification, ....)&#10;&#10;Enumération RequestType : enumération spécifiant les différents types de requêtes.&#10;&#10;Interface NetworkServiceInterface : ajout de deux méthodes getLastTagsUpdateTime() et getLastProfilesUpdateTime() pour récupérer la date de dernière modification de la liste des puces ou celle de la liste des profils.">
+      <created>1426961559576</created>
+      <updated>1426961559576</updated>
+    </task>
+    <task id="LOCAL-00002" summary="Ajout de commentaire pour les éléments qui restent à implémenter.">
+      <created>1427206187629</created>
+      <updated>1427206187629</updated>
+    </task>
+    <task id="LOCAL-00003" summary="Interface NetworkServiceInterface : ajout de la méthode modifyProfileName().&#10;classe NetworkServiceEmulator : ajout de l'implémentation de la méthode modifyProfileName()&#10; &#10; classe Profile : ajout de la méthode setName()">
+      <created>1427208730621</created>
+      <updated>1427208730621</updated>
+    </task>
+    <task id="LOCAL-00004" summary="Ajout de la classe BasicActivity : permet d'obtenir l'activité courante de l'application.&#10;&#10;Classes du paquetage activities : modification en utilisant la classe BasicActivity comme classe mère.&#10;">
+      <created>1427578318683</created>
+      <updated>1427578318683</updated>
+    </task>
+    <task id="LOCAL-00005" summary="classe EngineService : modifications mineures.">
+      <created>1427799467876</created>
+      <updated>1427799467876</updated>
+    </task>
+    <task id="LOCAL-00006" summary="interface NetworkServiceInterface : ajout de la méthode downloadObjectImage() et de deux autres méthodes pour obtenir la date de dernière modification de la liste des puces, et celle de la liste des profiles.">
+      <created>1427813887192</created>
+      <updated>1427813887192</updated>
+    </task>
+    <task id="LOCAL-00007" summary="Merge branch 'MutualCodeBranch' into NicolasBranch&#10;&#10;Conflicts:&#10;&#9;main/java/com/stuffinder/data/Account.java&#10;&#9;main/java/com/stuffinder/data/Position.java&#10;&#9;main/java/com/stuffinder/data/Profile.java&#10;&#9;main/java/com/stuffinder/data/Tag.java&#10;&#9;main/java/com/stuffinder/engine/FieldVerifier.java&#10;&#9;main/java/com/stuffinder/engine/NetworkServiceProvider.java&#10;&#9;main/java/com/stuffinder/exceptions/AccountNotFoundException.java&#10;&#9;main/java/com/stuffinder/exceptions/IllegalFieldException.java&#10;&#9;main/java/com/stuffinder/exceptions/NetworkServiceException.java&#10;&#9;main/java/com/stuffinder/exceptions/NotAuthenticatedException.java&#10;&#9;main/java/com/stuffinder/exceptions/TagAlreadyUsedException.java&#10;&#9;main/java/com/stuffinder/exceptions/TagNotFoundException.java&#10;&#9;main/java/com/stuffinder/interfaces/NetworkServiceInterface.java&#10;&#9;main/java/com/stuffinder/tests/EmulatorTest.java&#10;&#9;main/java/com/stuffinder/tests/NetworkServiceEmulator.java&#10;">
+      <created>1427920378998</created>
+      <updated>1427920378998</updated>
+    </task>
+    <task id="LOCAL-00008" summary="Modifications mineures.">
+      <created>1428133207717</created>
+      <updated>1428133207717</updated>
+    </task>
+    <task id="LOCAL-00009" summary="Classe BasicActivity : correction du type de retour de la méthode getCurrentActivity().&#10;&#10;Classe EngineService : &#10;    _ méthode authenticate() : ajout des liens entre les profils et les tags + utilisation de la nouvelle méthode pour démarrer l'auto-synchronisation.&#10;    _ classe interne AutoSynchronizer : &#10;        -- Changement de la gestion des requêtes (utilisation d'une liste à la place d'une file).&#10;        -- Ajout d'une copie des données du compte, mise à jour àprès l'exécution réussie de chaque requête.&#10;        -- Ajout de la méthode getAccountCopy() créant une copie du jeu de données actuel.&#10;        -- Suppression de la file des requêtes dont l'exécution a échoué.&#10;        -- Ajout de la méthode startAutoSynchronization() (crée une copie des données du compte courant avant de démarrer la synchronisation automatique).&#10;        -- Modification de la méthode run() : ajout de la génération d'un mesage d'erreur si une exception du type IllegalFieldException survient, et affichage de ce message via l'activité courante + ajout de la mise à jour de la copie des données pour chaque requête exécutée sans problème.&#10;&#10;Classe Requests : ajout d'un identifiant unique pour les requêtes (non utilisé pour le moment).">
+      <created>1428158302133</created>
+      <updated>1428158302133</updated>
+    </task>
+    <task id="LOCAL-00010" summary="Classe EngineService : correction du constructeur (ajout de l'initialisation du sémaphore associé aux données du compte) et correction de la méthode run().">
+      <created>1428167109947</created>
+      <updated>1428167109947</updated>
+    </task>
+    <task id="LOCAL-00011" summary="Classe EngineService : &#10;    _ classe interne AutoSynchronizer : ajout de la méthode getAccountCopyUpdatedAfterErrorOnData() qui renvoie une copie des données sans celles liées à la requête qui à échouée (i.e. une exception du type IllegalFieldException est survenue) et de la classe interne AccountData pour encapsuler toutes les données relatives au compte actuel, y compris le mot de passe.&#10;    _ ajout de la méthode checkForAccountUpdate() qui met à jour les données en cas d'erreur, en utilisant la méthode getAccountCopyUpdatedAfterErrorOnData().&#10;    _ ajout de l'appel à cette méthode au début de toutes les méthodes permettant d'accéder aux données du compte actuel ou de les modifier.">
+      <created>1428171667487</created>
+      <updated>1428171667487</updated>
+    </task>
+    <task id="LOCAL-00012" summary="Classe EngineService : &#10;    _ modification du fonctionnement des sémaphores utilisés pour les exclusions mutuelles.&#10;    _ classe interne AutoSynchronizer : ajout de la structure du code pour la mise à jour automatique du jeu de données.&#10;    &#10;Classe FieldVerifier : &#10;    _ implémentation de la méthode verifyImageFileName() terminée.&#10;&#10;Ajout de la classe SortUtility : permet de trier une liste de tags et une liste de profiles.">
+      <created>1428185436710</created>
+      <updated>1428185436710</updated>
+    </task>
+    <task id="LOCAL-00013" summary="Classe EngineService : ajout de la méthode checkForUpdates() pour mettre à jour toutes les données locales relatives au compte (la partie de mise à jour des profils n'est pas encore implémentée).&#10;    &#10;Classe BasicActivity : correction de la méthode showErrorMessage() : ajout de l'appel à la méthode show() pour l'object Toast créé.&#10;&#10;Classe SortUtility : ajout de la méthode getTagByUID() pour obtenir un tag à partir de son  identifiant dans une liste triée, en effectuant une recherche dichotomique.&#10;&#10;Interface NetworkServiceInterface : ajout de la méthode getLastPersonnalInformationUpdateTime() pour obtenir la date de dermière modification des informations personnelles.&#10;Classe NetworkServiceEmulator : ajout de cette méthode.">
+      <created>1428227113500</created>
+      <updated>1428227113500</updated>
+    </task>
+    <task id="LOCAL-00014" summary="Classe BasicActivity : &#10;    _ correction de la méthode showErrorMessage() : exécution du Toast sur le thread UI au lieu d'un autre thread.&#10;    _ ajout de la méthode askPasswordAfterError() : permet de demander à nouveau à l'utilisateur de rentrer son mot de passe (méthode appelée si une erreur liée au mot de passe survient après que l'authentification soit réalisé avec succès).  Création d'une boite de dialogue pour réaliser cette opération (le layout utilisé est password_dialog.xml).&#10;&#10;Classe EngineService : &#10;    _ ajout de la méthode checkAutoSynchronizerState() : affiche la boite de dialogue pour demander à nouveau le mot de passe à l'utilisateur si l'auto-sinchronisation a échoué à cause d'un problème de mot de passe.&#10;    _ ajout de la méthode resolveErrorOnPassword() : résout le problème de mot de passe en utilisant celui passé en paramètre (relance le thread d'auto-synchronisation).&#10;    _ méthodes addTag() et modifyObjectImage() : correction de la vérification de validité du chemin de l'image à vérifier.&#10;    _ classe interne AutoSinchronizer : méthode checkForUpdates() : ajout de l'application de la mise à jour des profiles.&#10;&#10;classe NetworkServiceEmulator : &#10;    _ Correction du traitement du champ objectImage des tags.&#10;    _ Ajout de la méthode simulateRealBehavior() : simule un temps d'attente de la réponse du serveur.">
+      <created>1428275389739</created>
+      <updated>1428275389739</updated>
+    </task>
+    <task id="LOCAL-00015" summary="Classe FieldVerifier : implémentation de la méthode verifyImageFileName() terminée.&#10;&#10;Classe NetworkServiceEmulator : correction de la vérification du champ objectImage pour les tags.">
+      <created>1428308354623</created>
+      <updated>1428308354623</updated>
+    </task>
+    <task id="LOCAL-00016" summary="Classe EngineServiceException : ajout de deux constructeurs.&#10;&#10;Ajout de la classe Constants dans le sous paquetage engine.&#10;&#10;Classe EngineService : modification de la méthode initEngineService() : ajout de l'initialisation du dossier images et correction du type des exceptions propagées par cette méthode.&#10;&#10;Classe Accueil : ajout du traitement des exception de type EngineServiceException lors de la phase d'initialisation de l'application.">
+      <created>1428355787286</created>
+      <updated>1428355787286</updated>
+    </task>
+    <task id="LOCAL-00017" summary="Classe Tag : ajout du champ numéro de version.">
+      <created>1428409373968</created>
+      <updated>1428409373968</updated>
+    </task>
+    <task id="LOCAL-00018" summary="Classe NetworkServiceEmulator : ajout d'un deuxième compte pour les tests.&#10;&#10;Classe engine.Constants : ajout de la méthode getTagImageFile() permettant d'obtenir un fichier image à partir d'un tag.&#10;&#10;Classe EngineService : ajout d'une partie des commentaires javadoc.">
+      <created>1428428716226</created>
+      <updated>1428428716226</updated>
+    </task>
+    <task id="LOCAL-00019" summary="Interface NetworkServiceInterface : ajout de la méthode updatePassword().&#10;&#10;Classe NetworkServiceEmulator : implémentation de la méthode updatePassword().&#10;">
+      <created>1428429594713</created>
+      <updated>1428429594713</updated>
+    </task>
+    <task id="LOCAL-00020" summary="Merge branch 'MutualCodeBranch' into NicolasBranch&#10;&#10;Conflicts:&#10;&#9;main/java/com/stuffinder/tests/NetworkServiceEmulator.java&#10;">
+      <created>1428430117626</created>
+      <updated>1428430117626</updated>
+    </task>
+    <task id="LOCAL-00021" summary="Classe EngineService : classe interne AutoSynchronizer : &#10;    _ méthode startAutoSynchronization() : ajout de la copie du champ imageVersion des tags.&#10;    _ méthode run() : ajout de la mise à jour du mot de passe pour la partie web service en cas de relance du service après une erreur d'authentification.">
+      <created>1428439288478</created>
+      <updated>1428439288478</updated>
+    </task>
+    <task id="LOCAL-00022" summary="Merge branch 'MarieAnneBranch' into NicolasBranch&#10;&#10;Conflicts:&#10;&#9;main/java/com/stuffinder/activities/Accueil.java&#10;&#9;main/java/com/stuffinder/activities/ExterieurActivity.java&#10;&#9;main/java/com/stuffinder/interfaces/NetworkServiceInterface.java&#10;&#9;main/java/com/stuffinder/webservice/NetworkService.java&#10;">
+      <created>1428440827878</created>
+      <updated>1428440827878</updated>
+    </task>
+    <task id="LOCAL-00023" summary="Merge branch 'MarieAnneBranch' into NicolasBranch&#10;&#10;Conflicts:&#10;&#9;main/java/com/stuffinder/activities/Accueil.java&#10;&#9;main/java/com/stuffinder/activities/ExterieurActivity.java&#10;&#9;main/java/com/stuffinder/interfaces/NetworkServiceInterface.java&#10;&#9;main/java/com/stuffinder/webservice/NetworkService.java&#10;">
+      <created>1428441112639</created>
+      <updated>1428441112639</updated>
+    </task>
+    <task id="LOCAL-00024" summary="Classes du paquetage activities : ajout de la méthode pour l'action retour.&#10;&#10;layouts : correction des méthodes associées aux boutons.&#10;&#10;manifest android : correction mineure.">
+      <created>1428443533773</created>
+      <updated>1428443533774</updated>
+    </task>
+    <task id="LOCAL-00025" summary="Merge branch 'DanBranch' into NicolasBranch&#10;&#10;Conflicts:&#10;&#9;main/AndroidManifest.xml&#10;&#9;main/java/com/stuffinder/activities/Accueil.java&#10;&#9;main/java/com/stuffinder/activities/ConfigurationActivity.java&#10;&#9;main/java/com/stuffinder/activities/ExterieurActivity.java&#10;&#9;main/java/com/stuffinder/activities/InfoTagActivity.java&#10;&#9;main/java/com/stuffinder/activities/ModifTagActivity.java&#10;&#9;main/java/com/stuffinder/interfaces/NetworkServiceInterface.java&#10;&#9;main/java/com/stuffinder/tests/NetworkServiceEmulator.java&#10;&#9;main/java/com/stuffinder/webservice/NetworkService.java&#10;&#9;main/res/layout/activity_configuration.xml&#10;&#9;main/res/values/strings.xml&#10;">
+      <created>1428445634817</created>
+      <updated>1428445634817</updated>
+    </task>
+    <task id="LOCAL-00026" summary="Merge branch 'DanBranch' into NicolasBranch&#10;&#10;Conflicts:&#10;&#9;main/AndroidManifest.xml&#10;&#9;main/java/com/stuffinder/activities/Accueil.java&#10;&#9;main/java/com/stuffinder/activities/ConfigurationActivity.java&#10;&#9;main/java/com/stuffinder/activities/ExterieurActivity.java&#10;&#9;main/java/com/stuffinder/activities/InfoTagActivity.java&#10;&#9;main/java/com/stuffinder/activities/ModifTagActivity.java&#10;&#9;main/java/com/stuffinder/interfaces/NetworkServiceInterface.java&#10;&#9;main/java/com/stuffinder/tests/NetworkServiceEmulator.java&#10;&#9;main/java/com/stuffinder/webservice/NetworkService.java&#10;&#9;main/res/layout/activity_configuration.xml&#10;&#9;main/res/values/strings.xml&#10;">
+      <created>1428445650329</created>
+      <updated>1428445650329</updated>
+    </task>
+    <task id="LOCAL-00027" summary="Suppression du bouton qui lance l'activité de gestion des modes de synchronisation et modifications mineures.">
+      <created>1428449500578</created>
+      <updated>1428449500578</updated>
+    </task>
+    <task id="LOCAL-00028" summary="Intégration du service bluetooth (non terminé et non utilisable pour le moment).">
+      <created>1428512774232</created>
+      <updated>1428512774232</updated>
+    </task>
+    <task id="LOCAL-00029" summary="classe BLEServiceException : ajout de deux constructeurs.&#10;&#10;classe BLEService : &#10;     _ généralisation des méthodes utilisant un gatt : le gatt utilisé n'est plus un attribut mais est passé en paramètre.&#10;     _ ré-écriture des méthode onCreate() et onDestroy() pour respectivement démarrer et arrêter proprement le service BLE.&#10;     _ Ajout des méthodes liées à la localisation d'un tag (implémentation connexion et déconnexion terminée).">
+      <created>1428615155711</created>
+      <updated>1428615155711</updated>
+    </task>
+    <task id="LOCAL-00030" summary="classe BLEService : modifications mineures.">
+      <created>1428665428364</created>
+      <updated>1428665428364</updated>
+    </task>
+    <task id="LOCAL-00031" summary="classe Accueil : correction de l'appel pour initialiser le service BLE.&#10;&#10;classe BasicActivity : ajout du modifier &quot;synchronized&quot; pour la méthode showErrorMessage() afin de la rendre safe thread.&#10;&#10;classe EngineService : ajout de la détection de la perte de connexion internet.">
+      <created>1428689259029</created>
+      <updated>1428689259029</updated>
+    </task>
+    <task id="LOCAL-00032" summary="Ajout de la classe FileManager : permet de gérer les opérations liées aux fichiers image.&#10;&#10;classe EngineService : ajout de l'initialisation du FileManager.">
+      <created>1428702613911</created>
+      <updated>1428702613911</updated>
+    </task>
+    <task id="LOCAL-00033" summary="Classe FileManager : ajout de méthodes pour supprimer des fichiers des dossiers dédiés au stockage des  images.&#10;&#10;Classe EngineService : Ajout de la prise en charge des fichiers images dans les méthodes liées à la gestion des tags.&#10;&#10;Classe FieldVerifier : modification mineure.">
+      <created>1428707506540</created>
+      <updated>1428707506540</updated>
+    </task>
+    <task id="LOCAL-00034" summary="Classe FileManager : ajout de la méthode moveFileFromRequestFolderToAutoSyncFolder().&#10;&#10;Classe EngineService : classe interne AutoSynchronizer : ajout de la gestion des images lors du traitement des requêtes dans la méthode run.">
+      <created>1428742716816</created>
+      <updated>1428742716816</updated>
+    </task>
+    <task id="LOCAL-00035" summary="Classe FileManager : ajout de la méthode moveFileFromRequestFolderToAutoSyncFolder().&#10;&#10;Classe EngineService : classe interne AutoSynchronizer : &#10;     _ méthode run() : correction pour éviter l'interblocage sur le sémaphore accountMutex.&#10;     _ ajout de la méthode checkAndWaitForInternetConnection().&#10;     _ ajout de la gestion des images pour la mise a jour des données locale du module de synchronisation automatique.">
+      <created>1428748771328</created>
+      <updated>1428748771328</updated>
+    </task>
+    <task id="LOCAL-00036" summary="Classe FileManager : ajout de la méthode copyFileFromAutoSyncFolderToUserFolder().&#10;&#10;Classe EngineService : classe interne AutoSynchronizer :&#10;    _ correction mineure de la méthode addTag() concernant le numéro de version du champ image.&#10;    _ classe interne AutoSynchronizer : &#10;        -- suppression du vérouillage du mutex associé aux données dans la méthode getAccountCopy().&#10;        -- ajout de la méthode updateUserTagImagesFromAccountCopy() qui met à jour les images de la copie utilisateur à partir des données du module de synchronisation automatique.&#10;        -- méthode getAccountCopyUpdatedAfterErrorOnData() : ajout de la mise à jour des images de la copie utilisateur à partir des données du module de synchronisation automatique et des requêtes non exécutées.&#10;">
+      <created>1428758468433</created>
+      <updated>1428758468433</updated>
+    </task>
+    <task id="LOCAL-00037" summary="Classe EngineService :&#10;    _ méthode checkForAccountUpdate() : ajout de la mise à jour de la copie de données locale Utilisateur à partir de la copie locale du module de synchronisation automatique suite à une mise à jour depuis le serveur.&#10;    _ ajout du téléchargement automatique des images suite à l'authentification. Exécution des téléchargements en tache de fond.&#10;    _ classe interne AutoSynchronizer : &#10;        -- méthode run() : correction afin de lancer périodiquement une vérification de la date de dernière mise à jour des données sur le serveur et, si cette date est plus récente que celle locale, les mises a jours sont téléchargées et appliquées à la version locale.&#10;        -- ajout de la méthode isThereRequestAboutTagImage().&#10;&#10;Ajout de la classe ThreadAlarm qui permet d'envoyer une interruption à un thread après au bout d'un certain temps.">
+      <created>1428766260304</created>
+      <updated>1428766260304</updated>
+    </task>
+    <task id="LOCAL-00038" summary="Classe EngineService : classe interne AutoSynchronizer : correction de la méthode startAutoSynchronization() : ajout du remplacement du champ objectImageFilename par le bon chemin de fichier.&#10;&#10;Classe myArrayAdapter : Ajout du chargement du fichier image au lieu d'une ressource image.&#10;&#10;Classe NetworkServiceEmulator :&#10;    _ modification du jeu de données en ajoutant des images à chaque tag.&#10;    _ modification de la méthode getTags() : renvoie maintenant une copie de la liste des tags au lieu de la liste originale.&#10;    &#10;Classe FileManager : ajout de la méthode cleanImageFolders() et modification du type des images utilisées (jpg -&gt; png).&#10;&#10;Classe BasicActivity : ajout de la méthode getImageFileByResource().&#10;&#10;Classe Accueil : ajout de la méthode initializeDefaultImageSet() pour initialiser le dossier contenant les images proposées à l'utilisateur.&#10;">
+      <created>1428776200214</created>
+      <updated>1428776200214</updated>
+    </task>
+    <task id="LOCAL-00039" summary="Classe FileManager : modification mineure.&#10;&#10;Classe NetworkServiceEmulator : changement de l'implémentation de la méthode downloadObjectImage() : retourne le chemin d'une copie de l'image asociée au tag.">
+      <created>1428783339854</created>
+      <updated>1428783339854</updated>
+    </task>
+    <task id="LOCAL-00040" summary="Merge branch 'DanBranch' into NicolasBranch&#10;&#10;Conflicts:&#10;&#9;main/java/com/stuffinder/activities/AjoutTagActivity.java&#10;&#9;main/java/com/stuffinder/activities/SupprTagActivity.java&#10;&#9;main/java/com/stuffinder/activities/TagsActivity.java&#10;&#9;main/java/com/stuffinder/adaptateurs/MyArrayAdapter.java&#10;&#9;main/java/com/stuffinder/tests/NetworkServiceEmulator.java&#10;&#9;main/res/values/strings.xml&#10;">
+      <created>1428784934332</created>
+      <updated>1428784934332</updated>
+    </task>
+    <task id="LOCAL-00041" summary="Classe PictureActivity : ajout de la classe interne PictureChooserCallback pour avertir du choix réalisé par l'utilisateur.&#10;&#10;Classe InfoTagActivity : ajout de la récupération de l'image sélectionnée avec l'activité PictureActivity via les méthode de callback + adaptation de la méthode modifierTag().&#10;&#10;Classe AjouterTagActivity : ajout de la récupération de l'image sélectionnée avec l'activité PictureActivity via les méthode de callback + adaptation de la méthode creerTag().&#10;&#10;layout activity_ajout_layout : ajout d'une ImageView pour afficher l'image sélectionnée.">
+      <created>1428793122868</created>
+      <updated>1428793122868</updated>
+    </task>
+    <task id="LOCAL-00042" summary="Enumération RequestType : ajout des type de requêtes liées à la gestion des profils.&#10;&#10;Classe Requests : ajout des classes internes permettant de représenter les différentes opérations possibles concernant les profils.&#10;&#10;Classe EngineService : &#10;     _ Corection du niveau de visibilité de certains attributs qui n'étaient pas privé.&#10;     _ Implémentation des méthodes de gestion de profils terminée.&#10;     _ classe interne AutoSynchronizer : ajout du traitement des requêtes liées à la gestion des profils.">
+      <created>1428842405748</created>
+      <updated>1428842405748</updated>
+    </task>
+    <task id="LOCAL-00043" summary="Modifications mineures.">
+      <created>1428851414679</created>
+      <updated>1428851414679</updated>
+    </task>
+    <task id="LOCAL-00044" summary="Classe Account : ajout d'un attribut pour l'identifiant du bracelet.&#10;&#10;Classe IllegalFieldException : ajout du champ BRACELET_UID à la liste des champs possibles.&#10;&#10;Interface NetworkServiceInterface : ajout de la méhtode modifyBraceletUID() pour modifier l'identifiant du bracelet à utiliser pour la surveillance.">
+      <created>1428867670674</created>
+      <updated>1428867670674</updated>
+    </task>
+    <task id="LOCAL-00045" summary="Classe Requests : ajout de la classe interne statique ModifyBraceletUIDRequest pour représenter une requête de modification de l'identifiant du bracelet à utiliser pour la surveillance.&#10; &#10;Classe EngineService : ajout de la gestion de la modification de l'identifiant du braelet à utiliser.">
+      <created>1428868969117</created>
+      <updated>1428868969117</updated>
+    </task>
+    <task id="LOCAL-00046" summary="Classe BLEService : ajout des modifications réalisées par Bruno.">
+      <created>1428874001379</created>
+      <updated>1428874001379</updated>
+    </task>
+    <task id="LOCAL-00047" summary="Ajout de la classe ImageLoader : permet d'éviter de charger les images à chaque fois que l'on veut l'utiliser.&#10;&#10;Classe FileManager : ajout de la méthode loadImageForList() qui permet de charger une image en basse résolution.&#10;&#10;Classe EngineService : classe interne AutoSynchronizer : ajout du chargement automatique des images une fois téléchargé.&#10;&#10;Classe MyArrayAdapter : utilisation de la classe ImageLoader pour charger les images.">
+      <created>1428919115632</created>
+      <updated>1428919115632</updated>
+    </task>
+    <task id="LOCAL-00048" summary="Interface NetworkServiceInterface : changement du type de retour pour un long pour les méthodes de récupération de dates de dernière modification.">
+      <created>1428930391434</created>
+      <updated>1428930391434</updated>
+    </task>
+    <task id="LOCAL-00049" summary="Merge branch 'WebServiceBranch' of https://github.com/danhros/StuffinderAndroid into WebServiceBranch&#10;&#10;Conflicts:&#10;&#9;main/java/com/stuffinder/webservice/NetworkService.java&#10;">
+      <created>1428930765005</created>
+      <updated>1428930765005</updated>
+    </task>
+    <task id="LOCAL-00050" summary="Classe BLEService : ajout d'une classe de callback pour les opérations liées à la localisation et modification de l'implémentation du service.&#10;&#10;Classe Localisation : ajout de la connection avec le BLEService.&#10;">
+      <created>1429048121284</created>
+      <updated>1429048121284</updated>
+    </task>
+    <task id="LOCAL-00051" summary="Classe BLEService : Modifications mineures.&#10;&#10;Classe Localisation : implémentation normalement terminée, il reste à réaliser différents tests pour valider son bon fonctionnement.&#10;">
+      <created>1429119853878</created>
+      <updated>1429119853878</updated>
+    </task>
+    <task id="LOCAL-00052" summary="Classe BLEService : classe interne LocationBluetoothGattCallback : ré-écriture de la méthode onCharacteristicWrite() pour avertir l'activité lorqu'une action a bien été effectuée.">
+      <created>1429121542964</created>
+      <updated>1429121542964</updated>
+    </task>
+    <task id="LOCAL-00053" summary="Classe BLEService : correction mineure.&#10;&#10;Classe EngineService : utilisation du type long à la place du type int pour les dates.">
+      <created>1429127800156</created>
+      <updated>1429127800156</updated>
+    </task>
+    <task id="LOCAL-00054" summary="Classe BLEService : modifications mineures.">
+      <created>1429170842175</created>
+      <updated>1429170842175</updated>
+    </task>
+    <task id="LOCAL-00055" summary="Merge branch 'MarieAnneBranch' into NicolasBranch&#10;&#10;Conflicts:&#10;&#9;main/AndroidManifest.xml&#10;&#9;main/java/com/stuffinder/activities/ConfigurationProfilsActivity.java&#10;&#9;main/java/com/stuffinder/activities/ModifierProfileActivity.java&#10;&#9;main/res/layout/activity_configuration_profils.xml&#10;">
+      <created>1429211457628</created>
+      <updated>1429211457628</updated>
+    </task>
+    <task id="LOCAL-00056" summary="Merge branch 'WebServiceBranch' of https://github.com/danhros/StuffinderAndroid into WebServiceBranch&#10;&#10;Conflicts:&#10;&#9;main/java/com/stuffinder/webservice/NetworkService.java&#10;">
+      <created>1429217809733</created>
+      <updated>1429217809733</updated>
+    </task>
+    <task id="LOCAL-00057" summary="Merge branch 'MutualCodeBranch' into WebServiceBranch&#10;&#10;Conflicts:&#10;&#9;main/java/com/stuffinder/interfaces/NetworkServiceInterface.java&#10;&#9;main/java/com/stuffinder/tests/NetworkServiceEmulator.java&#10;">
+      <created>1429218219743</created>
+      <updated>1429218219743</updated>
+    </task>
+    <task id="LOCAL-00058" summary="Merge branch 'MutualCodeBranch' into WebServiceBranch&#10;&#10;Conflicts:&#10;&#9;main/java/com/stuffinder/interfaces/NetworkServiceInterface.java&#10;&#9;main/java/com/stuffinder/tests/NetworkServiceEmulator.java&#10;">
+      <created>1429218469842</created>
+      <updated>1429218469842</updated>
+    </task>
+    <task id="LOCAL-00059" summary="Classe BasicActivity : ajout de la méthode isApplicationOnForeground() qui permet de savoir si le focus est sur l'application ou non.&#10;&#10;Classe LocalisationActivity : correction mineure.&#10;&#10;Classe BLEService : avancement de la partie surveillance.">
+      <created>1429286188901</created>
+      <updated>1429286188901</updated>
+    </task>
+    <task id="LOCAL-00060" summary="Classe BasicActivity : ajout de la méthode showMessage().&#10;&#10;Ckasse LocalisationActivity : correction des affichages pour qu'ils soit réalisés à partir du thread UI&#10;&#10;Classe BLEService : modifications mineures.">
+      <created>1429310163765</created>
+      <updated>1429310163765</updated>
+    </task>
+    <task id="LOCAL-00061" summary="Classe FieldVerifier : changement d'implémentation pour la méthodeverifyTagUID()">
+      <created>1429349306449</created>
+      <updated>1429349306449</updated>
+    </task>
+    <task id="LOCAL-00062" summary="Modification du manifest AndroidManifiest.xml : ajout du blocage de la rotation automatique de l'écran.">
+      <created>1429350000679</created>
+      <updated>1429350000679</updated>
+    </task>
+    <task id="LOCAL-00063" summary="Classe LocalisationActivity : correction de l'implémentation des méthodes de callback.">
+      <created>1429350998038</created>
+      <updated>1429350998038</updated>
+    </task>
+    <task id="LOCAL-00064" summary="Modifications mineures.">
+      <created>1429352191072</created>
+      <updated>1429352191072</updated>
+    </task>
+    <task id="LOCAL-00065" summary="Merge branch 'MarieAnneBranch' into NicolasBranch&#10;&#10;">
+      <created>1429361758987</created>
+      <updated>1429361758987</updated>
+    </task>
+    <task id="LOCAL-00066" summary="Correction de certains éléments des activités liées à la gestion des profils.">
+      <created>1429362165022</created>
+      <updated>1429362165022</updated>
+    </task>
+    <task id="LOCAL-00067" summary="Classe TagCode : correction du conflit de numéro concernant deux code et ajout des code GET_LAST_UPDATE_TIMES et  REPLACE_TAG_LIST_OF_PROFILE.&#10;&#10;Classe NetworkService : &#10;     _ Ajout de la gestion des dates de dernières modifications.&#10;     _ Implémentation de la méthode replaceTagListOfProfile() en effectuant UNE SEULE REQUETE HTTP (méthode POST).&#10;">
+      <created>1429378085829</created>
+      <updated>1429378085829</updated>
+    </task>
+    <task id="LOCAL-00068" summary="Adaptation des classes liées à la gestion des profils : utilisation de EngineServiceProvider à la place de NetworkServiceProvider.&#10;&#10;Classe FileManager : ajout de la méthode importImageFileToUserFolder() pour importer une image au bon format et à la bonne taille, i.e. format PNG, et largeur et hauteur inférieures à 400 pixels.&#10;&#10;Classe EngineService : utilisation de la méthode ci-dessus pour copier importer importer des images dans le compte de l'utilisateur.">
+      <created>1429391677931</created>
+      <updated>1429391677931</updated>
+    </task>
+    <task id="LOCAL-00069" summary="Classe BLEService : avancement de l'intégration de la partie surveillance.">
+      <created>1429465450428</created>
+      <updated>1429465450428</updated>
+    </task>
+    <task id="LOCAL-00070" summary="Classe BLEService : La partie surveillance est normalement terminée, il ne reste plus qu'à la tester.&#10;&#10;Classe ExterieurActivity : implémentation de la partie suveillance normalement terminée.&#10;.">
+      <created>1429471404252</created>
+      <updated>1429471404252</updated>
+    </task>
+    <task id="LOCAL-00071" summary="utilisation de la méthode onBackPressed() au lieu de finish() pour retourner à l'activité précédente.&#10;&#10;Suppression de l'activité SynchroActivity.">
+      <created>1429472581396</created>
+      <updated>1429472581396</updated>
+    </task>
+    <task id="LOCAL-00072" summary="Classe BLEService : modification du callback pour le scan BLE de la partie surveillance.">
+      <created>1429524767718</created>
+      <updated>1429524767718</updated>
+    </task>
+    <task id="LOCAL-00073" summary="Classe BLEService :&#10;     _ ajout dans les notifications du nombre de secondes écoulées depuis qu'un tag a été perdu (pas de 15 secondes).&#10;     _ correction du thread du bracelet : ajout de l'attente de 5 secondes entre la connexion au bracelet et la déconnexion du bracelet. &#10;&#10;Classe ExterieurActivity : ajout de l'override de la méthode onBackPressed() pour se déconnecter proprement du BLEService.">
+      <created>1429541681274</created>
+      <updated>1429541681274</updated>
+    </task>
+    <task id="LOCAL-00074" summary="Classes Accueil et  ExterieurActivity : ajout de la vérification du support du BLE.">
+      <created>1429548870478</created>
+      <updated>1429548870478</updated>
+    </task>
+    <task id="LOCAL-00075" summary="Merge branch 'NicolasBranch' into GUIBranch&#10;">
+      <created>1429549189461</created>
+      <updated>1429549189461</updated>
+    </task>
+    <task id="LOCAL-00076" summary="Merge branch 'GUIBranch' into ApplicationBranch&#10;&#10;Conflicts:&#10;&#9;main/java/com/stuffinder/activities/Accueil.java&#10;&#9;main/java/com/stuffinder/tests/NetworkServiceEmulator.java&#10;">
+      <created>1429549488065</created>
+      <updated>1429549488065</updated>
+    </task>
+    <task id="LOCAL-00077" summary="Classe Accueil : ajout de l'initialisation avec le module web service.">
+      <created>1429549741318</created>
+      <updated>1429549741318</updated>
+    </task>
+    <task id="LOCAL-00078" summary="Merge branch 'philippeBranchBis' into ApplicationBranch&#10;&#10;Conflicts:&#10;&#9;main/java/com/stuffinder/activities/Accueil.java&#10;&#9;main/java/com/stuffinder/webservice/NetworkService.java&#10;&#9;main/java/com/stuffinder/webservice/TagCode.java&#10;">
+      <created>1429551320456</created>
+      <updated>1429551320456</updated>
+    </task>
+    <task id="LOCAL-00079" summary="Intégration de la partie web service terminée.">
+      <created>1429554215653</created>
+      <updated>1429554215653</updated>
+    </task>
+    <task id="LOCAL-00080" summary="modifications mineures">
+      <created>1429559386886</created>
+      <updated>1429559386886</updated>
+    </task>
+    <task id="LOCAL-00081" summary="Merge branch 'GUIBranch' into ApplicationBranch&#10;">
+      <created>1429559513059</created>
+      <updated>1429559513059</updated>
+    </task>
+    <task id="LOCAL-00082" summary="Classe FileManager : ajout de la méthode getTemporaryTagImageFile().&#10;&#10;">
+      <created>1429561362511</created>
+      <updated>1429561362511</updated>
+    </task>
+    <task id="LOCAL-00083" summary="Classe NetworkService : correction de la méthode downloadImage()">
+      <created>1429561605273</created>
+      <updated>1429561605273</updated>
+    </task>
+    <task id="LOCAL-00084" summary="Classe NetworkService : correction de la méthode downloadImage()">
+      <created>1429562781988</created>
+      <updated>1429562781988</updated>
+    </task>
+    <task id="LOCAL-00085" summary="Classe SupprimerProfilActivity : problème de supression du profil sélectionné résolu !">
+      <created>1429566819395</created>
+      <updated>1429566819395</updated>
+    </task>
+    <task id="LOCAL-00086" summary="Classe ErrorCode : mise à jour de la liste des constantes ...&#10;&#10;Classe NetworkService : correction du traitement du champs returnCode du json.">
+      <created>1429612342000</created>
+      <updated>1429612342001</updated>
+    </task>
+    <task id="LOCAL-00087" summary="Dernières modifications.">
+      <created>1429625184959</created>
+      <updated>1429625184959</updated>
+    </task>
+    <option name="localTasksCounter" value="88" />
+    <servers />
+  </component>
+  <component name="TodoView" selected-index="0">
+    <todo-panel id="selected-file">
+      <are-packages-shown value="false" />
+      <are-modules-shown value="false" />
+      <flatten-packages value="false" />
+      <is-autoscroll-to-source value="true" />
+    </todo-panel>
+    <todo-panel id="all">
+      <are-packages-shown value="true" />
+      <are-modules-shown value="false" />
+      <flatten-packages value="false" />
+      <is-autoscroll-to-source value="true" />
+    </todo-panel>
+    <todo-panel id="default-changelist">
+      <are-packages-shown value="false" />
+      <are-modules-shown value="false" />
+      <flatten-packages value="false" />
+      <is-autoscroll-to-source value="false" />
+    </todo-panel>
+  </component>
+  <component name="ToolWindowManager">
+    <frame x="-8" y="-8" width="1616" height="876" extended-state="6" />
+    <editor active="false" />
+    <layout>
+      <window_info id="Palette&#9;" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Changes" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32916668" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Designer" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Palette" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
+      <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32916668" sideWeight="0.5" order="15" side_tool="false" content_ui="tabs" />
+      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25277779" sideWeight="0.5" order="8" side_tool="true" content_ui="tabs" />
+      <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="4" side_tool="true" content_ui="tabs" />
+      <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.29027778" sideWeight="0.5" order="10" side_tool="false" content_ui="tabs" />
+      <window_info id="Gradle Console" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32916668" sideWeight="0.5" order="9" side_tool="true" content_ui="tabs" />
+      <window_info id="Build Variants" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.22172236" sideWeight="0.5010352" order="3" side_tool="true" content_ui="tabs" />
+      <window_info id="Android" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.31527779" sideWeight="0.5" order="14" side_tool="false" content_ui="tabs" />
+      <window_info id="Gradle" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32969153" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
+      <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32916668" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
+      <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="SLIDING" type="SLIDING" visible="false" weight="0.4" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="Maven Projects" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
+      <window_info id="Application Servers" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="11" side_tool="false" content_ui="tabs" />
+      <window_info id="Project" active="true" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.1966581" sideWeight="0.49896482" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32916668" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Memory Monitor" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="12" side_tool="true" content_ui="tabs" />
+      <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="3" side_tool="false" content_ui="combo" />
+      <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
+      <window_info id="Preview" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32969153" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
+      <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
+      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32916668" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32916668" sideWeight="0.5" order="13" side_tool="false" content_ui="tabs" />
+      <window_info id="Dependency Viewer" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32916668" sideWeight="0.5" order="16" side_tool="false" content_ui="tabs" />
+      <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
+    </layout>
+    <layout-to-restore>
+      <window_info id="Palette&#9;" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Changes" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32916668" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25277779" sideWeight="0.5" order="8" side_tool="true" content_ui="tabs" />
+      <window_info id="Build Variants" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="true" content_ui="tabs" />
+      <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.29027778" sideWeight="0.5" order="10" side_tool="false" content_ui="tabs" />
+      <window_info id="Gradle Console" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="9" side_tool="true" content_ui="tabs" />
+      <window_info id="Gradle" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32969153" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
+      <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32916668" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
+      <window_info id="Application Servers" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="11" side_tool="false" content_ui="tabs" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.22172236" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="3" side_tool="false" content_ui="combo" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32916668" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Memory Monitor" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="12" side_tool="true" content_ui="tabs" />
+      <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
+      <window_info id="Designer" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
+      <window_info id="Palette" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
+      <window_info id="Preview" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
+      <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32916668" sideWeight="0.5" order="15" side_tool="false" content_ui="tabs" />
+      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32916668" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="4" side_tool="true" content_ui="tabs" />
+      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32916668" sideWeight="0.5" order="13" side_tool="false" content_ui="tabs" />
+      <window_info id="Android" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.30833334" sideWeight="0.5" order="14" side_tool="false" content_ui="tabs" />
+      <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="Maven Projects" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
+      <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="SLIDING" type="SLIDING" visible="false" weight="0.4" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
+    </layout-to-restore>
+  </component>
+  <component name="Vcs.Log.UiProperties">
+    <option name="RECENTLY_FILTERED_USER_GROUPS">
+      <collection />
+    </option>
+    <option name="RECENTLY_FILTERED_BRANCH_GROUPS">
+      <collection />
+    </option>
+  </component>
+  <component name="VcsContentAnnotationSettings">
+    <option name="myLimit" value="2678400000" />
+  </component>
+  <component name="VcsManagerConfiguration">
+    <option name="CHECK_CODE_SMELLS_BEFORE_PROJECT_COMMIT" value="false" />
+    <option name="CHECK_NEW_TODO" value="false" />
+    <option name="myTodoPanelSettings">
+      <TodoPanelSettings />
+    </option>
+    <MESSAGE value="Modification du manifest AndroidManifiest.xml : ajout du blocage de la rotation automatique de l'écran." />
+    <MESSAGE value="Classe LocalisationActivity : correction de l'implémentation des méthodes de callback." />
+    <MESSAGE value="Modifications mineures." />
+    <MESSAGE value="Merge branch 'MarieAnneBranch' into NicolasBranch&#10;&#10;" />
+    <MESSAGE value="Correction de certains éléments des activités liées à la gestion des profils." />
+    <MESSAGE value="Classe TagCode : correction du conflit de numéro concernant deux code et ajout des code GET_LAST_UPDATE_TIMES et  REPLACE_TAG_LIST_OF_PROFILE.&#10;&#10;Classe NetworkService : &#10;     _ Ajout de la gestion des dates de dernières modifications.&#10;     _ Implémentation de la méthode replaceTagListOfProfile() en effectuant UNE SEULE REQUETE HTTP (méthode POST).&#10;" />
+    <MESSAGE value="Adaptation des classes liées à la gestion des profils : utilisation de EngineServiceProvider à la place de NetworkServiceProvider.&#10;&#10;Classe FileManager : ajout de la méthode importImageFileToUserFolder() pour importer une image au bon format et à la bonne taille, i.e. format PNG, et largeur et hauteur inférieures à 400 pixels.&#10;&#10;Classe EngineService : utilisation de la méthode ci-dessus pour copier importer importer des images dans le compte de l'utilisateur." />
+    <MESSAGE value="Classe BLEService : avancement de l'intégration de la partie surveillance." />
+    <MESSAGE value="Classe BLEService : La partie surveillance est normalement terminée, il ne reste plus qu'à la tester.&#10;&#10;Classe ExterieurActivity : implémentation de la partie suveillance normalement terminée.&#10;." />
+    <MESSAGE value="utilisation de la méthode onBackPressed() au lieu de finish() pour retourner à l'activité précédente.&#10;&#10;Suppression de l'activité SynchroActivity." />
+    <MESSAGE value="Classe BLEService : modification du callback pour le scan BLE de la partie surveillance." />
+    <MESSAGE value="Classe BLEService :&#10;     _ ajout dans les notifications du nombre de secondes écoulées depuis qu'un tag a été perdu (pas de 15 secondes).&#10;     _ correction du thread du bracelet : ajout de l'attente de 5 secondes entre la connexion au bracelet et la déconnexion du bracelet. &#10;&#10;Classe ExterieurActivity : ajout de l'override de la méthode onBackPressed() pour se déconnecter proprement du BLEService." />
+    <MESSAGE value="Classes Accueil et  ExterieurActivity : ajout de la vérification du support du BLE." />
+    <MESSAGE value="Merge branch 'NicolasBranch' into GUIBranch&#10;" />
+    <MESSAGE value="Merge branch 'GUIBranch' into ApplicationBranch&#10;&#10;Conflicts:&#10;&#9;main/java/com/stuffinder/activities/Accueil.java&#10;&#9;main/java/com/stuffinder/tests/NetworkServiceEmulator.java&#10;" />
+    <MESSAGE value="Classe Accueil : ajout de l'initialisation avec le module web service." />
+    <MESSAGE value="Merge branch 'philippeBranchBis' into ApplicationBranch&#10;&#10;Conflicts:&#10;&#9;main/java/com/stuffinder/activities/Accueil.java&#10;&#9;main/java/com/stuffinder/webservice/NetworkService.java&#10;&#9;main/java/com/stuffinder/webservice/TagCode.java&#10;" />
+    <MESSAGE value="Intégration de la partie web service terminée." />
+    <MESSAGE value="modifications mineures" />
+    <MESSAGE value="Merge branch 'GUIBranch' into ApplicationBranch&#10;" />
+    <MESSAGE value="Classe FileManager : ajout de la méthode getTemporaryTagImageFile().&#10;&#10;" />
+    <MESSAGE value="Classe NetworkService : correction de la méthode downloadImage()" />
+    <MESSAGE value="Classe SupprimerProfilActivity : problème de supression du profil sélectionné résolu !" />
+    <MESSAGE value="Classe ErrorCode : mise à jour de la liste des constantes ...&#10;&#10;Classe NetworkService : correction du traitement du champs returnCode du json." />
+    <MESSAGE value="Dernières modifications." />
+    <option name="LAST_COMMIT_MESSAGE" value="Dernières modifications." />
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <option name="time" value="5" />
+    </breakpoint-manager>
+  </component>
+  <component name="editorHistoryManager">
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/stuffinder/webservice/NetworkService.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="12070" max-vertical-offset="32895">
+          <caret line="710" column="50" selection-start-line="710" selection-start-column="50" selection-end-line="710" selection-end-column="50" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/stuffinder/engine/FieldVerifier.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.4516129" vertical-offset="283" max-vertical-offset="952">
+          <caret line="43" column="5" selection-start-line="13" selection-start-column="1" selection-end-line="43" selection-end-column="5" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/stuffinder/data/Profile.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="1.4258064" vertical-offset="0" max-vertical-offset="765">
+          <caret line="61" column="0" selection-start-line="5" selection-start-column="0" selection-end-line="61" selection-end-column="0" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/stuffinder/data/Account.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.78064513" vertical-offset="963" max-vertical-offset="1428">
+          <caret line="104" column="0" selection-start-line="5" selection-start-column="0" selection-end-line="104" selection-end-column="0" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/stuffinder/exceptions/IllegalFieldException.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.7743363" vertical-offset="2064" max-vertical-offset="2516">
+          <caret line="154" column="0" selection-start-line="3" selection-start-column="0" selection-end-line="154" selection-end-column="0" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/stuffinder/exceptions/NetworkServiceException.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.21935484" vertical-offset="0" max-vertical-offset="465">
+          <caret line="6" column="50" selection-start-line="6" selection-start-column="50" selection-end-line="6" selection-end-column="50" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/stuffinder/interfaces/NetworkServiceInterface.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="1.4137168" vertical-offset="6926" max-vertical-offset="7684">
+          <caret line="454" column="102" selection-start-line="22" selection-start-column="4" selection-end-line="454" selection-end-column="102" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/../../sdk/sources/android-21/java/io/File.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.33236995" vertical-offset="1742" max-vertical-offset="18785">
+          <caret line="147" column="11" selection-start-line="147" selection-start-column="11" selection-end-line="147" selection-end-column="11" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/app.iml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="1700">
+          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/build.gradle">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.17196532" vertical-offset="0" max-vertical-offset="692">
+          <caret line="7" column="56" selection-start-line="7" selection-start-column="56" selection-end-line="7" selection-end-column="56" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/proguard-rules.pro">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="455">
+          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$USER_HOME$/Documents/université/Android/httpcomponents-client-android-4.3.5/README.txt">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.9089595" vertical-offset="0" max-vertical-offset="884">
+          <caret line="37" column="26" selection-start-line="37" selection-start-column="26" selection-end-line="37" selection-end-column="26" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/build.gradle">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.19653179" vertical-offset="0" max-vertical-offset="692">
+          <caret line="8" column="27" selection-start-line="8" selection-start-column="27" selection-end-line="8" selection-end-column="27" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/res/layout/activity_exterieur.xml">
+      <provider editor-type-id="android-designer">
+        <state />
+      </provider>
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.79908675" vertical-offset="891" max-vertical-offset="1462">
+          <caret line="73" column="46" selection-start-line="73" selection-start-column="46" selection-end-line="73" selection-end-column="46" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/../../sdk/sources/android-21/java/lang/String.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.80860215" vertical-offset="21452" max-vertical-offset="30396">
+          <caret line="1332" column="23" selection-start-line="1332" selection-start-column="23" selection-end-line="1332" selection-end-column="23" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/stuffinder/activities/InfoPersoActivity.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="1079" max-vertical-offset="2227">
+          <caret line="92" column="16" selection-start-line="92" selection-start-column="16" selection-end-line="92" selection-end-column="16" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/stuffinder/activities/InfoTagActivity.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="2188" max-vertical-offset="4012">
+          <caret line="165" column="12" selection-start-line="165" selection-start-column="12" selection-end-line="165" selection-end-column="12" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/stuffinder/activities/InterieurActivity.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="1496">
+          <caret line="28" column="6" selection-start-line="28" selection-start-column="6" selection-end-line="28" selection-end-column="6" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/stuffinder/activities/ModifTagActivity.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="413" max-vertical-offset="1105">
+          <caret line="61" column="8" selection-start-line="61" selection-start-column="8" selection-end-line="61" selection-end-column="8" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/res/layout/activity_configuration.xml">
+      <provider editor-type-id="android-designer">
+        <state />
+      </provider>
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="1768">
+          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/stuffinder/activities/ConfigurationActivity.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.28757226" vertical-offset="175" max-vertical-offset="1088">
+          <caret line="29" column="35" selection-start-line="29" selection-start-column="35" selection-end-line="29" selection-end-column="35" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/AndroidManifest.xml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.31213874" vertical-offset="1705" max-vertical-offset="2414">
+          <caret line="113" column="19" selection-start-line="113" selection-start-column="19" selection-end-line="113" selection-end-column="19" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/stuffinder/activities/TagsActivity.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.6069364" vertical-offset="158" max-vertical-offset="1105">
+          <caret line="49" column="8" selection-start-line="49" selection-start-column="8" selection-end-line="49" selection-end-column="8" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/stuffinder/activities/ReussiteCreationCompteActivity.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.38583815" vertical-offset="90" max-vertical-offset="901">
+          <caret line="28" column="8" selection-start-line="28" selection-start-column="8" selection-end-line="28" selection-end-column="8" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/stuffinder/data/Tag.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="1.4913294" vertical-offset="56" max-vertical-offset="1275">
+          <caret line="93" column="40" selection-start-line="93" selection-start-column="40" selection-end-line="93" selection-end-column="40" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/../../sdk/platforms/android-21/data/res/layout/simple_list_item_multiple_choice.xml">
+      <provider editor-type-id="android-designer">
+        <state />
+      </provider>
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.5879699" vertical-offset="0" max-vertical-offset="665">
+          <caret line="23" column="70" selection-start-line="23" selection-start-column="70" selection-end-line="23" selection-end-column="70" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/stuffinder/activities/AjoutTagActivity.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="124" max-vertical-offset="2227">
+          <caret line="65" column="12" selection-start-line="65" selection-start-column="12" selection-end-line="65" selection-end-column="12" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/stuffinder/activities/LocalisationActivity.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="1.193617" vertical-offset="0" max-vertical-offset="4794">
+          <caret line="50" column="32" selection-start-line="50" selection-start-column="32" selection-end-line="50" selection-end-column="32" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/import-summary.txt">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.5232558" vertical-offset="47" max-vertical-offset="714">
+          <caret line="16" column="60" selection-start-line="16" selection-start-column="60" selection-end-line="16" selection-end-column="60" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/stuffinder/activities/ExterieurActivity.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="947" max-vertical-offset="4522">
+          <caret line="77" column="9" selection-start-line="77" selection-start-column="9" selection-end-line="77" selection-end-column="9" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/stuffinder/activities/HomeActivity.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.69462365" vertical-offset="34" max-vertical-offset="1921">
+          <caret line="38" column="0" selection-start-line="38" selection-start-column="0" selection-end-line="38" selection-end-column="0" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/stuffinder/activities/CreerCompteActivity.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.48893806" vertical-offset="0" max-vertical-offset="2261">
+          <caret line="28" column="0" selection-start-line="28" selection-start-column="0" selection-end-line="28" selection-end-column="0" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/../../sdk/sources/android-21/android/widget/AbsListView.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.33333334" vertical-offset="2259" max-vertical-offset="121380">
+          <caret line="215" column="28" selection-start-line="215" selection-start-column="28" selection-end-line="215" selection-end-column="28" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/stuffinder/activities/Accueil.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-0.54408604" vertical-offset="763" max-vertical-offset="2788">
+          <caret line="30" column="13" selection-start-line="30" selection-start-column="13" selection-end-line="30" selection-end-column="13" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/stuffinder/activities/SeConnecterActivity.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.3761062" vertical-offset="0" max-vertical-offset="1853">
+          <caret line="10" column="0" selection-start-line="10" selection-start-column="0" selection-end-line="10" selection-end-column="0" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/stuffinder/webservice/NetworkService.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.13495575" vertical-offset="31185" max-vertical-offset="32657">
+          <caret line="1898" column="0" selection-start-line="1898" selection-start-column="0" selection-end-line="1898" selection-end-column="0" />
+        </state>
+      </provider>
+    </entry>
+  </component>
+</project>
+
